@@ -2,6 +2,15 @@
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
+## macOS
+.DS_Store
+
+## Xcode generated files
+DerivedData/
+build/
+*.xcuserstate
+*.xccheckout
+
 ## User settings
 xcuserdata/
 
