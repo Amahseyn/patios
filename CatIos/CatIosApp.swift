@@ -2,16 +2,17 @@
 //  CatIosApp.swift
 //  CatIos
 //
-//  Created by Mo on 8/2/26.
-//
 
 import SwiftUI
 
 @main
 struct CatIosApp: App {
+    @AppStorage("prefersDarkMode") private var prefersDarkMode: Bool = false
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+                .preferredColorScheme(prefersDarkMode ? .dark : nil)
         }
     }
 }
