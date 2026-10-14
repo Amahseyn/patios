@@ -1114,6 +1114,26 @@
         }
       }
     },
+    "Changes saved on this iPhone — retrying sync": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تغییرات روی این آیفون ذخیره شد — تلاش دوباره برای همگام‌سازی"
+          }
+        }
+      }
+    },
+    "Changes saved — syncing soon": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تغییرات ذخیره شد — به‌زودی همگام می‌شود"
+          }
+        }
+      }
+    },
     "Chat actions": {
       "localizations": {
         "fa": {
@@ -2884,6 +2904,16 @@
         }
       }
     },
+    "Offline — changes saved, will sync when online": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آفلاین — تغییرات ذخیره شد و پس از اتصال همگام می‌شود"
+          }
+        }
+      }
+    },
     "Offline — using data on this iPhone": {
       "localizations": {
         "fa": {
@@ -3100,6 +3130,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "دستیار مراقبت حیوان"
+          }
+        }
+      }
+    },
+    "Pet Care is ready to sync. Sign in to connect this phone.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آماده همگام‌سازی است. برای اتصال این گوشی وارد شوید."
           }
         }
       }
@@ -3774,6 +3814,16 @@
         }
       }
     },
+    "Saved on this device": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "روی این دستگاه ذخیره شد"
+          }
+        }
+      }
+    },
     "Saved templates": {
       "localizations": {
         "fa": {
@@ -3914,6 +3964,16 @@
         }
       }
     },
+    "Showing the last saved report — offline": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نمایش آخرین گزارش ذخیره‌شده — آفلاین"
+          }
+        }
+      }
+    },
     "Sign In": {
       "localizations": {
         "fa": {
@@ -3960,6 +4020,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "از بخش «شما» وارد شوید تا حیوانات، کارها و سوابق سلامت روی همه دستگاه‌ها پشتیبان‌گیری شوند."
+          }
+        }
+      }
+    },
+    "Sign in to load analytics from your account.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "برای دیدن تحلیل‌ها از حساب خود وارد شوید."
           }
         }
       }
@@ -4230,6 +4300,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "همگام‌سازی اکنون"
+          }
+        }
+      }
+    },
+    "Synced with your account": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "با حساب شما همگام شد"
           }
         }
       }

@@ -522,4 +522,12 @@ FA = {
 'Pet Care+ Monthly is %@. Pet Care+ Yearly is %@. 11pets Premium is about %@ a month. Petio Plus is %@ a month or %@ a year. A plan change is an App Store purchase, checked by Pet Care before ads go away.': 'Pet Care+ ماهانه %@ و سالانه %@ است. 11pets Premium حدود %@ در ماه و Petio Plus %@ در ماه یا %@ در سال است. تغییر طرح یک خرید از App Store است و پیش از حذف تبلیغات توسط Pet Care بررسی می‌شود.',
 'Quick actions': 'اقدامات سریع',
 'Owner tip': 'نکته برای صاحب حیوان',
+'Saved on this device': 'روی این دستگاه ذخیره شد',
+'Synced with your account': 'با حساب شما همگام شد',
+'Changes saved — syncing soon': 'تغییرات ذخیره شد — به‌زودی همگام می‌شود',
+'Offline — changes saved, will sync when online': 'آفلاین — تغییرات ذخیره شد و پس از اتصال همگام می‌شود',
+'Changes saved on this iPhone — retrying sync': 'تغییرات روی این آیفون ذخیره شد — تلاش دوباره برای همگام‌سازی',
+'Pet Care is ready to sync. Sign in to connect this phone.': 'آماده همگام‌سازی است. برای اتصال این گوشی وارد شوید.',
+'Showing the last saved report — offline': 'نمایش آخرین گزارش ذخیره‌شده — آفلاین',
+'Sign in to load analytics from your account.': 'برای دیدن تحلیل‌ها از حساب خود وارد شوید.',
 }
