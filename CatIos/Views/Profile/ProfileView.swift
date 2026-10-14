@@ -30,7 +30,7 @@ struct ProfileView: View {
                         )
                         RealmStatTile(
                             title: "Plan",
-                            value: membership.plan == .basic ? "Free" : "Plus",
+                            value: membership.plan == .basic ? L("Free") : L("Plus"),
                             systemImage: "star.fill",
                             tint: AppTheme.starlight
                         )
@@ -103,7 +103,7 @@ struct ProfileView: View {
                             HStack(spacing: 8) {
                                 Image(systemName: reachable ? "antenna.radiowaves.left.and.right" : "wifi.slash")
                                     .foregroundStyle(reachable ? AppTheme.success : AppTheme.warning)
-                                Text(reachable ? "Server is reachable" : "Offline — using data on this iPhone")
+                                Text(reachable ? L("Server is reachable") : L("Offline — using data on this iPhone"))
                                     .font(AppTheme.captionFont())
                                     .foregroundStyle(AppTheme.textSecondary)
                             }
@@ -132,7 +132,7 @@ struct ProfileView: View {
 
                     RealmSectionCard(
                         title: "Preferences",
-                        subtitle: "Appearance and alerts",
+                        subtitle: "Appearance, language, and alerts",
                         icon: "slider.horizontal.3",
                         tint: AppTheme.lilac
                     ) {
@@ -152,7 +152,7 @@ struct ProfileView: View {
                                 Spacer()
                                 Picker("Appearance", selection: $appearance) {
                                     ForEach(AppAppearance.allCases) { mode in
-                                        Text(mode.title).tag(mode.rawValue)
+                                        Text(LocalizedStringKey(mode.title)).tag(mode.rawValue)
                                     }
                                 }
                                 .pickerStyle(.menu)
@@ -161,6 +161,17 @@ struct ProfileView: View {
                             .padding(.horizontal, AppTheme.spacingS)
                             .padding(.vertical, 10)
                         }
+                        RealmRowDivider()
+                        HStack(spacing: AppTheme.spacingS) {
+                            EnchantedIconBadge(systemImage: "globe", tint: AppTheme.sky, size: 36)
+                            Text("Language")
+                                .font(AppTheme.bodyFont().weight(.medium))
+                                .foregroundStyle(AppTheme.textPrimary)
+                            Spacer()
+                            LanguagePicker()
+                        }
+                        .padding(.horizontal, AppTheme.spacingS)
+                        .padding(.vertical, 10)
                         RealmRowDivider()
                         RealmNavigationRow(
                             title: "Notifications",
@@ -183,7 +194,7 @@ struct ProfileView: View {
                                 .font(AppTheme.bodyFont())
                                 .foregroundStyle(AppTheme.textSecondary)
                             Spacer()
-                            Text(membership.plan.title)
+                            Text(LocalizedStringKey(membership.plan.title))
                                 .font(AppTheme.bodyFont().weight(.semibold))
                                 .foregroundStyle(AppTheme.primary)
                         }
@@ -261,16 +272,16 @@ struct ProfileView: View {
             let local = email.split(separator: "@").first.map(String.init) ?? email
             return local.capitalized
         }
-        return "This iPhone"
+        return L("This iPhone")
     }
 
     private var statusLine: String {
-        if householdSync.isSyncing { return "Syncing with your account…" }
+        if householdSync.isSyncing { return L("Syncing with your account…") }
         if let error = householdSync.lastError, authSession.isSignedIn { return error }
         if authSession.isSignedIn {
             return authSession.currentUser?.email ?? "Signed in"
         }
-        return "Everything stays on this iPhone until you sign in"
+        return L("Everything stays on this iPhone until you sign in")
     }
 
     private var statusChips: [RealmStatusChip] {
@@ -287,7 +298,7 @@ struct ProfileView: View {
         }
         if let reachable = householdSync.apiReachable {
             chips.append(RealmStatusChip(
-                title: reachable ? "Online" : "Offline",
+                title: reachable ? L("Online") : L("Offline"),
                 systemImage: reachable ? "antenna.radiowaves.left.and.right" : "wifi.slash",
                 tint: reachable ? AppTheme.tide : AppTheme.warning,
                 isActive: reachable
@@ -298,8 +309,8 @@ struct ProfileView: View {
 
     private var syncShortLabel: String {
         if householdSync.isSyncing { return "…" }
-        if authSession.isSignedIn { return "On" }
-        return "Off"
+        if authSession.isSignedIn { return L("On") }
+        return L("Off")
     }
 
     private var syncTint: Color {

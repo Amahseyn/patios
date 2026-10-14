@@ -32,7 +32,7 @@ struct PetProfileCard: View {
 
             Spacer()
 
-            Image(systemName: "chevron.right")
+            Image(systemName: "chevron.forward")
                 .foregroundStyle(AppTheme.textSecondary)
                 .font(.subheadline.weight(.semibold))
         }

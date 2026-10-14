@@ -89,3 +89,6 @@ CatIos/Config/DevAuthConfig.local.swift
 venv/
 DerivedData/
 *.xcuserstate
+
+__pycache__/
+*.pyc

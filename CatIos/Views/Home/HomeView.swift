@@ -284,7 +284,7 @@ struct HomeView: View {
                             .font(.title3)
 
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(item.title)
+                            Text(LocalizedStringKey(item.title))
                                 .font(.subheadline.weight(.medium))
                                 .foregroundStyle(AppTheme.textPrimary)
                             Text(item.category)

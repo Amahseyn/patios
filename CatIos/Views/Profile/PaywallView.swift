@@ -89,7 +89,7 @@ struct PaywallView: View {
             HStack(alignment: .firstTextBaseline, spacing: AppTheme.spacingS) {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: AppTheme.spacingS) {
-                        Text(plan.title)
+                        Text(LocalizedStringKey(plan.title))
                             .font(.headline)
                             .foregroundStyle(AppTheme.textPrimary)
                         if plan == .plusYearly {

@@ -20,10 +20,10 @@ struct HomeOverviewView: View {
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         switch hour {
-        case 5..<12: return "Good morning"
-        case 12..<17: return "Good afternoon"
-        case 17..<22: return "Good evening"
-        default: return "Hello"
+        case 5..<12: return L("Good morning")
+        case 12..<17: return L("Good afternoon")
+        case 17..<22: return L("Good evening")
+        default: return L("Hello")
         }
     }
 
@@ -98,7 +98,7 @@ struct HomeOverviewView: View {
                         showPaywall = true
                     } label: {
                         Label(
-                            membership.plan == .basic ? "Upgrade" : "Pet Care+",
+                            membership.plan == .basic ? L("Upgrade") : "Pet Care+",
                             systemImage: "star.fill"
                         )
                         .font(AppTheme.captionFont().weight(.bold))
@@ -141,25 +141,25 @@ struct HomeOverviewView: View {
 
     private var ownerTitle: String {
         if petManager.pets.count == 1 {
-            return "\(petManager.currentPet.name)’s day"
+            return LF("%@’s day", petManager.currentPet.name)
         }
         if petManager.pets.isEmpty {
-            return "Your pet home"
+            return L("Your pet home")
         }
-        return "Your pets today"
+        return L("Your pets today")
     }
 
     private var subtitleLine: String {
         if petManager.pets.isEmpty {
-            return "Set up a profile to track meals, walks, meds, and vet visits."
+            return L("Set up a profile to track meals, walks, meds, and vet visits.")
         }
         if remainingTodayCount == 0 && !todayTasks.isEmpty {
-            return "All of today’s care tasks are done. Nice work."
+            return L("All of today’s care tasks are done. Nice work.")
         }
         if todayTasks.isEmpty {
-            return "No tasks scheduled for today — add one from Care when you’re ready."
+            return L("No tasks scheduled for today — add one from Care when you’re ready.")
         }
-        return "\(remainingTodayCount) care task\(remainingTodayCount == 1 ? "" : "s") left · \(petManager.pets.count) pet\(petManager.pets.count == 1 ? "" : "s")"
+        return LF("%lld care tasks left · %lld pets", remainingTodayCount, petManager.pets.count)
     }
 
     private var petStrip: some View {
@@ -196,7 +196,7 @@ struct HomeOverviewView: View {
                         .frame(width: 72)
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel("\(pet.name)")
+                    .accessibilityLabel(Text(verbatim: pet.name))
                     .accessibilityAddTraits(pet.id == petManager.selectedPetId ? .isSelected : [])
                 }
             }
@@ -215,12 +215,12 @@ struct HomeOverviewView: View {
                         Text("Today’s care")
                             .font(AppTheme.headlineFont())
                             .foregroundStyle(AppTheme.textPrimary)
-                        Text(todayTasks.isEmpty ? "No tasks yet" : "\(completedTodayCount) of \(todayTasks.count) done")
+                        Text(todayTasks.isEmpty ? L("No tasks yet") : LF("%lld of %lld done", completedTodayCount, todayTasks.count))
                             .font(AppTheme.captionFont())
                             .foregroundStyle(AppTheme.textSecondary)
                     }
                     Spacer(minLength: 0)
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "chevron.forward")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(AppTheme.textSecondary)
                 }
@@ -233,7 +233,7 @@ struct HomeOverviewView: View {
                             .font(AppTheme.captionFont().weight(.medium))
                             .foregroundStyle(AppTheme.textSecondary)
                         Spacer()
-                        Text(remainingTodayCount == 0 ? "All clear" : "Open Care")
+                        Text(remainingTodayCount == 0 ? L("All clear") : L("Open Care"))
                             .font(AppTheme.captionFont().weight(.semibold))
                             .foregroundStyle(AppTheme.primary)
                     }
@@ -266,7 +266,7 @@ struct HomeOverviewView: View {
                             .foregroundStyle(AppTheme.textSecondary)
                     }
                     Spacer(minLength: 0)
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "chevron.forward")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(AppTheme.textSecondary)
                 }
@@ -276,7 +276,7 @@ struct HomeOverviewView: View {
                         Circle()
                             .fill(dueTint(for: record).opacity(0.9))
                             .frame(width: 8, height: 8)
-                        Text(record.title)
+                        Text(LocalizedStringKey(record.title))
                             .font(AppTheme.bodyFont().weight(.medium))
                             .foregroundStyle(AppTheme.textPrimary)
                             .lineLimit(1)
@@ -350,12 +350,12 @@ struct HomeOverviewView: View {
 
     private var ownerTip: String {
         if !authSession.isSignedIn {
-            return "Sign in from You to back up pets, tasks, and health records across devices."
+            return L("Sign in from You to back up pets, tasks, and health records across devices.")
         }
         if todayTasks.isEmpty {
-            return "Use Care → Add to schedule daily feeding and weekly grooming so nothing slips."
+            return L("Use Care → Add to schedule daily feeding and weekly grooming so nothing slips.")
         }
-        return "Swipe a care task to snooze or edit. Health reminders keep vaccines and vet visits on track."
+        return L("Swipe a care task to snooze or edit. Health reminders keep vaccines and vet visits on track.")
     }
 
     private func dueTint(for record: HealthRecord) -> Color {
@@ -402,11 +402,11 @@ private struct HomeQuickAction: View {
             HStack(spacing: AppTheme.spacingS) {
                 EnchantedIconBadge(systemImage: systemImage, tint: tint, size: 40)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
+                    Text(LocalizedStringKey(title))
                         .font(AppTheme.bodyFont().weight(.semibold))
                         .foregroundStyle(AppTheme.textPrimary)
                         .lineLimit(1)
-                    Text(subtitle)
+                    Text(LocalizedStringKey(subtitle))
                         .font(AppTheme.captionFont())
                         .foregroundStyle(AppTheme.textSecondary)
                         .lineLimit(1)

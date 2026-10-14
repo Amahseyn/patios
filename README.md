@@ -34,3 +34,13 @@ To sync, start the API from `../backend`, then sign in from **You** (simulator d
 ## Secrets
 
 Do not commit real passwords. `CatIos/Config/DevAuthConfig.swift` is DEBUG-only and should stay empty or local. See `DevAuthConfig.example.swift` for the shape.
+
+## Offline-first data
+
+Everything the UI shows is read from the on-device SQLite database (`Persistence/`): pets (with memories and sound notes), care tasks and occurrence logs, task templates, health records and reminders, foods, feedings, weights, activity/behavior logs, AI chat sessions, and the last analytics report. The app works fully without a network.
+
+Sync (`Services/HouseholdSync.swift`):
+- Each edit is saved locally first and marked pending. The pending flag, server revision, and last-synced snapshot are kept in SQLite, so they survive restarts.
+- When signed in and online, pending changes are pushed (`PUT /sync`) shortly after an edit, when the network comes back (`NWPathMonitor`), and when the app returns to the foreground. Failures retry with exponential backoff (5 s up to 5 min).
+- Pull-to-refresh never overwrites unsynced edits. On a revision conflict the app fetches the server copy and does a per-record three-way merge (`Services/SyncMerge.swift`): one-sided changes are taken, edits on both sides keep this device's version, and an edit beats a delete. Then it retries.
+- First sign-in merges local and account data instead of replacing either.

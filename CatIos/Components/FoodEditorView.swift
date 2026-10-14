@@ -32,7 +32,7 @@ struct FoodEditorView: View {
                     TextField("Product", text: $product)
                     Picker("Category", selection: $category) {
                         ForEach(NutritionCategory.allCases) { item in
-                            Text(item.rawValue).tag(item)
+                            Text(LocalizedStringKey(item.rawValue)).tag(item)
                         }
                     }
                 }

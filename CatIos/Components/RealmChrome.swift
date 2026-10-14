@@ -7,7 +7,7 @@ struct RealmStatusChip: View {
     var isActive: Bool = true
 
     var body: some View {
-        Label(title, systemImage: systemImage)
+        Label(LocalizedStringKey(title), systemImage: systemImage)
             .font(AppTheme.captionFont().weight(.semibold))
             .foregroundStyle(isActive ? tint : AppTheme.textSecondary)
             .padding(.horizontal, 10)
@@ -31,7 +31,7 @@ struct RealmStatTile: View {
                 Image(systemName: systemImage)
                     .font(.caption.weight(.bold))
                     .foregroundStyle(tint)
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(AppTheme.captionFont())
                     .foregroundStyle(AppTheme.textSecondary)
             }
@@ -59,11 +59,11 @@ struct RealmSectionCard<Content: View>: View {
             HStack(spacing: AppTheme.spacingS) {
                 EnchantedIconBadge(systemImage: icon, tint: tint, size: 36)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
+                    Text(LocalizedStringKey(title))
                         .font(AppTheme.headlineFont())
                         .foregroundStyle(AppTheme.textPrimary)
                     if let subtitle {
-                        Text(subtitle)
+                        Text(LocalizedStringKey(subtitle))
                             .font(AppTheme.captionFont())
                             .foregroundStyle(AppTheme.textSecondary)
                     }
@@ -153,23 +153,23 @@ private struct RealmRowLabel: View {
                     .foregroundStyle(tint)
             }
             VStack(alignment: .leading, spacing: 2) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(AppTheme.bodyFont().weight(.medium))
                     .foregroundStyle(AppTheme.textPrimary)
                 if let subtitle {
-                    Text(subtitle)
+                    Text(LocalizedStringKey(subtitle))
                         .font(AppTheme.captionFont())
                         .foregroundStyle(AppTheme.textSecondary)
                 }
             }
             Spacer(minLength: 0)
             if let trailing {
-                Text(trailing)
+                Text(LocalizedStringKey(trailing))
                     .font(AppTheme.captionFont().weight(.semibold))
                     .foregroundStyle(tint)
             }
             if showsChevron {
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(AppTheme.textSecondary.opacity(0.7))
             }
@@ -192,10 +192,10 @@ struct RealmProfileHero: View {
                 EnchantedIconBadge(systemImage: systemImage, tint: AppTheme.primary, size: 56)
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(title)
+                    Text(LocalizedStringKey(title))
                         .font(AppTheme.titleFont(24))
                         .foregroundStyle(AppTheme.textPrimary)
-                    Text(subtitle)
+                    Text(LocalizedStringKey(subtitle))
                         .font(AppTheme.bodyFont())
                         .foregroundStyle(AppTheme.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -276,10 +276,10 @@ struct RealmLegalHero: View {
         HStack(spacing: AppTheme.spacingM) {
             EnchantedIconBadge(systemImage: icon, tint: AppTheme.dusk, size: 48)
             VStack(alignment: .leading, spacing: 4) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(AppTheme.titleFont(22))
                     .foregroundStyle(AppTheme.textPrimary)
-                Text(subtitle)
+                Text(LocalizedStringKey(subtitle))
                     .font(AppTheme.captionFont())
                     .foregroundStyle(AppTheme.textSecondary)
             }
