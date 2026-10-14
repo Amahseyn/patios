@@ -58,7 +58,7 @@ struct RemindersView: View {
                                     selectedCategory = cat
                                 }
                             } label: {
-                                Text(cat.rawValue)
+                                Text(LocalizedStringKey(cat.rawValue))
                                     .font(.caption.weight(.semibold))
                                     .padding(.horizontal, 14)
                                     .padding(.vertical, 8)
@@ -134,12 +134,12 @@ struct RemindersView: View {
                             }
 
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(item.title)
+                                Text(LocalizedStringKey(item.title))
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundStyle(item.isDone ? AppTheme.textSecondary : AppTheme.textPrimary)
                                     .strikethrough(item.isDone)
 
-                                Text(item.category.rawValue)
+                                Text(LocalizedStringKey(item.category.rawValue))
                                     .font(.caption2)
                                     .foregroundStyle(AppTheme.textSecondary)
                             }

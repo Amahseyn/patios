@@ -21,7 +21,7 @@ struct OnboardingPageView: View {
                 )
             }
             VStack(spacing: AppTheme.spacingS) {
-                Text(page.title)
+                Text(LocalizedStringKey(page.title))
                     .font(AppTheme.titleFont(26))
                     .multilineTextAlignment(.center)
                 Text(page.description)

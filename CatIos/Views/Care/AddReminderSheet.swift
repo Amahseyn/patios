@@ -25,7 +25,7 @@ struct AddReminderSheet: View {
                         ForEach(CareCategory.allCases) { category in
                             HStack {
                                 Text(category.icon)
-                                Text(category.rawValue)
+                                Text(LocalizedStringKey(category.rawValue))
                             }
                             .tag(category)
                         }

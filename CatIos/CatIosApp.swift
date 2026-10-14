@@ -10,6 +10,7 @@ import UserNotifications
 struct CatIosApp: App {
     @AppStorage("appearance") private var appearance = ""
     @AppStorage("prefersDarkMode") private var prefersDarkMode: Bool = false
+    @AppStorage(AppLanguage.storageKey) private var languageRaw = AppLanguage.system.rawValue
 
     private var colorScheme: ColorScheme? {
         if let mode = AppAppearance(rawValue: appearance) {
@@ -23,6 +24,7 @@ struct CatIosApp: App {
             RootView()
                 .tint(AppTheme.primary)
                 .preferredColorScheme(colorScheme)
+                .appLanguage(AppLanguage(rawValue: languageRaw) ?? .system)
                 .onAppear {
                     migrateAppearance()
                     UNUserNotificationCenter.current().delegate = CareNotificationBridge.shared

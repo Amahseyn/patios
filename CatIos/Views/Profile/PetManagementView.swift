@@ -143,7 +143,7 @@ struct PetManagementView: View {
                                         .foregroundStyle(AppTheme.textSecondary)
                                 }
                                 Spacer()
-                                Image(systemName: "chevron.right")
+                                Image(systemName: "chevron.forward")
                                     .font(.caption.weight(.semibold))
                                     .foregroundStyle(AppTheme.textSecondary.opacity(0.6))
                             }
@@ -192,7 +192,7 @@ struct PetManagementView: View {
                 Menu {
                     Picker("Sort", selection: $sortOption) {
                         ForEach(SortOption.allCases, id: \.self) { opt in
-                            Text(opt.rawValue).tag(opt)
+                            Text(LocalizedStringKey(opt.rawValue)).tag(opt)
                         }
                     }
                 } label: {
@@ -298,7 +298,7 @@ struct PetManagementView: View {
                 Section("Gender") {
                     Picker("Gender", selection: $draftGender) {
                         ForEach(PetGender.allCases) { gender in
-                            Text(gender.rawValue).tag(gender)
+                            Text(LocalizedStringKey(gender.rawValue)).tag(gender)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -428,7 +428,7 @@ struct PetManagementView: View {
                 Section("Gender") {
                     Picker("Gender", selection: $draftGender) {
                         ForEach(PetGender.allCases) { gender in
-                            Text(gender.rawValue).tag(gender)
+                            Text(LocalizedStringKey(gender.rawValue)).tag(gender)
                         }
                     }
                     .pickerStyle(.segmented)

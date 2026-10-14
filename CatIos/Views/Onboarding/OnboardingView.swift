@@ -65,7 +65,7 @@ struct OnboardingView: View {
                         .cardStyle()
                     Picker("Sex", selection: $viewModel.petGender) {
                         ForEach(PetGender.allCases) { gender in
-                            Text(gender.rawValue).tag(gender)
+                            Text(LocalizedStringKey(gender.rawValue)).tag(gender)
                         }
                     }
                     .padding()

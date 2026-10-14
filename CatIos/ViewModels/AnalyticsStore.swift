@@ -18,11 +18,23 @@ final class AnalyticsStore: ObservableObject {
         isLoading = true
         defer { isLoading = false }
         let path = petId == PetManager.allPetsId ? "analytics" : "analytics/pets/\(petId.uuidString)"
+        let cacheKey = "cache.\(path)"
         do {
-            report = try await APIClient.shared.send("GET", path: path)
+            let fresh: APIAnalyticsReport = try await APIClient.shared.send("GET", path: path)
+            report = fresh
             message = nil
+            if let data = try? JSONEncoder().encode(fresh), let text = String(data: data, encoding: .utf8) {
+                AppDatabase.shared.setValue(text, for: cacheKey)
+            }
         } catch {
-            message = error.localizedDescription
+            // Offline: fall back to the last report saved on this device.
+            if let text = AppDatabase.shared.value(for: cacheKey),
+               let cached = try? JSONDecoder().decode(APIAnalyticsReport.self, from: Data(text.utf8)) {
+                report = cached
+                message = "Showing the last saved report — offline"
+            } else {
+                message = error.localizedDescription
+            }
         }
     }
 }

@@ -60,7 +60,7 @@ struct OracleHubView: View {
             }
         } label: {
             VStack(alignment: .leading, spacing: 4) {
-                Label(item.rawValue, systemImage: item.systemImage)
+                Label(LocalizedStringKey(item.rawValue), systemImage: item.systemImage)
                     .font(AppTheme.headlineFont())
                 Text(item.subtitle)
                     .font(AppTheme.captionFont())

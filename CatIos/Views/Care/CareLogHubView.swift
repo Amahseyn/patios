@@ -493,7 +493,7 @@ struct CareLogHubView: View {
                     PetScopePicker(selection: $selectedPetScopeId, pets: petManager.pets)
                     Picker("Status", selection: $selectedTaskStatus) {
                         ForEach(TaskStatus.allCases) { status in
-                            Text(status.rawValue).tag(status)
+                            Text(LocalizedStringKey(status.rawValue)).tag(status)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -990,7 +990,7 @@ struct CareLogHubView: View {
 
                     Picker("Kind", selection: $taskKind) {
                         ForEach(CareTaskKind.allCases) { kind in
-                            Label(kind.rawValue, systemImage: kind.symbol).tag(kind)
+                            Label(LocalizedStringKey(kind.rawValue), systemImage: kind.symbol).tag(kind)
                         }
                     }
                 }
@@ -1000,7 +1000,7 @@ struct CareLogHubView: View {
 
                     Picker("Frequency", selection: $taskFrequency) {
                         ForEach(TaskFrequency.allCases) { freq in
-                            Label(freq.rawValue, systemImage: freq.systemImage)
+                            Label(LocalizedStringKey(freq.rawValue), systemImage: freq.systemImage)
                                 .tag(freq)
                         }
                     }
@@ -1008,7 +1008,7 @@ struct CareLogHubView: View {
                     if taskFrequency == .custom {
                         Picker("Unit", selection: $taskCustomUnit) {
                             ForEach(FrequencyUnit.allCases) { unit in
-                                Label(unit.rawValue, systemImage: unit.systemImage)
+                                Label(LocalizedStringKey(unit.rawValue), systemImage: unit.systemImage)
                                     .tag(unit)
                             }
                         }
@@ -1104,7 +1104,7 @@ struct CareLogHubView: View {
 
                     Picker("Kind", selection: $taskKind) {
                         ForEach(CareTaskKind.allCases) { kind in
-                            Label(kind.rawValue, systemImage: kind.symbol).tag(kind)
+                            Label(LocalizedStringKey(kind.rawValue), systemImage: kind.symbol).tag(kind)
                         }
                     }
                 }
@@ -1114,7 +1114,7 @@ struct CareLogHubView: View {
 
                     Picker("Frequency", selection: $taskFrequency) {
                         ForEach(TaskFrequency.allCases) { freq in
-                            Label(freq.rawValue, systemImage: freq.systemImage)
+                            Label(LocalizedStringKey(freq.rawValue), systemImage: freq.systemImage)
                                 .tag(freq)
                         }
                     }
@@ -1122,7 +1122,7 @@ struct CareLogHubView: View {
                     if taskFrequency == .custom {
                         Picker("Unit", selection: $taskCustomUnit) {
                             ForEach(FrequencyUnit.allCases) { unit in
-                                Label(unit.rawValue, systemImage: unit.systemImage)
+                                Label(LocalizedStringKey(unit.rawValue), systemImage: unit.systemImage)
                                     .tag(unit)
                             }
                         }
@@ -1324,7 +1324,7 @@ private struct DayStrip: View {
     var body: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacingS) {
             HStack(spacing: AppTheme.spacingS) {
-                stepButton(systemImage: "chevron.left", label: "Previous day", delta: -1)
+                stepButton(systemImage: "chevron.backward", label: "Previous day", delta: -1)
                 VStack(spacing: 2) {
                     Text(relativeTitle)
                         .font(.headline)
@@ -1334,7 +1334,7 @@ private struct DayStrip: View {
                         .foregroundStyle(AppTheme.textSecondary)
                 }
                 .frame(maxWidth: .infinity)
-                stepButton(systemImage: "chevron.right", label: "Next day", delta: 1)
+                stepButton(systemImage: "chevron.forward", label: "Next day", delta: 1)
                 if selectedDateOffset != 0 {
                     Button("Today") {
                         withAnimation { selectedDateOffset = 0 }

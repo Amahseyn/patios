@@ -9,7 +9,7 @@ struct TaskBlueprintChip: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(template.emojiIcon)
                     .font(.title2)
-                Text(template.title)
+                Text(LocalizedStringKey(template.title))
                     .font(AppTheme.captionFont().weight(.semibold))
                     .foregroundStyle(AppTheme.textPrimary)
                     .lineLimit(2)
@@ -58,7 +58,7 @@ struct TaskBlueprintManagerView: View {
                             HStack(spacing: AppTheme.spacingM) {
                                 Text(template.emojiIcon).font(.title2)
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text(template.title)
+                                    Text(LocalizedStringKey(template.title))
                                         .font(AppTheme.headlineFont())
                                         .foregroundStyle(AppTheme.textPrimary)
                                     Text("\(template.taskKind.rawValue) · \(template.timeText) · \(template.petScopeLabel)")
@@ -66,7 +66,7 @@ struct TaskBlueprintManagerView: View {
                                         .foregroundStyle(AppTheme.textSecondary)
                                 }
                                 Spacer()
-                                Image(systemName: "chevron.right")
+                                Image(systemName: "chevron.forward")
                                     .font(.caption.weight(.semibold))
                                     .foregroundStyle(AppTheme.textSecondary.opacity(0.7))
                             }
@@ -142,7 +142,7 @@ struct TaskBlueprintEditorView: View {
                     }
                     Picker("Kind", selection: $draft.taskKind) {
                         ForEach(CareTaskKind.allCases) { kind in
-                            Label(kind.rawValue, systemImage: kind.symbol).tag(kind)
+                            Label(LocalizedStringKey(kind.rawValue), systemImage: kind.symbol).tag(kind)
                         }
                     }
                 }
@@ -173,7 +173,7 @@ struct TaskBlueprintEditorView: View {
                     DatePicker("Time", selection: $taskTime, displayedComponents: .hourAndMinute)
                     Picker("Frequency", selection: $draft.frequency) {
                         ForEach(TaskFrequency.allCases) { freq in
-                            Text(freq.rawValue).tag(freq)
+                            Text(LocalizedStringKey(freq.rawValue)).tag(freq)
                         }
                     }
                     if draft.frequency == .custom {

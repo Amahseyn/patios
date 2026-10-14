@@ -11,7 +11,7 @@ struct BasicAdBanner: View {
                 Text("Ad")
                     .font(.caption2.weight(.bold))
                     .foregroundStyle(AppTheme.textSecondary)
-                Text(ad.title)
+                Text(LocalizedStringKey(ad.title))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(AppTheme.textPrimary)
                 Text(ad.detail)

@@ -11,10 +11,10 @@ struct EmptyStateView: View {
         VStack(spacing: AppTheme.spacingM) {
             EnchantedIconBadge(systemImage: systemImage, tint: AppTheme.primary, size: 56)
             VStack(spacing: AppTheme.spacingS) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(AppTheme.titleFont(20))
                     .multilineTextAlignment(.center)
-                Text(message)
+                Text(LocalizedStringKey(message))
                     .font(AppTheme.bodyFont())
                     .foregroundStyle(AppTheme.textSecondary)
                     .multilineTextAlignment(.center)
@@ -40,11 +40,11 @@ struct LoadingStateView: View {
                 .controlSize(.large)
                 .tint(AppTheme.primary)
             VStack(spacing: AppTheme.spacingS) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(AppTheme.headlineFont())
                     .foregroundStyle(AppTheme.textPrimary)
                 if let message {
-                    Text(message)
+                    Text(LocalizedStringKey(message))
                         .font(AppTheme.bodyFont())
                         .foregroundStyle(AppTheme.textSecondary)
                         .multilineTextAlignment(.center)
@@ -68,9 +68,9 @@ struct InlineErrorCard: View {
             HStack(alignment: .top, spacing: 10) {
                 EnchantedIconBadge(systemImage: "exclamationmark.triangle.fill", tint: AppTheme.warning, size: 36)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
+                    Text(LocalizedStringKey(title))
                         .font(AppTheme.headlineFont())
-                    Text(message)
+                    Text(LocalizedStringKey(message))
                         .font(AppTheme.captionFont())
                         .foregroundStyle(AppTheme.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -109,7 +109,7 @@ struct PetKindPicker: View {
     var body: some View {
         Picker("Kind", selection: $selection) {
             ForEach(PetType.allCases) { type in
-                Label(type.rawValue, systemImage: type.systemIcon).tag(type)
+                Label(LocalizedStringKey(type.rawValue), systemImage: type.systemIcon).tag(type)
             }
         }
     }

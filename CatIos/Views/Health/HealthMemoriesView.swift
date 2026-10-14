@@ -222,7 +222,7 @@ struct HealthMemoriesView: View {
                 Section("Details") {
                     Picker("Type", selection: $newRecordType) {
                         ForEach(HealthRecordType.allCases) { type in
-                            Text(type.rawValue).tag(type)
+                            Text(LocalizedStringKey(type.rawValue)).tag(type)
                         }
                     }
 
@@ -267,7 +267,7 @@ struct HealthMemoriesView: View {
                 Section("Repeats") {
                     Picker("Frequency", selection: $newFrequency) {
                         ForEach(TaskFrequency.allCases) { freq in
-                            Label(freq.rawValue, systemImage: freq.systemImage)
+                            Label(LocalizedStringKey(freq.rawValue), systemImage: freq.systemImage)
                                 .tag(freq)
                         }
                     }
@@ -275,7 +275,7 @@ struct HealthMemoriesView: View {
                     if newFrequency == .custom {
                         Picker("Unit", selection: $newCustomUnit) {
                             ForEach(FrequencyUnit.allCases) { unit in
-                                Label(unit.rawValue, systemImage: unit.systemImage)
+                                Label(LocalizedStringKey(unit.rawValue), systemImage: unit.systemImage)
                                     .tag(unit)
                             }
                         }
@@ -318,7 +318,7 @@ struct HealthMemoriesView: View {
                 Section("Details") {
                     Picker("Type", selection: $editRecordType) {
                         ForEach(HealthRecordType.allCases) { type in
-                            Text(type.rawValue).tag(type)
+                            Text(LocalizedStringKey(type.rawValue)).tag(type)
                         }
                     }
 
@@ -363,7 +363,7 @@ struct HealthMemoriesView: View {
                 Section("Repeats") {
                     Picker("Frequency", selection: $editFrequency) {
                         ForEach(TaskFrequency.allCases) { freq in
-                            Label(freq.rawValue, systemImage: freq.systemImage)
+                            Label(LocalizedStringKey(freq.rawValue), systemImage: freq.systemImage)
                                 .tag(freq)
                         }
                     }
@@ -371,7 +371,7 @@ struct HealthMemoriesView: View {
                     if editFrequency == .custom {
                         Picker("Unit", selection: $editCustomUnit) {
                             ForEach(FrequencyUnit.allCases) { unit in
-                                Label(unit.rawValue, systemImage: unit.systemImage)
+                                Label(LocalizedStringKey(unit.rawValue), systemImage: unit.systemImage)
                                     .tag(unit)
                             }
                         }
@@ -530,7 +530,7 @@ private struct HealthRecordRow: View {
     var body: some View {
         Label {
             VStack(alignment: .leading, spacing: 4) {
-                Text(record.title)
+                Text(LocalizedStringKey(record.title))
                     .font(.body.weight(.medium))
                 HStack(spacing: 6) {
                     Text(record.dateText)
