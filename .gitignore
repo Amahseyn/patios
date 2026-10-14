@@ -84,3 +84,8 @@ Secrets.xcconfig
 CatIos/Config/DevAuthConfig.local.swift
 
 .cursor/
+
+.venv/
+venv/
+DerivedData/
+*.xcuserstate
