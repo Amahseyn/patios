@@ -42,7 +42,7 @@ struct SettingsView: View {
                 Section {
                     HStack {
                         Spacer()
-                        Text("Pet Emotion AI v1.0.0 (Prototype)")
+                        Text("Patios v1.0.0 (Prototype)")
                             .font(.caption)
                             .foregroundStyle(AppTheme.textSecondary)
                         Spacer()

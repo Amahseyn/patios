@@ -14,6 +14,8 @@ struct ProfileView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: AppTheme.spacingL) {
+                    profileSummaryCard
+
                     VStack(spacing: AppTheme.spacingS) {
                         NavigationLink {
                             PetManagementView()
@@ -75,10 +77,41 @@ struct ProfileView: View {
                 }
                 .padding(AppTheme.spacingM)
             }
-            .background(AppTheme.background.ignoresSafeArea())
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
+            .patiosScreenBackground()
+            .navigationTitle("Profile")
+            .navigationBarTitleDisplayMode(.large)
         }
+    }
+
+    private var profileSummaryCard: some View {
+        let pet = petManager.currentPet
+        return HStack(spacing: AppTheme.spacingM) {
+            ZStack {
+                Circle()
+                    .fill(AppTheme.heroGradient)
+                    .frame(width: 56, height: 56)
+                Image(systemName: "person.fill")
+                    .font(.title2)
+                    .foregroundStyle(.white)
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Pet parent")
+                    .font(AppTypography.caption.weight(.semibold))
+                    .foregroundStyle(AppTheme.textSecondary)
+                Text("Caring for \(petManager.pets.count) pet\(petManager.pets.count == 1 ? "" : "s")")
+                    .font(AppTypography.headline)
+                    .foregroundStyle(AppTheme.textPrimary)
+                Text("Focused on \(pet.name) • \(AppTheme.appDisplayName)")
+                    .font(AppTypography.caption)
+                    .foregroundStyle(AppTheme.textSecondary)
+            }
+
+            Spacer()
+        }
+        .padding(AppTheme.spacingM)
+        .cardStyle()
+        .accessibilityElement(children: .combine)
     }
 }
 

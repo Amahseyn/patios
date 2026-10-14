@@ -8,15 +8,15 @@ import UIKit
 
 enum AppTheme {
 
-    // MARK: - Brand Colors
+    // MARK: - Brand Colors (Patios — warm pet-care palette)
 
     static let primary = Color("BrandPrimary", bundle: nil)
-        .fallback(light: Color(red: 0.42, green: 0.36, blue: 0.98),
-                  dark: Color(red: 0.56, green: 0.50, blue: 1.0))
+        .fallback(light: Color(red: 0.20, green: 0.55, blue: 0.52),
+                  dark: Color(red: 0.35, green: 0.72, blue: 0.68))
 
     static let secondary = Color("BrandSecondary", bundle: nil)
-        .fallback(light: Color(red: 1.0, green: 0.65, blue: 0.42),
-                  dark: Color(red: 1.0, green: 0.70, blue: 0.48))
+        .fallback(light: Color(red: 0.95, green: 0.55, blue: 0.38),
+                  dark: Color(red: 1.0, green: 0.62, blue: 0.45))
 
     static let background = Color("BrandBackground", bundle: nil)
         .fallback(light: Color(red: 0.97, green: 0.97, blue: 0.99),
@@ -66,6 +66,21 @@ enum AppTheme {
     static let spacingL: CGFloat = 24
     static let spacingXL: CGFloat = 32
 
+    // MARK: - App identity
+
+    static let appDisplayName = "Patios"
+}
+
+// MARK: - Typography (Dynamic Type–friendly)
+
+enum AppTypography {
+    static let largeTitle = Font.largeTitle.weight(.bold)
+    static let title2 = Font.title2.weight(.bold)
+    static let headline = Font.headline.weight(.semibold)
+    static let subheadline = Font.subheadline
+    static let body = Font.body
+    static let caption = Font.caption
+    static let button = Font.headline.weight(.semibold)
 }
 
 private struct CardShadowModifier: ViewModifier {
@@ -88,6 +103,13 @@ extension View {
             .background(AppTheme.cardBackground)
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
             .cardShadow()
+    }
+
+    /// Standard screen chrome: brand background + readable default tint.
+    func patiosScreenBackground() -> some View {
+        self
+            .background(AppTheme.background.ignoresSafeArea())
+            .tint(AppTheme.primary)
     }
 }
 

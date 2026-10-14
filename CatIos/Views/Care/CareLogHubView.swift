@@ -515,7 +515,7 @@ struct CareLogHubView: View {
                         .padding(.bottom, 80)
                     }
                 }
-                .background(AppTheme.background.ignoresSafeArea())
+                .patiosScreenBackground()
 
                 Menu {
                     Button {
@@ -535,13 +535,14 @@ struct CareLogHubView: View {
                         .font(.headline.weight(.semibold))
                         .foregroundStyle(.white)
                         .frame(width: 44, height: 44)
-                        .background(Color.accentColor, in: Circle())
-                        .shadow(color: Color.accentColor.opacity(0.3), radius: 6, x: 0, y: 3)
+                        .background(AppTheme.primary, in: Circle())
+                        .shadow(color: AppTheme.primary.opacity(0.35), radius: 6, x: 0, y: 3)
                 }
+                .accessibilityLabel("Add task or pet")
                 .padding(.trailing, AppTheme.spacingM)
                 .padding(.bottom, AppTheme.spacingM)
             }
-            .navigationTitle("Tasks & Alarms")
+            .navigationTitle("Care tasks")
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $showAddTaskSheet) {
                 addTaskModalSheet
@@ -782,49 +783,7 @@ struct CareLogHubView: View {
     }
 
     private var petScopeSelectorBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                Button {
-                    withAnimation {
-                        selectedPetScopeId = PetManager.allPetsId
-                    }
-                } label: {
-                    HStack(spacing: 6) {
-                        Text("🐾")
-                        Text("All Pets")
-                    }
-                    .font(.caption.weight(.bold))
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 8)
-                    .background(selectedPetScopeId == PetManager.allPetsId ? AppTheme.primary : AppTheme.cardBackground)
-                    .foregroundStyle(selectedPetScopeId == PetManager.allPetsId ? .white : AppTheme.textPrimary)
-                    .clipShape(Capsule())
-                    .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 2)
-                }
-
-                ForEach(petManager.pets) { pet in
-                    Button {
-                        withAnimation {
-                            selectedPetScopeId = pet.id
-                        }
-                    } label: {
-                        HStack(spacing: 6) {
-                            Text(pet.avatarEmoji)
-                            Text(pet.name)
-                        }
-                        .font(.caption.weight(.semibold))
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 8)
-                        .background(selectedPetScopeId == pet.id ? Color(hex: pet.petColorHex) : AppTheme.cardBackground)
-                        .foregroundStyle(selectedPetScopeId == pet.id ? .white : AppTheme.textPrimary)
-                        .clipShape(Capsule())
-                        .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 2)
-                    }
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-        }
+        PetScopeChipBar(selectedPetScopeId: $selectedPetScopeId)
     }
 
     private var careScopeHeaderCard: some View {
@@ -918,17 +877,13 @@ struct CareLogHubView: View {
         }
 
         if filteredTasks.isEmpty {
-            VStack(spacing: 8) {
-                Text(emptyStateText)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(AppTheme.textPrimary)
-                Text(emptyStateSubtext)
-                    .font(.caption)
-                    .foregroundStyle(AppTheme.textSecondary)
-                    .multilineTextAlignment(.center)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 24)
+            EmptyStateView(
+                systemImage: selectedTaskStatus == .overdue ? "checkmark.seal.fill" : "checklist",
+                title: emptyStateText,
+                message: emptyStateSubtext,
+                actionTitle: selectedTaskStatus == .overdue ? nil : "Add task",
+                action: selectedTaskStatus == .overdue ? nil : { showAddTaskSheet = true }
+            )
             .cardStyle()
         } else {
             ForEach(expandedTaskItems) { item in

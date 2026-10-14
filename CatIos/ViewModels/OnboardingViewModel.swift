@@ -30,20 +30,20 @@ final class OnboardingViewModel: ObservableObject {
         OnboardingPage(
             systemImage: nil,
             imageName: "AppLogo",
-            title: "Welcome to AI Pet Companion",
-            description: "Track health, analyze emotions, and manage daily care seamlessly for cats and dogs."
+            title: "Welcome to Patios",
+            description: "Your warm, modern companion for daily pet care—health, tasks, and understanding how your pet feels."
         ),
         OnboardingPage(
             systemImage: "waveform.circle.fill",
             imageName: nil,
-            title: "AI-Powered Emotion & Voice",
-            description: "Understand your pet's mood and vocal sound patterns instantly."
+            title: "Voice & emotion insights",
+            description: "Record sounds and get friendly AI interpretations of mood and behavior patterns."
         ),
         OnboardingPage(
             systemImage: "heart.circle.fill",
             imageName: nil,
-            title: "Personalized Daily Care",
-            description: "Schedule reminders and maintain health records."
+            title: "Care that fits your routine",
+            description: "Smart reminders, health timelines, and an assistant that knows your pets."
         )
     ]
 

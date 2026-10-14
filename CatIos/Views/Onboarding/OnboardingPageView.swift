@@ -16,15 +16,18 @@ struct OnboardingPageView: View {
         VStack(spacing: AppTheme.spacingXL) {
             Spacer()
 
+            onboardingHero
+                .scaleEffect(animateIn ? 1 : 0.92)
+                .opacity(animateIn ? 1 : 0)
 
             VStack(spacing: AppTheme.spacingM) {
                 Text(page.title)
-                    .font(.title.weight(.bold))
+                    .font(AppTypography.title2)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(AppTheme.textPrimary)
 
                 Text(page.description)
-                    .font(.body)
+                    .font(AppTypography.body)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(AppTheme.textSecondary)
                     .padding(.horizontal, AppTheme.spacingL)
@@ -39,6 +42,29 @@ struct OnboardingPageView: View {
             withAnimation(.spring(response: 0.55, dampingFraction: 0.75)) {
                 animateIn = true
             }
+        }
+    }
+
+    @ViewBuilder
+    private var onboardingHero: some View {
+        if let imageName = page.imageName {
+            Image(imageName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 140, height: 140)
+                .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
+                .shadow(color: AppTheme.shadowColor, radius: 12, y: 6)
+                .accessibilityLabel("Patios app logo")
+        } else if let systemImage = page.systemImage {
+            ZStack {
+                Circle()
+                    .fill(AppTheme.heroGradient)
+                    .frame(width: 120, height: 120)
+                Image(systemName: systemImage)
+                    .font(.system(size: 52))
+                    .foregroundStyle(.white)
+            }
+            .shadow(color: AppTheme.primary.opacity(0.35), radius: 16, y: 8)
         }
     }
 }

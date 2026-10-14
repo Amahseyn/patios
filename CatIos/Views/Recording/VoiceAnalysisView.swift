@@ -33,8 +33,8 @@ struct VoiceAnalysisView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(AppTheme.background.ignoresSafeArea())
-            .navigationTitle("Voice Analysis")
+            .patiosScreenBackground()
+            .navigationTitle("Voice scan")
             .navigationBarTitleDisplayMode(.inline)
         }
     }

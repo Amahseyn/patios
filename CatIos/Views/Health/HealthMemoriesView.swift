@@ -6,7 +6,7 @@
 import SwiftUI
 
 enum HealthSubTab: String, CaseIterable, Identifiable {
-    case healthTimeline = "Health Timeline 💉"
+    case healthTimeline = "Timeline"
 
     var id: String { rawValue }
 }
@@ -86,8 +86,8 @@ struct HealthMemoriesView: View {
                     .padding(.bottom, 40)
                 }
             }
-            .background(AppTheme.background.ignoresSafeArea())
-            .navigationTitle("Health & Vaccination Care")
+            .patiosScreenBackground()
+            .navigationTitle("Health")
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $showAddHealthSheet) {
                 addHealthRecordSheet
@@ -116,51 +116,7 @@ struct HealthMemoriesView: View {
     }
 
     private var petScopeSelectorBar: some View {
-        HStack(spacing: 8) {
-            Button {
-                withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
-                    selectedPetScopeId = PetManager.allPetsId
-                }
-            } label: {
-                Text("🐾 All")
-                    .font(.caption2.weight(.medium))
-                    .foregroundStyle(selectedPetScopeId == PetManager.allPetsId ? .white : AppTheme.textSecondary)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(selectedPetScopeId == PetManager.allPetsId ? AppTheme.primary : AppTheme.cardBackground)
-                    .clipShape(Capsule())
-            }
-            .buttonStyle(.plain)
-
-            ForEach(petManager.pets) { pet in
-                Button {
-                    withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
-                        selectedPetScopeId = pet.id
-                    }
-                } label: {
-                    HStack(spacing: 4) {
-                        Text(pet.avatarEmoji)
-                        Text(pet.name)
-                            .font(.caption2.weight(.medium))
-                    }
-                    .foregroundStyle(selectedPetScopeId == pet.id ? .white : AppTheme.textSecondary)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(selectedPetScopeId == pet.id ? Color(hex: pet.petColorHex) : AppTheme.cardBackground)
-                    .clipShape(Capsule())
-                }
-                .buttonStyle(.plain)
-            }
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 4)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(AppTheme.cardBackground)
-                .shadow(color: Color.black.opacity(0.04), radius: 2, x: 0, y: 1)
-        )
-        .padding(.horizontal, 16)
-        .padding(.top, 4)
+        PetScopeChipBar(selectedPetScopeId: $selectedPetScopeId)
     }
 
     private var healthTimelineView: some View {
@@ -219,6 +175,17 @@ struct HealthMemoriesView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color.orange.opacity(0.12))
                 .clipShape(RoundedRectangle(cornerRadius: 16))
+            }
+
+            if filteredHealthRecords.isEmpty {
+                EmptyStateView(
+                    systemImage: "syringe",
+                    title: "No health records yet",
+                    message: "Track vaccines, vet visits, and medications. Your reminders will show up here too.",
+                    actionTitle: "Add record",
+                    action: { showAddHealthSheet = true }
+                )
+                .cardStyle()
             }
 
             ForEach(filteredHealthRecords) { rec in

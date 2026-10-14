@@ -63,7 +63,7 @@ struct PetAIAssistantView: View {
                 inputFieldBar
             }
             .background(AppTheme.background.ignoresSafeArea())
-            .navigationTitle("Ask \(petManager.currentPet.name) AI")
+            .navigationTitle("Patios AI")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 if messages.isEmpty {
