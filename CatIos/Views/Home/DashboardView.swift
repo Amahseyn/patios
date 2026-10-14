@@ -54,7 +54,7 @@ struct DashboardView: View {
                 }
             }
             .background(AppTheme.background.ignoresSafeArea())
-            .navigationTitle("Pet Care Companion")
+            .navigationTitle("Overview")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -266,7 +266,7 @@ struct DashboardView: View {
                     Text("Today's Care for \(pet.name)")
                         .font(.headline)
                         .foregroundStyle(AppTheme.textPrimary)
-                    Text("Daily companion tracking summary")
+                    Text("Daily care summary")
                         .font(.caption)
                         .foregroundStyle(AppTheme.textSecondary)
                 }

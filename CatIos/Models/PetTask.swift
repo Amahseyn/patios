@@ -65,7 +65,33 @@ extension PetTaskSuggestion {
         PetTaskSuggestion(id: "dog_bath", title: "Bath", category: .grooming, emoji: "🛁", petType: .dog),
         PetTaskSuggestion(id: "dog_vet", title: "Vet Appointment", category: .health, emoji: "🩺", petType: .dog),
         PetTaskSuggestion(id: "dog_med", title: "Medication", category: .health, emoji: "💊", petType: .dog),
-        PetTaskSuggestion(id: "dog_vax", title: "Vaccination", category: .health, emoji: "💉", petType: .dog)
+        PetTaskSuggestion(id: "dog_vax", title: "Vaccination", category: .health, emoji: "💉", petType: .dog),
+
+        PetTaskSuggestion(id: "bird_feed", title: "Fresh Food", category: .feeding, emoji: "🌾", petType: .bird),
+        PetTaskSuggestion(id: "bird_water", title: "Change Water", category: .activities, emoji: "💧", petType: .bird),
+        PetTaskSuggestion(id: "bird_cage", title: "Refresh the Cage", category: .grooming, emoji: "🪺", petType: .bird),
+
+        PetTaskSuggestion(id: "rabbit_hay", title: "Fresh Hay", category: .feeding, emoji: "🌾", petType: .rabbit),
+        PetTaskSuggestion(id: "rabbit_water", title: "Change Water", category: .activities, emoji: "💧", petType: .rabbit),
+        PetTaskSuggestion(id: "rabbit_habitat", title: "Refresh the Habitat", category: .grooming, emoji: "🪺", petType: .rabbit),
+
+        PetTaskSuggestion(id: "horse_feed", title: "Feed", category: .feeding, emoji: "🌾", petType: .horse),
+        PetTaskSuggestion(id: "horse_water", title: "Check Water", category: .activities, emoji: "💧", petType: .horse),
+        PetTaskSuggestion(id: "horse_groom", title: "Groom", category: .grooming, emoji: "🧼", petType: .horse),
+
+        PetTaskSuggestion(id: "fish_feed", title: "Feed", category: .feeding, emoji: "🌾", petType: .fish),
+        PetTaskSuggestion(id: "fish_water", title: "Check the Water", category: .activities, emoji: "💧", petType: .fish),
+
+        PetTaskSuggestion(id: "hamster_feed", title: "Fresh Food", category: .feeding, emoji: "🌾", petType: .hamster),
+        PetTaskSuggestion(id: "hamster_water", title: "Change Water", category: .activities, emoji: "💧", petType: .hamster),
+        PetTaskSuggestion(id: "hamster_habitat", title: "Refresh the Habitat", category: .grooming, emoji: "🪺", petType: .hamster),
+
+        PetTaskSuggestion(id: "reptile_feed", title: "Feed", category: .feeding, emoji: "🌾", petType: .reptile),
+        PetTaskSuggestion(id: "reptile_habitat", title: "Check Heat and Water", category: .activities, emoji: "💧", petType: .reptile),
+
+        PetTaskSuggestion(id: "other_feed", title: "Feed", category: .feeding, emoji: "🌾", petType: .other),
+        PetTaskSuggestion(id: "other_water", title: "Fresh Water", category: .activities, emoji: "💧", petType: .other),
+        PetTaskSuggestion(id: "other_care", title: "Gentle Care", category: .grooming, emoji: "🐾", petType: .other)
     ]
 
     static func suggestions(for petType: PetType) -> [PetTaskSuggestion] {

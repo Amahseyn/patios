@@ -9,8 +9,22 @@ import Combine
 class PetManager: ObservableObject {
     static let shared = PetManager()
 
-    @Published var pets: [PetProfile] = PetProfile.mockList
-    @Published var selectedPetId: UUID = PetProfile.mockLuna.id
+    func replaceFromRemote(_ pets: [PetProfile]) {
+        self.pets = pets
+        if pets.contains(where: { $0.id == selectedPetId }) == false {
+            selectedPetId = pets.first?.id ?? selectedPetId
+        }
+    }
+
+    @Published var pets: [PetProfile] = PetProfile.mockList {
+        didSet { persist() }
+    }
+    @Published var selectedPetId: UUID = PetProfile.mockLuna.id {
+        didSet { persist() }
+    }
+
+    private let database: AppDatabase
+    private var isReady = false
 
     static let allPetsId = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
 
@@ -32,26 +46,51 @@ class PetManager: ObservableObject {
         return total / pets.count
     }
 
+    private init() {
+        database = .shared
+        if let saved = database.loadPets() {
+            pets = saved.pets
+            selectedPetId = saved.selectedPetId
+        }
+        isReady = true
+        if database.loadPets() == nil {
+            persist()
+        }
+    }
+
     func selectPet(id: UUID) {
         selectedPetId = id
     }
 
-    func addPet(name: String, breed: String, age: AgeValue, petType: PetType = .cat, customPetTypeName: String? = nil, avatarEmoji: String? = nil, petColorHex: String? = nil) {
+    func adoptOnboardingPet(name: String, petType: PetType, gender: PetGender) {
+        let sampleIds: Set<UUID> = [PetProfile.mockLuna.id, PetProfile.mockMilo.id, PetProfile.mockBuddy.id]
+        let replacingSamples = !pets.isEmpty && pets.allSatisfy { sampleIds.contains($0.id) }
+        addPet(name: name, breed: "", age: AgeValue(years: 1, months: 0), petType: petType, gender: gender)
+        guard replacingSamples else { return }
+        pets.removeAll { sampleIds.contains($0.id) }
+        if let kept = pets.last {
+            selectedPetId = kept.id
+            CareTaskStore.shared.replaceWithStarter(petId: kept.id)
+            HealthRecordStore.shared.clearIfOnlySamplePets()
+        }
+    }
+
+    func addPet(name: String, breed: String, age: AgeValue, petType: PetType = .cat, customPetTypeName: String? = nil, avatarEmoji: String? = nil, petColorHex: String? = nil, gender: PetGender = .female) {
         let finalAvatar = avatarEmoji ?? petType.defaultAvatar
         let finalBreed = breed.isEmpty ? petType.defaultBreed : breed
-        let memoryTitle = petType == .cat ? "Welcome to the family!" : "Welcome to the pack!"
+        let memoryTitle = "Welcome home."
 
         let newPet = PetProfile(
             id: UUID(),
             name: name,
             age: age,
             breed: finalBreed,
-            gender: .female,
+            gender: gender,
             petType: petType,
             customPetTypeName: customPetTypeName,
             wellnessScore: 90,
             avatarEmoji: finalAvatar,
-            statusSummary: "Healthy & Happy",
+            statusSummary: "Bright and well",
             todayMoodEmoji: "😊",
             todayMoodTitle: "Happy",
             moodConfidence: 90,
@@ -60,7 +99,7 @@ class PetManager: ObservableObject {
             needsAttention: false,
             userRole: .owner,
             birthDate: nil,
-            petColorHex: petColorHex ?? "#9B59B6",
+            petColorHex: petColorHex ?? petType.accentHex,
             playfulness: 80,
             social: 80,
             vocal: 60,
@@ -76,6 +115,8 @@ class PetManager: ObservableObject {
     }
 
     func removePet(id: UUID) {
+        CareTaskStore.shared.detachPet(id)
+        HealthRecordStore.shared.detachPet(id)
         pets.removeAll(where: { $0.id == id })
         if selectedPetId == id, let first = pets.first {
             selectedPetId = first.id
@@ -91,5 +132,11 @@ class PetManager: ObservableObject {
     func updatePet(_ pet: PetProfile) {
         guard let index = pets.firstIndex(where: { $0.id == pet.id }) else { return }
         pets[index] = pet
+    }
+
+    private func persist() {
+        guard isReady else { return }
+        database.savePets(pets, selectedPetId: selectedPetId)
+        NotificationCenter.default.post(name: .householdDidChange, object: nil)
     }
 }

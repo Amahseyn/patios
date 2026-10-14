@@ -70,3 +70,22 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# Leftover local Python venv from the old monorepo (API is ../backend)
+backend/
+
+.derived/
+
+# Local secrets / machine-only config
+.env
+.env.*
+*.pem
+Secrets.xcconfig
+CatIos/Config/DevAuthConfig.local.swift
+
+.cursor/
+
+.venv/
+venv/
+DerivedData/
+*.xcuserstate

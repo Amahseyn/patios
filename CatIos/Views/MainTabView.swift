@@ -1,68 +1,85 @@
-//
-//  MainTabView.swift
-//  CatIos
-//
-
 import SwiftUI
 
-enum AppTab: Int, CaseIterable, Identifiable {
-    case careLog = 0
-    case healthMemories = 1
-    case aiAssistant = 2
-    case profile = 3
+enum AppTab: Int, CaseIterable, Identifiable, Hashable {
+    case home = 0
+    case careLog = 1
+    case healthMemories = 2
+    case aiAssistant = 3
+    case profile = 4
 
     var id: Int { rawValue }
 
     var title: String {
         switch self {
-        case .careLog: return "Tasks"
+        case .home: return "Home"
+        case .careLog: return "Care"
         case .healthMemories: return "Health"
-        case .aiAssistant: return "AI Assistant"
-        case .profile: return "Profile"
+        case .aiAssistant: return "Assist"
+        case .profile: return "You"
         }
     }
 
-    var icon: String {
+    var systemImage: String {
         switch self {
-        case .careLog: return "heart.text.square.fill"
-        case .healthMemories: return "syringe.fill"
-        case .aiAssistant: return "sparkles"
+        case .home: return "house.fill"
+        case .careLog: return "checkmark.circle.fill"
+        case .healthMemories: return "cross.case.fill"
+        case .aiAssistant: return "bubble.left.and.bubble.right.fill"
         case .profile: return "person.crop.circle.fill"
         }
     }
 }
 
 struct MainTabView: View {
-    @State private var selectedTab: AppTab = .careLog
     @StateObject private var petManager = PetManager.shared
+    @StateObject private var taskStore = CareTaskStore.shared
+    @StateObject private var healthStore = HealthRecordStore.shared
+    @StateObject private var authSession = AuthSession.shared
+    @StateObject private var householdSync = HouseholdSync.shared
+    @StateObject private var assistantSessions = AssistantSessionStore.shared
+    @StateObject private var membership = MembershipStore.shared
+    @StateObject private var wellness = WellnessStore.shared
+    @StateObject private var analytics = AnalyticsStore.shared
+    @State private var selectedTab: AppTab = .home
+    @State private var showPricing = false
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            CareLogHubView()
-            .tabItem {
-                Label(AppTab.careLog.title, systemImage: AppTab.careLog.icon)
+            Tab(AppTab.home.title, systemImage: AppTab.home.systemImage, value: AppTab.home) {
+                HomeOverviewView(selectedTab: $selectedTab)
             }
-            .tag(AppTab.careLog)
-
-            HealthMemoriesView()
-            .tabItem {
-                Label(AppTab.healthMemories.title, systemImage: AppTab.healthMemories.icon)
+            Tab(AppTab.careLog.title, systemImage: AppTab.careLog.systemImage, value: AppTab.careLog) {
+                CareLogHubView()
             }
-            .tag(AppTab.healthMemories)
-
-            ProfileAIView()
-            .tabItem {
-                Label(AppTab.aiAssistant.title, systemImage: AppTab.aiAssistant.icon)
+            Tab(AppTab.healthMemories.title, systemImage: AppTab.healthMemories.systemImage, value: AppTab.healthMemories) {
+                HealthMemoriesView()
             }
-            .tag(AppTab.aiAssistant)
-
-            ProfileView()
-            .tabItem {
-                Label(AppTab.profile.title, systemImage: AppTab.profile.icon)
+            Tab(AppTab.aiAssistant.title, systemImage: AppTab.aiAssistant.systemImage, value: AppTab.aiAssistant) {
+                ProfileAIView()
             }
-            .tag(AppTab.profile)
+            Tab(AppTab.profile.title, systemImage: AppTab.profile.systemImage, value: AppTab.profile) {
+                ProfileView()
+            }
         }
+        .tint(AppTheme.primary)
         .environmentObject(petManager)
+        .environmentObject(taskStore)
+        .environmentObject(healthStore)
+        .environmentObject(authSession)
+        .environmentObject(householdSync)
+        .environmentObject(assistantSessions)
+        .environmentObject(membership)
+        .environmentObject(wellness)
+        .environmentObject(analytics)
+        .sheet(isPresented: $showPricing) {
+            PaywallView()
+        }
+        .onAppear {
+            householdSync.observeStores()
+            CareReminderScheduler.shared.reschedule(tasks: taskStore.tasks)
+            healthStore.applyNotificationPreference()
+            Task { await householdSync.connect() }
+        }
     }
 }
 

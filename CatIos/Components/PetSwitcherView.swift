@@ -143,15 +143,10 @@ struct PetSwitcherView: View {
                     }
 
                     Section("Pet Type") {
-                    Picker("Pet Type", selection: $draftPetType) {
-                        ForEach([PetType.cat, .dog, .other]) { type in
-                            Text(type.rawValue).tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
+                    PetKindPicker(selection: $draftPetType)
 
                     if draftPetType == .other {
-                            TextField("Enter pet type (e.g. Bird, Horse)", text: $draftCustomPetTypeName)
+                            TextField("Name this kind (e.g. ferret, goat, guinea pig)", text: $draftCustomPetTypeName)
                                 .textInputAutocapitalization(.words)
                                 .autocorrectionDisabled(true)
                         }
@@ -259,8 +254,6 @@ struct AddPetModalView: View {
     @State private var customPetTypeName: String = ""
     @State private var avatarEmoji: String = "🐱"
 
-    private let petTypeOptions: [PetType] = [.cat, .dog, .other]
-
     var availableEmojis: [String] {
         petType.avatarEmojis
     }
@@ -269,13 +262,7 @@ struct AddPetModalView: View {
         NavigationStack {
             Form {
                 Section("Pet Type") {
-                    Picker("Pet Type", selection: $petType) {
-                        ForEach(petTypeOptions) { type in
-                            Text(type.rawValue)
-                                .tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
+                    PetKindPicker(selection: $petType)
                     .onChange(of: petType) { newType in
                         avatarEmoji = newType.defaultAvatar
                         if newType != .other {
@@ -284,7 +271,7 @@ struct AddPetModalView: View {
                     }
 
                     if petType == .other {
-                        TextField("Enter pet type (e.g. Bird, Horse)", text: $customPetTypeName)
+                        TextField("Name this kind (e.g. ferret, goat, guinea pig)", text: $customPetTypeName)
                             .textInputAutocapitalization(.words)
                             .autocorrectionDisabled(true)
                     }

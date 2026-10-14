@@ -8,6 +8,7 @@ import SwiftUI
 
 struct PetManagementView: View {
     @EnvironmentObject private var petManager: PetManager
+    @EnvironmentObject private var householdSync: HouseholdSync
     @Environment(\.dismiss) private var dismiss
 
     @State private var showAddPetSheet = false
@@ -70,33 +71,134 @@ struct PetManagementView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: AppTheme.spacingL) {
-                    petsListSection
-
-                    addPetButton
+        List {
+            Section {
+                VStack(alignment: .leading, spacing: AppTheme.spacingS) {
+                    Text("\(petManager.pets.count) pet\(petManager.pets.count == 1 ? "" : "s")")
+                        .font(AppTheme.titleFont(22))
+                        .foregroundStyle(AppTheme.textPrimary)
+                    Text("Tap a profile to edit. Swipe to remove.")
+                        .font(AppTheme.captionFont())
+                        .foregroundStyle(AppTheme.textSecondary)
                 }
-                .padding(AppTheme.spacingM)
+                .padding(.vertical, 4)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
             }
-            .scrollDismissesKeyboard(.interactively)
-            .background(AppTheme.background.ignoresSafeArea())
-            .navigationTitle("My Pets")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Menu {
-                        Picker("Sort by", selection: $sortOption) {
-                            ForEach(SortOption.allCases, id: \.self) { opt in
-                                Text(opt.rawValue).tag(opt)
+
+            if filteredPets.isEmpty {
+                Section {
+                    EmptyStateView(
+                        systemImage: searchText.isEmpty ? "pawprint.circle" : "magnifyingglass",
+                        title: searchText.isEmpty ? "No pets yet" : "No matches",
+                        message: searchText.isEmpty
+                            ? "Add a pet to personalize tasks, health records, and assistant answers."
+                            : "Try another name or breed.",
+                        actionTitle: searchText.isEmpty && householdSync.canMutate ? "Add pet" : nil,
+                        action: searchText.isEmpty && householdSync.canMutate ? { showAddPetSheet = true } : nil
+                    )
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets())
+                }
+            } else {
+                Section {
+                    ForEach(filteredPets) { pet in
+                        Button {
+                            guard householdSync.canMutate else { return }
+                            editingPetId = pet.id
+                            loadDraft(from: pet)
+                            showEditPetSheet = true
+                        } label: {
+                            HStack(spacing: AppTheme.spacingM) {
+                                Text(pet.avatarEmoji)
+                                    .font(.title)
+                                    .frame(width: 48, height: 48)
+                                    .background {
+                                        Circle()
+                                            .fill(Color(hex: pet.petColorHex).opacity(0.22))
+                                            .overlay {
+                                                Circle()
+                                                    .strokeBorder(
+                                                        pet.id == petManager.selectedPetId ? AppTheme.primary : Color.clear,
+                                                        lineWidth: 2
+                                                    )
+                                            }
+                                    }
+                                VStack(alignment: .leading, spacing: 2) {
+                                    HStack {
+                                        Text(pet.name)
+                                            .font(AppTheme.headlineFont())
+                                            .foregroundStyle(AppTheme.textPrimary)
+                                        if pet.id == petManager.selectedPetId {
+                                            Text("Active")
+                                                .font(.caption2.weight(.bold))
+                                                .foregroundStyle(AppTheme.primary)
+                                                .padding(.horizontal, 6)
+                                                .padding(.vertical, 2)
+                                                .background(Capsule().fill(AppTheme.primary.opacity(0.12)))
+                                        }
+                                    }
+                                    Text("\(pet.breed.isEmpty ? pet.petType.rawValue : pet.breed) · \(pet.age.displayText)")
+                                        .font(AppTheme.captionFont())
+                                        .foregroundStyle(AppTheme.textSecondary)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(AppTheme.textSecondary.opacity(0.6))
+                            }
+                            .padding(.vertical, 4)
+                        }
+                        .buttonStyle(.plain)
+                        .listRowBackground(
+                            RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium, style: .continuous)
+                                .fill(AppTheme.cardBackground)
+                                .padding(.vertical, 2)
+                        )
+                        .swipeActions(edge: .trailing, allowsFullSwipe: householdSync.canMutate) {
+                            if householdSync.canMutate {
+                                Button("Delete", role: .destructive) {
+                                    petToDelete = pet.id
+                                    showDeleteAlert = true
+                                }
                             }
                         }
-                    } label: {
-                        Image(systemName: "arrow.up.arrow.down")
                     }
                 }
             }
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search pets")
+        }
+        .fantasyScreen()
+        .navigationTitle("Pets")
+        .fantasyNavigation()
+        .searchable(text: $searchText, prompt: "Search by name or breed")
+        .toolbar {
+            if householdSync.canMutate {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Add", systemImage: "plus") {
+                    draftName = ""
+                    draftBreed = ""
+                    draftAge = AgeValue(years: 1, months: 0)
+                    draftPetType = .cat
+                    draftCustomPetTypeName = ""
+                    draftGender = .female
+                    draftAvatarEmoji = "🐱"
+                    draftPetColorHex = "#9B59B6"
+                    hasChosenPetType = false
+                    showAddPetSheet = true
+                }
+            }
+            }
+            ToolbarItem(placement: .topBarLeading) {
+                Menu {
+                    Picker("Sort", selection: $sortOption) {
+                        ForEach(SortOption.allCases, id: \.self) { opt in
+                            Text(opt.rawValue).tag(opt)
+                        }
+                    }
+                } label: {
+                    Image(systemName: "arrow.up.arrow.down")
+                }
+            }
         }
         .sheet(isPresented: $showAddPetSheet) { addPetModal }
         .sheet(isPresented: $showEditPetSheet) { editPetModal }
@@ -111,7 +213,7 @@ struct PetManagementView: View {
                 petToDelete = nil
             }
         } message: {
-            Text("This action cannot be undone.")
+            Text("This cannot be undone.")
         }
     }
 
@@ -130,147 +232,11 @@ struct PetManagementView: View {
         ("Black", "#2D3436")
     ]
 
-    private var petsListSection: some View {
-        VStack(alignment: .leading, spacing: AppTheme.spacingM) {
-            Text("All Pets (\(filteredPets.count))")
-                .font(.headline)
-                .foregroundStyle(AppTheme.textPrimary)
-
-            if filteredPets.isEmpty {
-                VStack(spacing: AppTheme.spacingM) {
-                    Text("No pets found")
-                        .font(.subheadline)
-                        .foregroundStyle(AppTheme.textSecondary)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 32)
-                .cardStyle()
-            } else {
-                VStack(spacing: AppTheme.spacingM) {
-                    ForEach(filteredPets) { pet in
-                        petRow(pet)
-                    }
-                }
-            }
-        }
-    }
-
-    private func petRow(_ pet: PetProfile) -> some View {
-        HStack(spacing: AppTheme.spacingM) {
-            ZStack {
-                Circle()
-                    .fill(Color(hex: pet.petColorHex).opacity(0.15))
-                    .frame(width: 54, height: 54)
-                Text(pet.avatarEmoji)
-                    .font(.system(size: 32))
-            }
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text("\(pet.avatarEmoji) \(pet.name)")
-                    .font(.title3.weight(.bold))
-                    .foregroundStyle(AppTheme.textPrimary)
-
-                Text("\(pet.breed) • \(pet.age.displayText)")
-                    .font(.caption)
-                    .foregroundStyle(AppTheme.textSecondary)
-            }
-
-            Spacer()
-
-            Button {
-                editingPetId = pet.id
-                loadDraft(from: pet)
-                showEditPetSheet = true
-            } label: {
-                VStack(spacing: 2) {
-                    Image(systemName: "pencil")
-                        .font(.system(size: 20))
-                    Text("Edit")
-                        .font(.caption2.weight(.semibold))
-                }
-                .foregroundStyle(AppTheme.primary)
-                .frame(width: 56, height: 44)
-                .background(AppTheme.primary.opacity(0.12))
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-            }
-
-            Button {
-                petToDelete = pet.id
-                showDeleteAlert = true
-            } label: {
-                VStack(spacing: 2) {
-                    Image(systemName: "trash")
-                        .font(.system(size: 20))
-                    Text("Delete")
-                        .font(.caption2.weight(.semibold))
-                }
-                .foregroundStyle(.red)
-                .frame(width: 56, height: 44)
-                .background(Color.red.opacity(0.12))
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-            }
-        }
-        .padding(AppTheme.spacingM)
-        .cardStyle()
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            Button {
-                petToDelete = pet.id
-                showDeleteAlert = true
-            } label: {
-                Label("Delete", systemImage: "trash")
-            }
-            .tint(.red)
-
-            Button {
-                editingPetId = pet.id
-                loadDraft(from: pet)
-                showEditPetSheet = true
-            } label: {
-                Label("Edit", systemImage: "pencil")
-            }
-            .tint(AppTheme.primary)
-        }
-    }
-
-    private var addPetButton: some View {
-        Button {
-            draftName = ""
-            draftBreed = ""
-            draftAge = AgeValue(years: 1, months: 0)
-            draftPetType = .cat
-            draftCustomPetTypeName = ""
-            draftGender = .female
-            draftAvatarEmoji = "🐱"
-            draftPetColorHex = "#9B59B6"
-            hasChosenPetType = false
-            showAddPetSheet = true
-        } label: {
-            HStack {
-                Image(systemName: "plus.circle.fill")
-                    .font(.title3)
-                Text("Add New Pet")
-                    .font(.headline.weight(.semibold))
-            }
-            .foregroundStyle(AppTheme.primary)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
-            .background(AppTheme.primary.opacity(0.1))
-            .clipShape(RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium))
-        }
-        .padding(.top, AppTheme.spacingM)
-    }
-
     private var addPetModal: some View {
         NavigationStack {
             Form {
                 Section("Pet Type") {
-                    Picker("Pet Type", selection: $draftPetType) {
-                        ForEach([PetType.cat, .dog, .other]) { type in
-                            Text(type.rawValue)
-                                .tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
+                    PetKindPicker(selection: $draftPetType)
                     .onChange(of: draftPetType) { _ in
                         hasChosenPetType = true
                         if draftPetType != .other {
@@ -279,7 +245,7 @@ struct PetManagementView: View {
                     }
 
                     if draftPetType == .other {
-                        TextField("Enter pet type (e.g. Bird, Horse)", text: $draftCustomPetTypeName)
+                        TextField("Name this kind (e.g. ferret, goat, guinea pig)", text: $draftCustomPetTypeName)
                             .textInputAutocapitalization(.words)
                             .autocorrectionDisabled(true)
                     }
@@ -406,12 +372,7 @@ struct PetManagementView: View {
         NavigationStack {
             Form {
                 Section("Pet Type") {
-                    Picker("Pet Type", selection: $draftPetType) {
-                        ForEach([PetType.cat, .dog, .other]) { type in
-                            Text(type.rawValue).tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
+                    PetKindPicker(selection: $draftPetType)
                     .onChange(of: draftPetType) { _ in
                         if draftPetType != .other {
                             draftCustomPetTypeName = ""
@@ -419,7 +380,7 @@ struct PetManagementView: View {
                     }
 
                     if draftPetType == .other {
-                        TextField("Enter pet type (e.g. Bird, Horse)", text: $draftCustomPetTypeName)
+                        TextField("Name this kind (e.g. ferret, goat, guinea pig)", text: $draftCustomPetTypeName)
                             .textInputAutocapitalization(.words)
                             .autocorrectionDisabled(true)
                     }

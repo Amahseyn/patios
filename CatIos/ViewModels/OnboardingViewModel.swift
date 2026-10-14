@@ -1,8 +1,3 @@
-//
-//  OnboardingViewModel.swift
-//  CatEmotionAI
-//
-
 import SwiftUI
 import Combine
 
@@ -12,77 +7,54 @@ struct OnboardingPage: Identifiable {
     let imageName: String?
     let title: String
     let description: String
-}
-
-struct OnboardingQuestion: Identifiable {
-    let id = UUID()
-    let title: String
-    let subtitle: String
-    let options: [String]
+    let tintIndex: Int
 }
 
 @MainActor
 final class OnboardingViewModel: ObservableObject {
     @Published var currentPage: Int = 0
-    @Published var selectedAnswers: [Int: String] = [:]
+    @Published var petName: String = ""
+    @Published var petType: PetType = .cat
+    @Published var petGender: PetGender = .female
 
     let pages: [OnboardingPage] = [
         OnboardingPage(
             systemImage: nil,
             imageName: "AppLogo",
-            title: "Welcome to AI Pet Companion",
-            description: "Track health, analyze emotions, and manage daily care seamlessly for cats and dogs."
+            title: "Welcome to Patios",
+            description: "Keep meals, medication, walks, and vet dates in one place — for every pet in your household.",
+            tintIndex: 0
         ),
         OnboardingPage(
-            systemImage: "waveform.circle.fill",
+            systemImage: "cross.case.fill",
             imageName: nil,
-            title: "AI-Powered Emotion & Voice",
-            description: "Understand your pet's mood and vocal sound patterns instantly."
+            title: "Health you can act on",
+            description: "Log vaccines and visits, then get reminders before the next due date so nothing slips.",
+            tintIndex: 2
         ),
         OnboardingPage(
-            systemImage: "heart.circle.fill",
+            systemImage: "icloud.fill",
             imageName: nil,
-            title: "Personalized Daily Care",
-            description: "Schedule reminders and maintain health records."
+            title: "Works on this iPhone first",
+            description: "Your household stays on device. Sign in later from You to sync with family and other devices.",
+            tintIndex: 4
         )
     ]
 
-    let questions: [OnboardingQuestion] = [
-        OnboardingQuestion(
-            title: "What type of pet do you have?",
-            subtitle: "Helps us customize the experience for your pet.",
-            options: ["Cat 🐱", "Dog 🐶", "Both 🐱🐶"]
-        ),
-        OnboardingQuestion(
-            title: "How many pets do you have?",
-            subtitle: "Helps us customize your multi-pet management experience.",
-            options: ["1 Pet 🐾", "2 Pets 🐾🐾", "3+ Pets 🐈‍⬛"]
-        ),
-        OnboardingQuestion(
-            title: "What is your main care goal?",
-            subtitle: "We'll tailor your daily dashboard and smart reminders.",
-            options: ["Health & Vaccines 💉", "Behavior & Mood 🧠"]
-        )
-    ]
+    var totalSteps: Int { pages.count + 1 }
 
-    var totalSteps: Int {
-        pages.count + questions.count
-    }
-
-    var isQuestionPage: Bool {
-        currentPage >= pages.count
-    }
+    var isPetPage: Bool { currentPage >= pages.count }
 
     var isLastPage: Bool { currentPage == totalSteps - 1 }
 
-    func selectOption(_ option: String) {
-        let questionIndex = currentPage - pages.count
-        selectedAnswers[questionIndex] = option
+    var canFinish: Bool {
+        !petName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     func advance() {
         if isLastPage {
-            complete()
+            guard canFinish else { return }
+            complete(createPet: true)
         } else {
             withAnimation(.easeInOut) {
                 currentPage += 1
@@ -91,18 +63,20 @@ final class OnboardingViewModel: ObservableObject {
     }
 
     func skip() {
-        complete()
+        complete(createPet: false)
     }
 
     var onComplete: (() -> Void)?
 
-    private func complete() {
+    private func complete(createPet: Bool) {
+        if createPet {
+            let name = petName.trimmingCharacters(in: .whitespacesAndNewlines)
+            PetManager.shared.adoptOnboardingPet(name: name, petType: petType, gender: petGender)
+        }
+        Task {
+            _ = await HealthNotificationManager.shared.requestAuthorization()
+            CareReminderScheduler.shared.reschedule(tasks: CareTaskStore.shared.tasks)
+        }
         onComplete?()
-    }
-}
-
-extension Array {
-    subscript(indices index: Int) -> Element? {
-        indices.contains(index) ? self[index] : nil
     }
 }

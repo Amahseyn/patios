@@ -1,48 +1,37 @@
-//
-//  OnboardingPageView.swift
-//  CatEmotionAI
-//
-//  Single onboarding step: illustration placeholder + title + description.
-//
-
 import SwiftUI
 
 struct OnboardingPageView: View {
     let page: OnboardingPage
 
-    @State private var animateIn = false
-
     var body: some View {
-        VStack(spacing: AppTheme.spacingXL) {
+        VStack(spacing: AppTheme.spacingL) {
             Spacer()
-
-
-            VStack(spacing: AppTheme.spacingM) {
+            if let imageName = page.imageName {
+                Image(imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 120, height: 120)
+                    .shadow(color: AppTheme.primary.opacity(0.18), radius: 12, y: 4)
+                    .accessibilityHidden(true)
+            } else {
+                EnchantedIconBadge(
+                    systemImage: page.systemImage ?? "pawprint.fill",
+                    tint: AppTheme.palette[page.tintIndex % AppTheme.palette.count],
+                    size: 88
+                )
+            }
+            VStack(spacing: AppTheme.spacingS) {
                 Text(page.title)
-                    .font(.title.weight(.bold))
+                    .font(AppTheme.titleFont(26))
                     .multilineTextAlignment(.center)
-                    .foregroundStyle(AppTheme.textPrimary)
-
                 Text(page.description)
-                    .font(.body)
-                    .multilineTextAlignment(.center)
+                    .font(AppTheme.bodyFont())
                     .foregroundStyle(AppTheme.textSecondary)
-                    .padding(.horizontal, AppTheme.spacingL)
+                    .multilineTextAlignment(.center)
             }
-            .opacity(animateIn ? 1.0 : 0.0)
-            .offset(y: animateIn ? 0 : 12)
-
-            Spacer()
+            .padding(.horizontal, AppTheme.spacingM)
             Spacer()
         }
-        .onAppear {
-            withAnimation(.spring(response: 0.55, dampingFraction: 0.75)) {
-                animateIn = true
-            }
-        }
+        .padding(AppTheme.spacingL)
     }
-}
-
-#Preview {
-    OnboardingPageView(page: OnboardingViewModel().pages[0])
 }

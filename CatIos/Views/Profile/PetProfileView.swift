@@ -155,15 +155,11 @@ struct PetProfileView: View {
                 Text("Pet Type")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(AppTheme.textSecondary)
-                Picker("Pet Type", selection: $viewModel.draftProfile.petType) {
-                    ForEach([PetType.cat, .dog, .other]) { type in
-                        Text(type.rawValue).tag(type)
-                    }
-                }
-                .pickerStyle(.segmented)
+                PetKindPicker(selection: $viewModel.draftProfile.petType)
+                    .pickerStyle(.menu)
 
                 if viewModel.draftProfile.petType == .other {
-                    TextField("Enter pet type (e.g. Bird, Horse)", text: Binding(
+                    TextField("Name this kind (e.g. ferret, goat, guinea pig)", text: Binding(
                         get: { viewModel.draftProfile.customPetTypeName ?? "" },
                         set: { viewModel.draftProfile.customPetTypeName = $0 }
                     ))

@@ -31,8 +31,8 @@ struct HomeView: View {
                 }
                 .padding(AppTheme.spacingM)
             }
-            .background(AppTheme.background.ignoresSafeArea())
-            .navigationTitle("AI Pet Companion")
+            .fantasyScreen()
+            .navigationTitle("Home")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -211,7 +211,7 @@ struct HomeView: View {
                     icon: "person.crop.circle.fill",
                     title: "Pet Profile",
                     subtitle: "Manage profile",
-                    color: Color.purple
+                    color: AppTheme.lilac
                 ) {
                     onNavigateTab?(.profile)
                 }
@@ -220,7 +220,7 @@ struct HomeView: View {
                     icon: "sparkles",
                     title: "AI Assistant",
                     subtitle: "Ask care AI",
-                    color: Color.indigo
+                    color: AppTheme.assistant
                 ) {
                     onNavigateTab?(.aiAssistant)
                 }
@@ -229,7 +229,7 @@ struct HomeView: View {
                     icon: "plus.circle.fill",
                     title: "Add Activity",
                     subtitle: "Log event",
-                    color: Color.orange
+                    color: AppTheme.honey
                 ) {
                     showAddActivitySheet = true
                 }
@@ -238,7 +238,7 @@ struct HomeView: View {
                     icon: "heart.text.square.fill",
                     title: "Smart Care",
                     subtitle: "Care & Reminders",
-                    color: Color.blue
+                    color: AppTheme.health
                 ) {
                     onNavigateTab?(.careLog)
                 }
