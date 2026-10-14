@@ -538,7 +538,7 @@ struct BehaviorView: View {
                                 guard householdSync.canMutate else { return }
                                 draftKind = kind
                             } label: {
-                                Label(kind.rawValue, systemImage: kind.symbol)
+                                Label(LocalizedStringKey(kind.rawValue), systemImage: kind.symbol)
                                     .font(.caption)
                             }
                             .buttonStyle(.bordered)
@@ -623,7 +623,7 @@ private struct BehaviorEditor: View {
     var body: some View {
         NavigationStack {
             Form {
-                TextField("Title", text: $title, prompt: Text(kind.rawValue))
+                TextField("Title", text: $title, prompt: Text(LocalizedStringKey(kind.rawValue)))
                 DatePicker("When", selection: $when)
                 Picker("Duration unit", selection: $durationUnit) {
                     Text("Minutes").tag("Minutes")

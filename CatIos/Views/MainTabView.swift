@@ -11,11 +11,11 @@ enum AppTab: Int, CaseIterable, Identifiable, Hashable {
 
     var title: String {
         switch self {
-        case .home: return "Home"
-        case .careLog: return "Care"
-        case .healthMemories: return "Health"
-        case .aiAssistant: return "Assist"
-        case .profile: return "You"
+        case .home: return L("Home")
+        case .careLog: return L("Care")
+        case .healthMemories: return L("Health")
+        case .aiAssistant: return L("Assist")
+        case .profile: return L("You")
         }
     }
 

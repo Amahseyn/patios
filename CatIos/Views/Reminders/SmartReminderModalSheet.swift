@@ -36,7 +36,7 @@ struct SmartReminderModalSheet: View {
 
                     Picker("Category", selection: $category) {
                         ForEach(ReminderCategory.allCases.filter { $0 != .all }) { cat in
-                            Text(cat.rawValue).tag(cat)
+                            Text(LocalizedStringKey(cat.rawValue)).tag(cat)
                         }
                     }
 
@@ -54,7 +54,7 @@ struct SmartReminderModalSheet: View {
 
                     Picker("Repeat Frequency", selection: $repeatFrequency) {
                         ForEach(RepeatFrequency.allCases) { freq in
-                            Text(freq.rawValue).tag(freq)
+                            Text(LocalizedStringKey(freq.rawValue)).tag(freq)
                         }
                     }
                 }

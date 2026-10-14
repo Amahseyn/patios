@@ -252,7 +252,7 @@ struct AssistantSessionListView: View {
                 .background(AppTheme.primary.opacity(0.1), in: Circle())
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
-                    Text(conversation.title)
+                    Text(LocalizedStringKey(conversation.title))
                         .font(AppTheme.headlineFont())
                     Spacer()
                     Text(conversation.updatedAt.formatted(date: .abbreviated, time: .shortened))

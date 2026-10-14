@@ -143,7 +143,7 @@ struct PetProfileView: View {
                     .foregroundStyle(AppTheme.textSecondary)
                 Picker("Gender", selection: $viewModel.draftProfile.gender) {
                     ForEach(PetGender.allCases) { gender in
-                        Text(gender.rawValue).tag(gender)
+                        Text(LocalizedStringKey(gender.rawValue)).tag(gender)
                     }
                 }
                 .pickerStyle(.segmented)

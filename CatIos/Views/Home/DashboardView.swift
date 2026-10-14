@@ -215,7 +215,7 @@ struct DashboardView: View {
 
                         Spacer()
 
-                        Text(pet.userRole.rawValue)
+                        Text(LocalizedStringKey(pet.userRole.rawValue))
                             .font(.caption2.weight(.bold))
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)

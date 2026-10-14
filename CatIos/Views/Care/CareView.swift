@@ -174,7 +174,7 @@ struct CareView: View {
                                 HStack {
                                     Text(suggestion.icon)
                                         .font(.title2)
-                                    Text(suggestion.title)
+                                    Text(LocalizedStringKey(suggestion.title))
                                         .font(.subheadline.weight(.bold))
                                         .foregroundColor(AppTheme.textPrimary)
                                     Spacer()
@@ -276,7 +276,7 @@ struct CareView: View {
                 Text(title)
                     .font(.subheadline.weight(.semibold))
                     .foregroundColor(AppTheme.textPrimary)
-                Text(category.rawValue)
+                Text(LocalizedStringKey(category.rawValue))
                     .font(.caption2)
                     .foregroundColor(AppTheme.textSecondary)
             }
@@ -333,13 +333,13 @@ struct CareView: View {
                             .font(.title3)
                         
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(reminder.title)
+                            Text(LocalizedStringKey(reminder.title))
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundColor(reminder.isCompleted ? AppTheme.textSecondary : AppTheme.textPrimary)
                                 .strikethrough(reminder.isCompleted)
                             
                             HStack(spacing: 6) {
-                                Text(reminder.category.rawValue)
+                                Text(LocalizedStringKey(reminder.category.rawValue))
                                 Text("•")
                                 Text(reminder.frequency)
                             }
@@ -408,7 +408,7 @@ struct CareView: View {
                         
                         VStack(alignment: .leading, spacing: 2) {
                             HStack {
-                                Text(notif.title)
+                                Text(LocalizedStringKey(notif.title))
                                     .font(.subheadline.weight(.bold))
                                     .foregroundColor(AppTheme.textPrimary)
                                 Spacer()

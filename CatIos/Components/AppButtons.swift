@@ -10,9 +10,9 @@ struct PrimaryButton: View {
         Button(action: action) {
             Group {
                 if let systemImage {
-                    Label(title, systemImage: systemImage)
+                    Label(LocalizedStringKey(title), systemImage: systemImage)
                 } else {
-                    Text(title)
+                    Text(LocalizedStringKey(title))
                 }
             }
             .font(AppTheme.headlineFont())
@@ -38,9 +38,9 @@ struct SecondaryButton: View {
         Button(action: action) {
             Group {
                 if let systemImage {
-                    Label(title, systemImage: systemImage)
+                    Label(LocalizedStringKey(title), systemImage: systemImage)
                 } else {
-                    Text(title)
+                    Text(LocalizedStringKey(title))
                 }
             }
             .font(AppTheme.headlineFont())

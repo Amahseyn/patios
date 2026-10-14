@@ -1,0 +1,5203 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "\"%@ sounds relaxed and comfortable today based on recent activity.\"": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "«بر اساس فعالیت‌های اخیر، %@ امروز آرام و راحت به نظر می‌رسد.»"
+          }
+        }
+      }
+    },
+    "\"%@ sounds relaxed and comfortable. This type of sound usually happens during positive interactions.\"": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "«%@ آرام و راحت به نظر می‌رسد. این نوع صدا معمولاً در تعامل‌های مثبت شنیده می‌شود.»"
+          }
+        }
+      }
+    },
+    "\"%@\"": {},
+    "%@": {},
+    "%@ %@": {},
+    "%@ %lld%% compared to last week": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %lld%% نسبت به هفته گذشته"
+          }
+        }
+      }
+    },
+    "%@ kcal / 100 g": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ کیلوکالری / ۱۰۰ گرم"
+          }
+        }
+      }
+    },
+    "%@ · %@": {},
+    "%@ · %@ · %@": {},
+    "%@ · %lld": {},
+    "%@ • %@": {},
+    "%@ • Age: %@": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ • سن: %@"
+          }
+        }
+      }
+    },
+    "%@'s Memory": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خاطرات %@"
+          }
+        }
+      }
+    },
+    "%@'s Personality": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شخصیت %@"
+          }
+        }
+      }
+    },
+    "%@'s Wellness": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سلامت %@"
+          }
+        }
+      }
+    },
+    "%@: %@": {},
+    "%@: %lld%%": {},
+    "%@’s assistant is typing…": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دستیار %@ در حال نوشتن است…"
+          }
+        }
+      }
+    },
+    "%@’s day": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "روز %@"
+          }
+        }
+      }
+    },
+    "%lld": {},
+    "%lld %@ · %@ · %@": {},
+    "%lld %@. Tap a task to mark it done.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld %@. برای انجام‌شده کردن، روی کار بزنید."
+          }
+        }
+      }
+    },
+    "%lld care tasks left · %lld pets": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld کار مراقبت باقی‌مانده، %lld حیوان"
+          }
+        }
+      }
+    },
+    "%lld kcal / day": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld کیلوکالری در روز"
+          }
+        }
+      }
+    },
+    "%lld kcal per meal": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld کیلوکالری در هر وعده"
+          }
+        }
+      }
+    },
+    "%lld left": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld باقی‌مانده"
+          }
+        }
+      }
+    },
+    "%lld messages": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld پیام"
+          }
+        }
+      }
+    },
+    "%lld mo": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld ماه"
+          }
+        }
+      }
+    },
+    "%lld of %lld done": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld از %lld انجام شد"
+          }
+        }
+      }
+    },
+    "%lld overdue — review these first": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld کار عقب‌افتاده — اول این‌ها را بررسی کنید"
+          }
+        }
+      }
+    },
+    "%lld pet%@": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld حیوان%@"
+          }
+        }
+      }
+    },
+    "%lld remaining": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld باقی‌مانده"
+          }
+        }
+      }
+    },
+    "%lld yr": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld سال"
+          }
+        }
+      }
+    },
+    "%lld%%": {},
+    "%lld%% Health Rating": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "امتیاز سلامت %lld%%"
+          }
+        }
+      }
+    },
+    "%lld%% Wellness": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سلامت %lld%%"
+          }
+        }
+      }
+    },
+    "%lld%% confidence": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اطمینان %lld%%"
+          }
+        }
+      }
+    },
+    "/ 100": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "/ ۱۰۰"
+          }
+        }
+      }
+    },
+    "6 Care Items Active": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "۶ مورد مراقبت فعال"
+          }
+        }
+      }
+    },
+    "92% Confidence": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اطمینان ۹۲٪"
+          }
+        }
+      }
+    },
+    "<1": {},
+    "AI Autocomplete": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تکمیل خودکار هوش مصنوعی"
+          }
+        }
+      }
+    },
+    "AI Event Log": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گزارش رویدادهای هوش مصنوعی"
+          }
+        }
+      }
+    },
+    "AI Explanation": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "توضیح هوش مصنوعی"
+          }
+        }
+      }
+    },
+    "AI Health & Care Assistant": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دستیار سلامت و مراقبت هوشمند"
+          }
+        }
+      }
+    },
+    "AI Vocal Scanner": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اسکنر صدای هوشمند"
+          }
+        }
+      }
+    },
+    "AI autocomplete food and portion": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تکمیل خودکار غذا و مقدار با هوش مصنوعی"
+          }
+        }
+      }
+    },
+    "AI fills typical calories and macros from the food name. You can edit before saving.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هوش مصنوعی کالری و درشت‌مغذی‌های معمول را از روی نام غذا پر می‌کند. قبل از ذخیره می‌توانید ویرایش کنید."
+          }
+        }
+      }
+    },
+    "AI is understanding your pet...": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هوش مصنوعی در حال شناخت حیوان شماست..."
+          }
+        }
+      }
+    },
+    "AI suggestion": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیشنهاد هوش مصنوعی"
+          }
+        }
+      }
+    },
+    "API URL": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آدرس API"
+          }
+        }
+      }
+    },
+    "About %lld g per serving": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حدود %lld گرم در هر وعده"
+          }
+        }
+      }
+    },
+    "Account": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حساب کاربری"
+          }
+        }
+      }
+    },
+    "Active": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فعال"
+          }
+        }
+      }
+    },
+    "Activities": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فعالیت‌ها"
+          }
+        }
+      }
+    },
+    "Activity": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فعالیت"
+          }
+        }
+      }
+    },
+    "Activity Details": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جزئیات فعالیت"
+          }
+        }
+      }
+    },
+    "Activity Title (e.g. Snack, Play)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عنوان فعالیت (مثلاً تنقلات، بازی)"
+          }
+        }
+      }
+    },
+    "Ad": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تبلیغ"
+          }
+        }
+      }
+    },
+    "Ad. %@. %@": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تبلیغ. %@. %@"
+          }
+        }
+      }
+    },
+    "Add": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن"
+          }
+        }
+      }
+    },
+    "Add Activity Log": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ثبت فعالیت"
+          }
+        }
+      }
+    },
+    "Add Food": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن غذا"
+          }
+        }
+      }
+    },
+    "Add Health Record": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن سابقه سلامت"
+          }
+        }
+      }
+    },
+    "Add New Food": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن غذای جدید"
+          }
+        }
+      }
+    },
+    "Add New Pet": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن حیوان جدید"
+          }
+        }
+      }
+    },
+    "Add New Pet Profile": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن پروفایل حیوان جدید"
+          }
+        }
+      }
+    },
+    "Add Pet": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن حیوان"
+          }
+        }
+      }
+    },
+    "Add Record": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن سابقه"
+          }
+        }
+      }
+    },
+    "Add Task": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن کار"
+          }
+        }
+      }
+    },
+    "Add a vaccine, vet visit, or treatment so due dates and reminders stay on this iPhone — and in your account after you sign in.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یک واکسن، ویزیت یا درمان اضافه کنید تا سررسیدها و یادآورها روی این آیفون — و پس از ورود در حساب شما — بمانند."
+          }
+        }
+      }
+    },
+    "Add nutrition": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن تغذیه"
+          }
+        }
+      }
+    },
+    "Add weight": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن وزن"
+          }
+        }
+      }
+    },
+    "Add your first pet": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اولین حیوانتان را اضافه کنید"
+          }
+        }
+      }
+    },
+    "Add your first pet ": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اولین حیوانتان را اضافه کنید"
+          }
+        }
+      }
+    },
+    "Add your first pet.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اولین حیوانتان را اضافه کنید."
+          }
+        }
+      }
+    },
+    "Age": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سن"
+          }
+        }
+      }
+    },
+    "All": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همه"
+          }
+        }
+      }
+    },
+    "All My Pets (%lld)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همه حیوانات من (%lld)"
+          }
+        }
+      }
+    },
+    "All Pet Profiles": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همه پروفایل‌ها"
+          }
+        }
+      }
+    },
+    "All Pets 🐾": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همه حیوانات 🐾"
+          }
+        }
+      }
+    },
+    "All caught up with AI recommendations!": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همه پیشنهادهای هوش مصنوعی را انجام داده‌اید!"
+          }
+        }
+      }
+    },
+    "All clear": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همه انجام شد"
+          }
+        }
+      }
+    },
+    "All of today’s care tasks are done. Nice work.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همه کارهای مراقبت امروز انجام شد. آفرین!"
+          }
+        }
+      }
+    },
+    "All pets": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همه حیوانات"
+          }
+        }
+      }
+    },
+    "All records": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همه سوابق"
+          }
+        }
+      }
+    },
+    "Amount": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مقدار"
+          }
+        }
+      }
+    },
+    "Analysis Result": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نتیجه تحلیل"
+          }
+        }
+      }
+    },
+    "Analyzing acoustic frequencies and pitch patterns...": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال تحلیل فرکانس‌ها و الگوهای زیر و بمی صدا..."
+          }
+        }
+      }
+    },
+    "Appearance": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ظاهر"
+          }
+        }
+      }
+    },
+    "Appearance and alerts": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ظاهر و هشدارها"
+          }
+        }
+      }
+    },
+    "Appearance, language, and alerts": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ظاهر، زبان و هشدارها"
+          }
+        }
+      }
+    },
+    "Ask AI": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "از هوش مصنوعی بپرسید"
+          }
+        }
+      }
+    },
+    "Ask about meals, health, or routines": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "درباره غذا، سلامت یا برنامه روزانه بپرسید"
+          }
+        }
+      }
+    },
+    "Ask about meals, health, or routines…": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "درباره غذا، سلامت یا برنامه روزانه بپرسید…"
+          }
+        }
+      }
+    },
+    "Ask care AI": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "از هوش مصنوعی بپرسید"
+          }
+        }
+      }
+    },
+    "Assist": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دستیار"
+          }
+        }
+      }
+    },
+    "Assistant": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دستیار"
+          }
+        }
+      }
+    },
+    "Avatar": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آواتار"
+          }
+        }
+      }
+    },
+    "Avatar Emoji": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ایموجی آواتار"
+          }
+        }
+      }
+    },
+    "Average Wellness": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "میانگین سلامت"
+          }
+        }
+      }
+    },
+    "Back up pets, tasks, and health records": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پشتیبان‌گیری از حیوانات، کارها و سوابق سلامت"
+          }
+        }
+      }
+    },
+    "Base URL": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آدرس پایه"
+          }
+        }
+      }
+    },
+    "Basic is free and includes ads. Pet Care+ lifts them away, and costs less than 11pets and Petio.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "طرح پایه رایگان است و تبلیغ دارد. Pet Care+ تبلیغات را حذف می‌کند و از 11pets و Petio ارزان‌تر است."
+          }
+        }
+      }
+    },
+    "Batch number, dosage, reactions…": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شماره سری، دوز، واکنش‌ها…"
+          }
+        }
+      }
+    },
+    "Behavior": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "رفتار"
+          }
+        }
+      }
+    },
+    "Best value": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بهترین ارزش"
+          }
+        }
+      }
+    },
+    "Bordetella": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بوردتلا"
+          }
+        }
+      }
+    },
+    "Brand": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "برند"
+          }
+        }
+      }
+    },
+    "Breed": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نژاد"
+          }
+        }
+      }
+    },
+    "Breed (e.g. Persian Cat)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نژاد (مثلاً گربه پرشین)"
+          }
+        }
+      }
+    },
+    "Breed (e.g. Siamese)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نژاد (مثلاً سیامی)"
+          }
+        }
+      }
+    },
+    "Calories": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کالری"
+          }
+        }
+      }
+    },
+    "Calories (kcal)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کالری (کیلوکالری)"
+          }
+        }
+      }
+    },
+    "Calories eaten": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کالری مصرف‌شده"
+          }
+        }
+      }
+    },
+    "Calories per 100 g": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کالری در ۱۰۰ گرم"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لغو"
+          }
+        }
+      }
+    },
+    "Care": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مراقبت"
+          }
+        }
+      }
+    },
+    "Care Calendar": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تقویم مراقبت"
+          }
+        }
+      }
+    },
+    "Care tasks": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کارهای مراقبت"
+          }
+        }
+      }
+    },
+    "Category": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دسته"
+          }
+        }
+      }
+    },
+    "Cats, dogs, birds, rabbits, and any other pet can join later.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گربه، سگ، پرنده، خرگوش و هر حیوان دیگری بعداً هم می‌تواند اضافه شود."
+          }
+        }
+      }
+    },
+    "Change": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تغییر"
+          }
+        }
+      }
+    },
+    "Chat actions": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گزینه‌های گفتگو"
+          }
+        }
+      }
+    },
+    "Chats": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گفتگوها"
+          }
+        }
+      }
+    },
+    "Chats stay on this iPhone until you sign in. Open You to connect your account for AI replies that sync.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گفتگوها تا زمان ورود فقط روی این آیفون می‌مانند. برای پاسخ‌های همگام‌شده، از بخش «شما» وارد حساب شوید."
+          }
+        }
+      }
+    },
+    "Choose a Day": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یک روز انتخاب کنید"
+          }
+        }
+      }
+    },
+    "Choose a day": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یک روز انتخاب کنید"
+          }
+        }
+      }
+    },
+    "Clinic or home": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کلینیک یا خانه"
+          }
+        }
+      }
+    },
+    "Clinic or location": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کلینیک یا مکان"
+          }
+        }
+      }
+    },
+    "Clock Time": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ساعت"
+          }
+        }
+      }
+    },
+    "Close": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بستن"
+          }
+        }
+      }
+    },
+    "Color": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "رنگ"
+          }
+        }
+      }
+    },
+    "Combined Daily Care Summary": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خلاصه مراقبت روزانه همه"
+          }
+        }
+      }
+    },
+    "Combined Family (%lld Pets)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خانواده (%lld حیوان)"
+          }
+        }
+      }
+    },
+    "Coming up": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیش رو"
+          }
+        }
+      }
+    },
+    "Coming up in health": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "موارد سلامت پیش رو"
+          }
+        }
+      }
+    },
+    "Common Sounds & Behaviors": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "صداها و رفتارهای رایج"
+          }
+        }
+      }
+    },
+    "Complete For Pets": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "انجام برای حیوانات"
+          }
+        }
+      }
+    },
+    "Completed": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "انجام‌شده"
+          }
+        }
+      }
+    },
+    "Confidence": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اطمینان"
+          }
+        }
+      }
+    },
+    "Continue": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ادامه"
+          }
+        }
+      }
+    },
+    "Copy": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کپی"
+          }
+        }
+      }
+    },
+    "Couldn’t sync": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همگام‌سازی نشد"
+          }
+        }
+      }
+    },
+    "Create Account": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ساخت حساب"
+          }
+        }
+      }
+    },
+    "Create Pet Profile": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ساخت پروفایل حیوان"
+          }
+        }
+      }
+    },
+    "Current plan": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "طرح فعلی"
+          }
+        }
+      }
+    },
+    "Custom": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دلخواه"
+          }
+        }
+      }
+    },
+    "Custom Vaccine...": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "واکسن دلخواه..."
+          }
+        }
+      }
+    },
+    "Custom task": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کار دلخواه"
+          }
+        }
+      }
+    },
+    "DHPP Booster": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادآور DHPP"
+          }
+        }
+      }
+    },
+    "Daily": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "روزانه"
+          }
+        }
+      }
+    },
+    "Daily Health & Activity Summary": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خلاصه روزانه سلامت و فعالیت"
+          }
+        }
+      }
+    },
+    "Daily care summary": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خلاصه مراقبت روزانه"
+          }
+        }
+      }
+    },
+    "Dark": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تیره"
+          }
+        }
+      }
+    },
+    "Date": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تاریخ"
+          }
+        }
+      }
+    },
+    "Date & Time": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تاریخ و ساعت"
+          }
+        }
+      }
+    },
+    "Date given": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تاریخ تزریق"
+          }
+        }
+      }
+    },
+    "Dates": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تاریخ‌ها"
+          }
+        }
+      }
+    },
+    "Day": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "روز"
+          }
+        }
+      }
+    },
+    "Days fed": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "روزهای تغذیه"
+          }
+        }
+      }
+    },
+    "Delete": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حذف"
+          }
+        }
+      }
+    },
+    "Delete %lld chat%@?": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld گفتگو%@ حذف شود؟"
+          }
+        }
+      }
+    },
+    "Delete Chat": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حذف گفتگو"
+          }
+        }
+      }
+    },
+    "Delete Pet?": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حیوان حذف شود؟"
+          }
+        }
+      }
+    },
+    "Delete this chat?": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "این گفتگو حذف شود؟"
+          }
+        }
+      }
+    },
+    "Details": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جزئیات"
+          }
+        }
+      }
+    },
+    "Dictate": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دیکته صوتی"
+          }
+        }
+      }
+    },
+    "Direction": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جهت"
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "انجام شد"
+          }
+        }
+      }
+    },
+    "Due in the next 45 days, or already overdue. Tap a record to edit.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سررسید در ۴۵ روز آینده یا گذشته. برای ویرایش روی سابقه بزنید."
+          }
+        }
+      }
+    },
+    "Duration unit": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "واحد مدت"
+          }
+        }
+      }
+    },
+    "Edit": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ویرایش"
+          }
+        }
+      }
+    },
+    "Edit Health Record": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ویرایش سابقه سلامت"
+          }
+        }
+      }
+    },
+    "Edit Pet": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ویرایش حیوان"
+          }
+        }
+      }
+    },
+    "Edit Task": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ویرایش کار"
+          }
+        }
+      }
+    },
+    "Edit blueprint": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ویرایش الگو"
+          }
+        }
+      }
+    },
+    "Email": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ایمیل"
+          }
+        }
+      }
+    },
+    "Email address": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آدرس ایمیل"
+          }
+        }
+      }
+    },
+    "Emoji": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ایموجی"
+          }
+        }
+      }
+    },
+    "Emoji Icon": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نماد ایموجی"
+          }
+        }
+      }
+    },
+    "Enable Speech Recognition and Microphone in Settings to dictate questions.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "برای دیکته سؤال‌ها، تشخیص گفتار و میکروفون را در تنظیمات فعال کنید."
+          }
+        }
+      }
+    },
+    "English": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        }
+      }
+    },
+    "Enter Vaccine Title": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نام واکسن را وارد کنید"
+          }
+        }
+      }
+    },
+    "Estimate portions": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تخمین مقدار"
+          }
+        }
+      }
+    },
+    "Estimated %@ from the food label": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ از روی برچسب غذا تخمین زده شد"
+          }
+        }
+      }
+    },
+    "Estimating portions": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال تخمین مقدار"
+          }
+        }
+      }
+    },
+    "Estimating…": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال تخمین…"
+          }
+        }
+      }
+    },
+    "Every %lld %@": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هر %lld %@"
+          }
+        }
+      }
+    },
+    "Every %lld %@%@": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هر %lld %@%@"
+          }
+        }
+      }
+    },
+    "Everything stays on this iPhone until you sign in": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تا زمان ورود، همه‌چیز روی این آیفون می‌ماند"
+          }
+        }
+      }
+    },
+    "Family Group": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گروه خانواده"
+          }
+        }
+      }
+    },
+    "Fat g / 100 g": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "چربی (گرم / ۱۰۰ گرم)"
+          }
+        }
+      }
+    },
+    "Favorite": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مورد علاقه"
+          }
+        }
+      }
+    },
+    "Favorites": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "علاقه‌مندی‌ها"
+          }
+        }
+      }
+    },
+    "Fed at": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "زمان غذا"
+          }
+        }
+      }
+    },
+    "Feeding": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "غذا دادن"
+          }
+        }
+      }
+    },
+    "Feeding Reminder": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادآور غذا"
+          }
+        }
+      }
+    },
+    "Feeding history": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سابقه تغذیه"
+          }
+        }
+      }
+    },
+    "Fiber g / 100 g": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فیبر (گرم / ۱۰۰ گرم)"
+          }
+        }
+      }
+    },
+    "Food": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "غذا"
+          }
+        }
+      }
+    },
+    "Food name": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نام غذا"
+          }
+        }
+      }
+    },
+    "Foods": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "غذاها"
+          }
+        }
+      }
+    },
+    "Free": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "رایگان"
+          }
+        }
+      }
+    },
+    "Frequency": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تکرار"
+          }
+        }
+      }
+    },
+    "Full History": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تاریخچه کامل"
+          }
+        }
+      }
+    },
+    "Gender": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جنسیت"
+          }
+        }
+      }
+    },
+    "Get instant answers about %@": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پاسخ فوری درباره %@"
+          }
+        }
+      }
+    },
+    "Good afternoon": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ظهر بخیر"
+          }
+        }
+      }
+    },
+    "Good evening": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عصر بخیر"
+          }
+        }
+      }
+    },
+    "Good morning": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "صبح بخیر"
+          }
+        }
+      }
+    },
+    "Grams": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گرم"
+          }
+        }
+      }
+    },
+    "Grooming": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آرایش"
+          }
+        }
+      }
+    },
+    "Happy": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شاد"
+          }
+        }
+      }
+    },
+    "Health": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سلامت"
+          }
+        }
+      }
+    },
+    "Hello": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سلام"
+          }
+        }
+      }
+    },
+    "High": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "زیاد"
+          }
+        }
+      }
+    },
+    "History": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تاریخچه"
+          }
+        }
+      }
+    },
+    "Home": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خانه"
+          }
+        }
+      }
+    },
+    "Hourly": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ساعتی"
+          }
+        }
+      }
+    },
+    "Hours": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ساعت"
+          }
+        }
+      }
+    },
+    "Hours each day": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ساعت در روز"
+          }
+        }
+      }
+    },
+    "Household": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خانوار"
+          }
+        }
+      }
+    },
+    "Household sharing": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اشتراک خانوار"
+          }
+        }
+      }
+    },
+    "How often each activity was logged": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تعداد ثبت هر فعالیت"
+          }
+        }
+      }
+    },
+    "Icon": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نماد"
+          }
+        }
+      }
+    },
+    "Insight": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بینش"
+          }
+        }
+      }
+    },
+    "Insights": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بینش‌ها"
+          }
+        }
+      }
+    },
+    "Invite family and caregivers": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دعوت از خانواده و مراقبان"
+          }
+        }
+      }
+    },
+    "Jump to what you need": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سریع به آنچه لازم دارید بروید"
+          }
+        }
+      }
+    },
+    "Keep data on this device": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "داده‌ها روی این دستگاه می‌مانند"
+          }
+        }
+      }
+    },
+    "Keep sample pets": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نگه‌داشتن حیوانات نمونه"
+          }
+        }
+      }
+    },
+    "Kilograms": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کیلوگرم"
+          }
+        }
+      }
+    },
+    "Kind": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نوع"
+          }
+        }
+      }
+    },
+    "Language": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "زبان"
+          }
+        }
+      }
+    },
+    "Legal": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حقوقی"
+          }
+        }
+      }
+    },
+    "Leptospirosis": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لپتوسپیروز"
+          }
+        }
+      }
+    },
+    "Light": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "روشن"
+          }
+        }
+      }
+    },
+    "Listening to %@...": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال گوش دادن به %@..."
+          }
+        }
+      }
+    },
+    "Listening...": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال گوش دادن..."
+          }
+        }
+      }
+    },
+    "Loading from your account": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال بارگذاری از حساب شما"
+          }
+        }
+      }
+    },
+    "Loading…": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال بارگذاری…"
+          }
+        }
+      }
+    },
+    "Local only": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فقط محلی"
+          }
+        }
+      }
+    },
+    "Location": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مکان"
+          }
+        }
+      }
+    },
+    "Log": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ثبت"
+          }
+        }
+      }
+    },
+    "Log Meal": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ثبت وعده"
+          }
+        }
+      }
+    },
+    "Log Weight": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ثبت وزن"
+          }
+        }
+      }
+    },
+    "Logs": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گزارش‌ها"
+          }
+        }
+      }
+    },
+    "Low": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کم"
+          }
+        }
+      }
+    },
+    "Manage": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مدیریت"
+          }
+        }
+      }
+    },
+    "Manage Pets": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مدیریت حیوانات"
+          }
+        }
+      }
+    },
+    "Manage pets": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مدیریت حیوانات"
+          }
+        }
+      }
+    },
+    "Mark done": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "علامت انجام"
+          }
+        }
+      }
+    },
+    "Meal": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "وعده غذا"
+          }
+        }
+      }
+    },
+    "Meals": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "وعده‌ها"
+          }
+        }
+      }
+    },
+    "Meals a day: %lld": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "وعده در روز: %lld"
+          }
+        }
+      }
+    },
+    "Meals you log will stay here.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "وعده‌هایی که ثبت می‌کنید اینجا می‌مانند."
+          }
+        }
+      }
+    },
+    "Medication": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دارو"
+          }
+        }
+      }
+    },
+    "Membership": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اشتراک"
+          }
+        }
+      }
+    },
+    "Microphone is off": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "میکروفون خاموش است"
+          }
+        }
+      }
+    },
+    "Minutes": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دقیقه"
+          }
+        }
+      }
+    },
+    "Minutes each day": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دقیقه در روز"
+          }
+        }
+      }
+    },
+    "Moderate": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "متوسط"
+          }
+        }
+      }
+    },
+    "Month": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ماه"
+          }
+        }
+      }
+    },
+    "Monthly": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ماهانه"
+          }
+        }
+      }
+    },
+    "Monthly Reminder": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادآور ماهانه"
+          }
+        }
+      }
+    },
+    "Months": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ماه"
+          }
+        }
+      }
+    },
+    "Mood": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حال"
+          }
+        }
+      }
+    },
+    "Mood trend:": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "روند حال:"
+          }
+        }
+      }
+    },
+    "Mood:": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حال:"
+          }
+        }
+      }
+    },
+    "Mood: %@ %@": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حال: %@ %@"
+          }
+        }
+      }
+    },
+    "Most used brand": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پرمصرف‌ترین برند"
+          }
+        }
+      }
+    },
+    "Most used food": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پرمصرف‌ترین غذا"
+          }
+        }
+      }
+    },
+    "Mute": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بی‌صدا"
+          }
+        }
+      }
+    },
+    "My Pets": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حیوانات من"
+          }
+        }
+      }
+    },
+    "Name": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نام"
+          }
+        }
+      }
+    },
+    "Name this kind (e.g. ferret, goat, guinea pig)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نام این نوع (مثلاً موش‌خرما، بز، خوکچه هندی)"
+          }
+        }
+      }
+    },
+    "New": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جدید"
+          }
+        }
+      }
+    },
+    "New Care Reminder": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادآور مراقبت جدید"
+          }
+        }
+      }
+    },
+    "New Chat": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گفتگوی جدید"
+          }
+        }
+      }
+    },
+    "New Pet Profile": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پروفایل حیوان جدید"
+          }
+        }
+      }
+    },
+    "New Task": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کار جدید"
+          }
+        }
+      }
+    },
+    "New blueprint": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الگوی جدید"
+          }
+        }
+      }
+    },
+    "Newest first. Swipe a record to delete or toggle its reminder.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جدیدترین‌ها اول. برای حذف یا تغییر یادآور، سابقه را بکشید."
+          }
+        }
+      }
+    },
+    "Next 3 weeks": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "۳ هفته آینده"
+          }
+        }
+      }
+    },
+    "Next due": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سررسید بعدی"
+          }
+        }
+      }
+    },
+    "No analyses yet": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هنوز تحلیلی نیست"
+          }
+        }
+      }
+    },
+    "No health records yet": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هنوز سابقه سلامتی نیست"
+          }
+        }
+      }
+    },
+    "No tasks": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کاری نیست"
+          }
+        }
+      }
+    },
+    "No tasks scheduled for today — add one from Care when you’re ready.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "امروز کاری برنامه‌ریزی نشده — هر وقت آماده بودید از «مراقبت» اضافه کنید."
+          }
+        }
+      }
+    },
+    "No tasks yet": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هنوز کاری نیست"
+          }
+        }
+      }
+    },
+    "Notes": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادداشت‌ها"
+          }
+        }
+      }
+    },
+    "Notification Design Preview": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیش‌نمایش طراحی اعلان"
+          }
+        }
+      }
+    },
+    "Notification Preview": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیش‌نمایش اعلان"
+          }
+        }
+      }
+    },
+    "Notifications": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اعلان‌ها"
+          }
+        }
+      }
+    },
+    "Nutrition": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تغذیه"
+          }
+        }
+      }
+    },
+    "Nutrition label": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "برچسب تغذیه"
+          }
+        }
+      }
+    },
+    "Nutrition, weight, and behavior sit with health so due dates and daily logs stay together.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تغذیه، وزن و رفتار کنار سلامت قرار دارند تا سررسیدها و گزارش‌های روزانه با هم باشند."
+          }
+        }
+      }
+    },
+    "Off": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خاموش"
+          }
+        }
+      }
+    },
+    "Offline": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آفلاین"
+          }
+        }
+      }
+    },
+    "Offline — using data on this iPhone": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آفلاین — استفاده از داده‌های این آیفون"
+          }
+        }
+      }
+    },
+    "On": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "روشن"
+          }
+        }
+      }
+    },
+    "On-device answers only": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فقط پاسخ‌های روی دستگاه"
+          }
+        }
+      }
+    },
+    "Online": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آنلاین"
+          }
+        }
+      }
+    },
+    "Open": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "باز کردن"
+          }
+        }
+      }
+    },
+    "Open Care": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "رفتن به مراقبت"
+          }
+        }
+      }
+    },
+    "Open Settings": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "باز کردن تنظیمات"
+          }
+        }
+      }
+    },
+    "Opens the Care tab": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "زبانه مراقبت را باز می‌کند"
+          }
+        }
+      }
+    },
+    "Opens the Health tab": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "زبانه سلامت را باز می‌کند"
+          }
+        }
+      }
+    },
+    "Optional notes": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادداشت اختیاری"
+          }
+        }
+      }
+    },
+    "Overdue": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عقب‌افتاده"
+          }
+        }
+      }
+    },
+    "Overview": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نمای کلی"
+          }
+        }
+      }
+    },
+    "Owner tip": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نکته برای صاحب حیوان"
+          }
+        }
+      }
+    },
+    "PRO": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حرفه‌ای"
+          }
+        }
+      }
+    },
+    "Park visit": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پارک"
+          }
+        }
+      }
+    },
+    "Park visits": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "رفتن به پارک"
+          }
+        }
+      }
+    },
+    "Password (8+ characters)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "رمز عبور (حداقل ۸ نویسه)"
+          }
+        }
+      }
+    },
+    "Patios": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پاتیوس"
+          }
+        }
+      }
+    },
+    "Period": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دوره"
+          }
+        }
+      }
+    },
+    "Personality Traits": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ویژگی‌های شخصیتی"
+          }
+        }
+      }
+    },
+    "Pet": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حیوان"
+          }
+        }
+      }
+    },
+    "Pet Care Assistant": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دستیار مراقبت حیوان"
+          }
+        }
+      }
+    },
+    "Pet Care+ Monthly is %@. Pet Care+ Yearly is %@. 11pets Premium is about %@ a month. Petio Plus is %@ a month or %@ a year. A plan change is an App Store purchase, checked by Pet Care before ads go away.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pet Care+ ماهانه %@ و سالانه %@ است. 11pets Premium حدود %@ در ماه و Petio Plus %@ در ماه یا %@ در سال است. تغییر طرح یک خرید از App Store است و پیش از حذف تبلیغات توسط Pet Care بررسی می‌شود."
+          }
+        }
+      }
+    },
+    "Pet Color": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "رنگ حیوان"
+          }
+        }
+      }
+    },
+    "Pet Details": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جزئیات حیوان"
+          }
+        }
+      }
+    },
+    "Pet Name": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نام حیوان"
+          }
+        }
+      }
+    },
+    "Pet Name (e.g. Cleo)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نام حیوان (مثلاً کلئو)"
+          }
+        }
+      }
+    },
+    "Pet Name (e.g. Luna)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نام حیوان (مثلاً لونا)"
+          }
+        }
+      }
+    },
+    "Pet Profile": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پروفایل حیوان"
+          }
+        }
+      }
+    },
+    "Pet Profiles": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پروفایل‌های حیوانات"
+          }
+        }
+      }
+    },
+    "Pet Type": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نوع حیوان"
+          }
+        }
+      }
+    },
+    "Pet name": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نام حیوان"
+          }
+        }
+      }
+    },
+    "Pets": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حیوانات"
+          }
+        }
+      }
+    },
+    "Pets & you": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حیوانات و شما"
+          }
+        }
+      }
+    },
+    "Places": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مکان‌ها"
+          }
+        }
+      }
+    },
+    "Plan": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "طرح"
+          }
+        }
+      }
+    },
+    "Plans": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "طرح‌ها"
+          }
+        }
+      }
+    },
+    "Plans and Pricing": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "طرح‌ها و قیمت‌ها"
+          }
+        }
+      }
+    },
+    "Please select a pet type": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لطفاً نوع حیوان را انتخاب کنید"
+          }
+        }
+      }
+    },
+    "Plus": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پلاس"
+          }
+        }
+      }
+    },
+    "Portion estimate": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تخمین مقدار"
+          }
+        }
+      }
+    },
+    "Positive streak": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "روند مثبت"
+          }
+        }
+      }
+    },
+    "Preferences": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ترجیحات"
+          }
+        }
+      }
+    },
+    "Privacy": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حریم خصوصی"
+          }
+        }
+      }
+    },
+    "Privacy and terms": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حریم خصوصی و شرایط"
+          }
+        }
+      }
+    },
+    "Privacy policy": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سیاست حریم خصوصی"
+          }
+        }
+      }
+    },
+    "Product": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "محصول"
+          }
+        }
+      }
+    },
+    "Profiles & sync": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پروفایل و همگام‌سازی"
+          }
+        }
+      }
+    },
+    "Profiles, breeds, and avatars": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پروفایل‌ها، نژادها و آواتارها"
+          }
+        }
+      }
+    },
+    "Profiles, daily tasks, and health records all start with a pet.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پروفایل، کارهای روزانه و سوابق سلامت همه با یک حیوان شروع می‌شوند."
+          }
+        }
+      }
+    },
+    "Protein g / 100 g": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پروتئین (گرم / ۱۰۰ گرم)"
+          }
+        }
+      }
+    },
+    "Pull to refresh, or tap Try Again. Your data is still saved on this iPhone.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "برای تازه‌سازی بکشید یا «تلاش دوباره» را بزنید. داده‌های شما هنوز روی این آیفون ذخیره است."
+          }
+        }
+      }
+    },
+    "Quick Actions": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اقدامات سریع"
+          }
+        }
+      }
+    },
+    "Quick Care Actions": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اقدامات سریع مراقبت"
+          }
+        }
+      }
+    },
+    "Quick actions": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اقدامات سریع"
+          }
+        }
+      }
+    },
+    "Rabies Vaccine": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "واکسن هاری"
+          }
+        }
+      }
+    },
+    "Reading this activity": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال بررسی این فعالیت"
+          }
+        }
+      }
+    },
+    "Recent": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اخیر"
+          }
+        }
+      }
+    },
+    "Recommended": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیشنهادی"
+          }
+        }
+      }
+    },
+    "Record %@'s Sound": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ضبط صدای %@"
+          }
+        }
+      }
+    },
+    "Record %@'s sound to decode emotion and mood.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "صدای %@ را ضبط کنید تا احساس و حالش مشخص شود."
+          }
+        }
+      }
+    },
+    "Record Another Sound": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ضبط صدای دیگر"
+          }
+        }
+      }
+    },
+    "Record Pet Sound": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ضبط صدای حیوان"
+          }
+        }
+      }
+    },
+    "Record Title (e.g. Annual Vet Checkup)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عنوان سابقه (مثلاً معاینه سالانه دامپزشکی)"
+          }
+        }
+      }
+    },
+    "Record your cat's sounds to see history here.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "صدای گربه‌تان را ضبط کنید تا تاریخچه اینجا نمایش داده شود."
+          }
+        }
+      }
+    },
+    "Recording": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال ضبط"
+          }
+        }
+      }
+    },
+    "Records & due dates": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سوابق و سررسیدها"
+          }
+        }
+      }
+    },
+    "Remind": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادآوری"
+          }
+        }
+      }
+    },
+    "Reminder Details": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جزئیات یادآور"
+          }
+        }
+      }
+    },
+    "Reminder Title (e.g. Luna's Morning Wet Food)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عنوان یادآور (مثلاً غذای صبح لونا)"
+          }
+        }
+      }
+    },
+    "Reminder title (e.g., Morning Salmon Feast)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عنوان یادآور (مثلاً صبحانه ماهی سالمون)"
+          }
+        }
+      }
+    },
+    "Reminders": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادآورها"
+          }
+        }
+      }
+    },
+    "Reminders off": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادآورها خاموش"
+          }
+        }
+      }
+    },
+    "Remove": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حذف"
+          }
+        }
+      }
+    },
+    "Remove ads with Pet Care+": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حذف تبلیغات با Pet Care+"
+          }
+        }
+      }
+    },
+    "Remove from household": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حذف از خانوار"
+          }
+        }
+      }
+    },
+    "Rename": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تغییر نام"
+          }
+        }
+      }
+    },
+    "Rename chat": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تغییر نام گفتگو"
+          }
+        }
+      }
+    },
+    "Repeat": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تکرار"
+          }
+        }
+      }
+    },
+    "Repeat Frequency": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تکرار"
+          }
+        }
+      }
+    },
+    "Repeats": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تکرارها"
+          }
+        }
+      }
+    },
+    "Rest": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "استراحت"
+          }
+        }
+      }
+    },
+    "Role": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نقش"
+          }
+        }
+      }
+    },
+    "Role: %@": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نقش: %@"
+          }
+        }
+      }
+    },
+    "Save": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ذخیره"
+          }
+        }
+      }
+    },
+    "Save Changes": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ذخیره تغییرات"
+          }
+        }
+      }
+    },
+    "Save Task": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ذخیره کار"
+          }
+        }
+      }
+    },
+    "Save as a template": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ذخیره به‌عنوان الگو"
+          }
+        }
+      }
+    },
+    "Save to Memory Timeline": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ذخیره در خط زمانی خاطرات"
+          }
+        }
+      }
+    },
+    "Saved templates": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الگوهای ذخیره‌شده"
+          }
+        }
+      }
+    },
+    "Schedule": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "زمان‌بندی"
+          }
+        }
+      }
+    },
+    "Schedule & Time": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "زمان‌بندی و ساعت"
+          }
+        }
+      }
+    },
+    "Search by name or breed": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جستجو با نام یا نژاد"
+          }
+        }
+      }
+    },
+    "Search chats": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جستجوی گفتگوها"
+          }
+        }
+      }
+    },
+    "Search foods": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جستجوی غذاها"
+          }
+        }
+      }
+    },
+    "Select Pets": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "انتخاب حیوانات"
+          }
+        }
+      }
+    },
+    "Send": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ارسال"
+          }
+        }
+      }
+    },
+    "Server is reachable": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سرور در دسترس است"
+          }
+        }
+      }
+    },
+    "Sessions each day": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جلسه در روز"
+          }
+        }
+      }
+    },
+    "Set next due date": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تعیین سررسید بعدی"
+          }
+        }
+      }
+    },
+    "Set up a profile to track meals, walks, meds, and vet visits.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یک پروفایل بسازید تا غذا، پیاده‌روی، دارو و ویزیت دامپزشکی را پیگیری کنید."
+          }
+        }
+      }
+    },
+    "Severity: %lld": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شدت: %lld"
+          }
+        }
+      }
+    },
+    "Sex": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جنسیت"
+          }
+        }
+      }
+    },
+    "Sign In": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ورود"
+          }
+        }
+      }
+    },
+    "Sign Out": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خروج"
+          }
+        }
+      }
+    },
+    "Sign in for cloud answers": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "برای پاسخ‌های ابری وارد شوید"
+          }
+        }
+      }
+    },
+    "Sign in from You for cloud AI answers that sync with your account.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "برای پاسخ‌های ابری همگام با حساب، از بخش «شما» وارد شوید."
+          }
+        }
+      }
+    },
+    "Sign in from You to back up pets, tasks, and health records across devices.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "از بخش «شما» وارد شوید تا حیوانات، کارها و سوابق سلامت روی همه دستگاه‌ها پشتیبان‌گیری شوند."
+          }
+        }
+      }
+    },
+    "Sign in to sync": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "برای همگام‌سازی وارد شوید"
+          }
+        }
+      }
+    },
+    "Sign out?": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خارج می‌شوید؟"
+          }
+        }
+      }
+    },
+    "Signed in": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "وارد شده"
+          }
+        }
+      }
+    },
+    "Skip": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "رد شدن"
+          }
+        }
+      }
+    },
+    "Smart AI Suggestions": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیشنهادهای هوشمند"
+          }
+        }
+      }
+    },
+    "Smart Care Reminders": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادآورهای هوشمند مراقبت"
+          }
+        }
+      }
+    },
+    "Smart Reminders": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادآورهای هوشمند"
+          }
+        }
+      }
+    },
+    "Snooze 1h": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تعویق ۱ ساعت"
+          }
+        }
+      }
+    },
+    "Social": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اجتماعی"
+          }
+        }
+      }
+    },
+    "Sort": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مرتب‌سازی"
+          }
+        }
+      }
+    },
+    "Sound": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "صدا"
+          }
+        }
+      }
+    },
+    "Start caring": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شروع مراقبت"
+          }
+        }
+      }
+    },
+    "Start caring replaces the sample household with this pet and three daily tasks. Keep sample pets leaves Luna, Milo, and Buddy so you can explore first.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "«شروع مراقبت» خانوار نمونه را با این حیوان و سه کار روزانه جایگزین می‌کند. «نگه‌داشتن حیوانات نمونه» لونا، میلو و بادی را نگه می‌دارد تا ابتدا برنامه را بشناسید."
+          }
+        }
+      }
+    },
+    "Start from a template": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شروع از یک الگو"
+          }
+        }
+      }
+    },
+    "Starting Date": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تاریخ شروع"
+          }
+        }
+      }
+    },
+    "Status": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "وضعیت"
+          }
+        }
+      }
+    },
+    "Stay signed in": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ماندن در حساب"
+          }
+        }
+      }
+    },
+    "Stop & Analyze": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "توقف و تحلیل"
+          }
+        }
+      }
+    },
+    "Stop recording": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "توقف ضبط"
+          }
+        }
+      }
+    },
+    "Suggested Actions": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اقدامات پیشنهادی"
+          }
+        }
+      }
+    },
+    "Suggesting…": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال پیشنهاد…"
+          }
+        }
+      }
+    },
+    "Swipe a care task to snooze or edit. Health reminders keep vaccines and vet visits on track.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "برای تعویق یا ویرایش، کار را بکشید. یادآورهای سلامت واکسن‌ها و ویزیت‌ها را به‌موقع نگه می‌دارند."
+          }
+        }
+      }
+    },
+    "Switch": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تغییر"
+          }
+        }
+      }
+    },
+    "Switch between pet profiles to view specialized AI insights and memory logs.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بین پروفایل‌ها جابه‌جا شوید تا بینش‌ها و خاطرات اختصاصی هر حیوان را ببینید."
+          }
+        }
+      }
+    },
+    "Sync": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همگام‌سازی"
+          }
+        }
+      }
+    },
+    "Sync and household sharing": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همگام‌سازی و اشتراک خانوار"
+          }
+        }
+      }
+    },
+    "Sync now": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همگام‌سازی اکنون"
+          }
+        }
+      }
+    },
+    "Syncing with your account…": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال همگام‌سازی با حساب شما…"
+          }
+        }
+      }
+    },
+    "Syncing…": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال همگام‌سازی…"
+          }
+        }
+      }
+    },
+    "System": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سیستم"
+          }
+        }
+      }
+    },
+    "Tap a profile to edit. Swipe to remove.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "برای ویرایش روی پروفایل بزنید. برای حذف بکشید."
+          }
+        }
+      }
+    },
+    "Tap a template to add that task without retyping.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "روی یک الگو بزنید تا آن کار بدون تایپ دوباره اضافه شود."
+          }
+        }
+      }
+    },
+    "Tap to add feeding, walks, meds, and more.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "برای افزودن غذا، پیاده‌روی، دارو و موارد دیگر بزنید."
+          }
+        }
+      }
+    },
+    "Target Pet": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حیوان مورد نظر"
+          }
+        }
+      }
+    },
+    "Task Type": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نوع کار"
+          }
+        }
+      }
+    },
+    "Task name (e.g. Breakfast, Walk, Medication)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نام کار (مثلاً صبحانه، پیاده‌روی، دارو)"
+          }
+        }
+      }
+    },
+    "Task templates": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الگوهای کار"
+          }
+        }
+      }
+    },
+    "Tasks": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کارها"
+          }
+        }
+      }
+    },
+    "Tasks, health, and assistant suggestions": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کارها، سلامت و پیشنهادهای دستیار"
+          }
+        }
+      }
+    },
+    "Template": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الگو"
+          }
+        }
+      }
+    },
+    "Templates let you add this task again without retyping.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "با الگوها می‌توانید این کار را بدون تایپ دوباره اضافه کنید."
+          }
+        }
+      }
+    },
+    "Terms": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شرایط"
+          }
+        }
+      }
+    },
+    "Terms of use": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شرایط استفاده"
+          }
+        }
+      }
+    },
+    "This %@": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "این %@"
+          }
+        }
+      }
+    },
+    "This action cannot be undone.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "این کار قابل بازگشت نیست."
+          }
+        }
+      }
+    },
+    "This cannot be undone.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "این کار قابل بازگشت نیست."
+          }
+        }
+      }
+    },
+    "This iPhone": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "این آیفون"
+          }
+        }
+      }
+    },
+    "This month": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "این ماه"
+          }
+        }
+      }
+    },
+    "This week": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "این هفته"
+          }
+        }
+      }
+    },
+    "Time": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ساعت"
+          }
+        }
+      }
+    },
+    "Times": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دفعات"
+          }
+        }
+      }
+    },
+    "Title": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عنوان"
+          }
+        }
+      }
+    },
+    "To Do": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "انجام‌نشده"
+          }
+        }
+      }
+    },
+    "Today": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "امروز"
+          }
+        }
+      }
+    },
+    "Today's AI Timeline": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خط زمانی هوشمند امروز"
+          }
+        }
+      }
+    },
+    "Today's Care for %@": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مراقبت امروز %@"
+          }
+        }
+      }
+    },
+    "Today's Mood": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حال امروز"
+          }
+        }
+      }
+    },
+    "Today’s care": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مراقبت امروز"
+          }
+        }
+      }
+    },
+    "Total Reminders Today": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کل یادآورهای امروز"
+          }
+        }
+      }
+    },
+    "Tracking %@": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیگیری %@"
+          }
+        }
+      }
+    },
+    "Training": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آموزش"
+          }
+        }
+      }
+    },
+    "Trends from tasks, meals, and activity": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "روندها از کارها، وعده‌ها و فعالیت"
+          }
+        }
+      }
+    },
+    "Try Again": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تلاش دوباره"
+          }
+        }
+      }
+    },
+    "Try asking": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "امتحان کنید بپرسید"
+          }
+        }
+      }
+    },
+    "Type": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نوع"
+          }
+        }
+      }
+    },
+    "Undo": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "واگرد"
+          }
+        }
+      }
+    },
+    "Unit": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "واحد"
+          }
+        }
+      }
+    },
+    "Upgrade": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ارتقا"
+          }
+        }
+      }
+    },
+    "Use AI suggest or enter calories manually.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "از پیشنهاد هوش مصنوعی استفاده کنید یا کالری را دستی وارد کنید."
+          }
+        }
+      }
+    },
+    "Use Care → Add to schedule daily feeding and weekly grooming so nothing slips.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "از «مراقبت ← افزودن» غذای روزانه و آرایش هفتگی را زمان‌بندی کنید تا چیزی فراموش نشود."
+          }
+        }
+      }
+    },
+    "Use the default unless your household API runs somewhere else.": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "از پیش‌فرض استفاده کنید مگر اینکه API خانوار شما جای دیگری اجرا شود."
+          }
+        }
+      }
+    },
+    "Using %@’s data saved on this iPhone": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "استفاده از داده‌های ذخیره‌شده %@ روی این آیفون"
+          }
+        }
+      }
+    },
+    "Using %@’s tasks and health records": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "استفاده از کارها و سوابق سلامت %@"
+          }
+        }
+      }
+    },
+    "Vaccine Name": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نام واکسن"
+          }
+        }
+      }
+    },
+    "Vet appointment": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نوبت دامپزشکی"
+          }
+        }
+      }
+    },
+    "View": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نمایش"
+          }
+        }
+      }
+    },
+    "View plans": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مشاهده طرح‌ها"
+          }
+        }
+      }
+    },
+    "Voice Analysis": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تحلیل صدا"
+          }
+        }
+      }
+    },
+    "Walking": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیاده‌روی"
+          }
+        }
+      }
+    },
+    "Walks": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیاده‌روی‌ها"
+          }
+        }
+      }
+    },
+    "Week": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هفته"
+          }
+        }
+      }
+    },
+    "Weekly": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هفتگی"
+          }
+        }
+      }
+    },
+    "Weekly Reminder": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادآور هفتگی"
+          }
+        }
+      }
+    },
+    "Weight": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "وزن"
+          }
+        }
+      }
+    },
+    "Weight over this %@": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "وزن در این %@"
+          }
+        }
+      }
+    },
+    "Weight tracking": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیگیری وزن"
+          }
+        }
+      }
+    },
+    "Weight trend from your account": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "روند وزن از حساب شما"
+          }
+        }
+      }
+    },
+    "Welcome back 👋": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خوش برگشتید 👋"
+          }
+        }
+      }
+    },
+    "Wellness:": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سلامت:"
+          }
+        }
+      }
+    },
+    "What this means": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "این یعنی چه"
+          }
+        }
+      }
+    },
+    "What you get": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "چه چیزی دریافت می‌کنید"
+          }
+        }
+      }
+    },
+    "When": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "زمان"
+          }
+        }
+      }
+    },
+    "Yearly": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سالانه"
+          }
+        }
+      }
+    },
+    "Years": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سال"
+          }
+        }
+      }
+    },
+    "You": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شما"
+          }
+        }
+      }
+    },
+    "Your Managed Pets": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حیوانات تحت مدیریت شما"
+          }
+        }
+      }
+    },
+    "Your pet home": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خانه حیوان شما"
+          }
+        }
+      }
+    },
+    "Your pets": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حیوانات شما"
+          }
+        }
+      }
+    },
+    "Your pets today": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حیوانات شما امروز"
+          }
+        }
+      }
+    },
+    "g": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گرم"
+          }
+        }
+      }
+    },
+    "kg": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کیلوگرم"
+          }
+        }
+      }
+    },
+    "lb": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پوند"
+          }
+        }
+      }
+    },
+    "·": {},
+    "فارسی": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فارسی"
+          }
+        }
+      }
+    },
+    "•": {},
+    "• \"%@\"": {},
+    "🌾 Hay & Greens": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌾 علوفه و سبزی"
+          }
+        }
+      }
+    },
+    "🍖 Food": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🍖 غذا"
+          }
+        }
+      }
+    },
+    "🍗 Meal / Food": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🍗 وعده / غذا"
+          }
+        }
+      }
+    },
+    "🎮 Play": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🎮 بازی"
+          }
+        }
+      }
+    },
+    "🎾 Play & Exercise": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🎾 بازی و ورزش"
+          }
+        }
+      }
+    },
+    "🎾 Toy": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🎾 اسباب‌بازی"
+          }
+        }
+      }
+    },
+    "🐾 All Pets": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🐾 همه حیوانات"
+          }
+        }
+      }
+    },
+    "🐾 All Pets (%lld)": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🐾 همه حیوانات (%lld)"
+          }
+        }
+      }
+    },
+    "🐾 All Pets Overview": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🐾 نمای کلی همه حیوانات"
+          }
+        }
+      }
+    },
+    "🐾 General Care": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🐾 مراقبت عمومی"
+          }
+        }
+      }
+    },
+    "💊 Medicine / Drops": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "💊 دارو / قطره"
+          }
+        }
+      }
+    },
+    "💊 Meds": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "💊 دارو"
+          }
+        }
+      }
+    },
+    "💧 Water Refill": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "💧 تعویض آب"
+          }
+        }
+      }
+    },
+    "😊": {},
+    "😊 Happy": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "😊 شاد"
+          }
+        }
+      }
+    },
+    "😴 Rest": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "😴 استراحت"
+          }
+        }
+      }
+    },
+    "🚶 Walk": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🚶 پیاده‌روی"
+          }
+        }
+      }
+    },
+    "🚽 Litter Box": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🚽 ظرف خاک"
+          }
+        }
+      }
+    },
+    "🛁 Grooming / Bath": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🛁 آرایش / حمام"
+          }
+        }
+      }
+    },
+    "🧠 Check-in": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🧠 بررسی حال"
+          }
+        }
+      }
+    },
+    "🪺 Habitat": {
+      "localizations": {
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🪺 محل زندگی"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

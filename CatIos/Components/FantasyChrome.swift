@@ -31,11 +31,11 @@ struct FantasySectionHeader: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .font(AppTheme.headlineFont())
                 .foregroundStyle(AppTheme.textPrimary)
             if let subtitle {
-                Text(subtitle)
+                Text(LocalizedStringKey(subtitle))
                     .font(AppTheme.captionFont())
                     .foregroundStyle(AppTheme.textSecondary)
             }
@@ -55,10 +55,10 @@ struct FantasyHeroHeader: View {
         HStack(alignment: .top, spacing: AppTheme.spacingM) {
             EnchantedIconBadge(systemImage: systemImage, tint: AppTheme.primary, size: 52)
             VStack(alignment: .leading, spacing: 6) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(AppTheme.titleFont(22))
                     .foregroundStyle(AppTheme.textPrimary)
-                Text(subtitle)
+                Text(LocalizedStringKey(subtitle))
                     .font(AppTheme.bodyFont())
                     .foregroundStyle(AppTheme.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -76,7 +76,7 @@ struct FantasyTopicChip: View {
     var tint: Color = AppTheme.primary
 
     var body: some View {
-        Label(title, systemImage: systemImage)
+        Label(LocalizedStringKey(title), systemImage: systemImage)
             .font(AppTheme.captionFont().weight(.semibold))
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
@@ -100,10 +100,10 @@ struct CareSummaryCard: View {
         VStack(alignment: .leading, spacing: AppTheme.spacingS) {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(headline)
+                    Text(LocalizedStringKey(headline))
                         .font(AppTheme.headlineFont())
                         .foregroundStyle(overdue > 0 ? AppTheme.danger : AppTheme.textPrimary)
-                    Text(detail)
+                    Text(LocalizedStringKey(detail))
                         .font(AppTheme.captionFont())
                         .foregroundStyle(AppTheme.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)

@@ -15,9 +15,9 @@ enum AppAppearance: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .system: return "System"
-        case .light: return "Light"
-        case .dark: return "Dark"
+        case .system: return L("System")
+        case .light: return L("Light")
+        case .dark: return L("Dark")
         }
     }
 
@@ -208,7 +208,7 @@ struct StatusBadge: View {
     var tint: Color = AppTheme.primary
 
     var body: some View {
-        Text(title)
+        Text(LocalizedStringKey(title))
             .font(AppTheme.captionFont().weight(.bold))
             .foregroundStyle(tint)
             .padding(.horizontal, 10)
