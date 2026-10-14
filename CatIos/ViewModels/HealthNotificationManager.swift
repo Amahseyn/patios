@@ -23,12 +23,15 @@ class HealthNotificationManager: ObservableObject {
     }
 
     func requestAuthorization() async -> Bool {
-        let granted = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
-        checkAuthorizationStatus()
-        return granted ?? false
+        let granted = (try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])) ?? false
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        authorizationStatus = settings.authorizationStatus
+        return granted
     }
 
     func scheduleReminders(for record: HealthRecord) {
+        guard NotificationPreferences.isOn(NotificationPreferences.masterKey) else { return }
+        guard NotificationPreferences.isOn(NotificationPreferences.healthKey) else { return }
         guard let nextDueDate = record.nextDueDate else { return }
         guard record.isReminderSet == true else { return }
         guard authorizationStatus == .authorized else { return }

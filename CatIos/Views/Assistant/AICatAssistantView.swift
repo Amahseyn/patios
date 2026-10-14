@@ -8,11 +8,13 @@ import SwiftUI
 
 struct AICatAssistantView: View {
     var body: some View {
-        PetAIAssistantView()
+        ProfileAIView()
     }
 }
 
 #Preview {
     AICatAssistantView()
         .environmentObject(PetManager.shared)
+        .environmentObject(AuthSession.shared)
+        .environmentObject(AssistantSessionStore.shared)
 }

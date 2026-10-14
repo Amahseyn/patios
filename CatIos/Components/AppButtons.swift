@@ -1,47 +1,34 @@
-//
-//  AppButtons.swift
-//  CatEmotionAI
-//
-//  Reusable button styles used throughout the app for a consistent,
-//  premium feel with large touch targets and subtle press animations.
-//
-
 import SwiftUI
-import UIKit
 
-/// Full-width, gradient-filled primary call-to-action button.
 struct PrimaryButton: View {
     let title: String
     var systemImage: String? = nil
     var action: () -> Void
-
-    @State private var isPressed = false
+    @Environment(\.isEnabled) private var isEnabled
 
     var body: some View {
-        Button(action: {
-            let generator = UIImpactFeedbackGenerator(style: .medium)
-            generator.impactOccurred()
-            action()
-        }) {
-            HStack(spacing: AppTheme.spacingS) {
+        Button(action: action) {
+            Group {
                 if let systemImage {
-                    Image(systemName: systemImage)
-                        .font(.headline)
+                    Label(title, systemImage: systemImage)
+                } else {
+                    Text(title)
                 }
-                Text(title)
-                    .font(.headline)
             }
-            .foregroundStyle(.white)
+            .font(AppTheme.headlineFont())
+            .foregroundStyle(Color.white)
             .frame(maxWidth: .infinity)
-            .frame(height: 56)
-            .background(AppTheme.heroGradient)
-            .clipShape(RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium, style: .continuous))
+            .padding(.vertical, 14)
+            .background {
+                RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium, style: .continuous)
+                    .fill(AppTheme.heroGradient)
+            }
         }
         .buttonStyle(PressableButtonStyle())
+        .opacity(isEnabled ? 1 : 0.45)
     }
 }
 
-/// Outlined secondary button, used for less prominent actions.
 struct SecondaryButton: View {
     let title: String
     var systemImage: String? = nil
@@ -49,37 +36,40 @@ struct SecondaryButton: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: AppTheme.spacingS) {
+            Group {
                 if let systemImage {
-                    Image(systemName: systemImage)
-                        .font(.headline)
+                    Label(title, systemImage: systemImage)
+                } else {
+                    Text(title)
                 }
-                Text(title)
-                    .font(.headline)
             }
+            .font(AppTheme.headlineFont())
             .foregroundStyle(AppTheme.primary)
             .frame(maxWidth: .infinity)
-            .frame(height: 56)
-            .background(AppTheme.primary.opacity(0.12))
-            .clipShape(RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium, style: .continuous))
+            .padding(.vertical, 13)
+            .background {
+                RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium, style: .continuous)
+                    .fill(AppTheme.primary.opacity(0.1))
+            }
         }
         .buttonStyle(PressableButtonStyle())
     }
 }
 
-/// Adds a subtle scale-down animation on press for a tactile feel.
 struct PressableButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
-            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .opacity(configuration.isPressed ? 0.88 : 1)
+            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
     }
 }
 
 #Preview {
     VStack(spacing: 16) {
-        PrimaryButton(title: "Record Cat Sound", systemImage: "mic.fill") {}
-        SecondaryButton(title: "Analyze Again", systemImage: "arrow.clockwise") {}
+        PrimaryButton(title: "Get started", systemImage: "arrow.right") {}
+        SecondaryButton(title: "Not now") {}
     }
     .padding()
+    .fantasyScreen()
 }

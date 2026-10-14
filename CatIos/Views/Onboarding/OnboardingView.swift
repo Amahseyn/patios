@@ -1,115 +1,82 @@
-//
-//  OnboardingView.swift
-//  CatEmotionAI
-//
-//  3-step onboarding flow with a swipeable TabView, custom page indicators,
-//  a Skip option, and a Continue / Get Started button.
-//
-
 import SwiftUI
 
 struct OnboardingView: View {
     @StateObject private var viewModel = OnboardingViewModel()
-
     var onFinished: () -> Void
 
     var body: some View {
-        ZStack {
-            AppTheme.background.ignoresSafeArea()
+        NavigationStack {
+            ZStack {
+                FantasyScreenBackground().ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                HStack {
-                    Spacer()
-                    if !viewModel.isLastPage {
-                        Button("Skip") {
-                            viewModel.skip()
+                VStack(spacing: 0) {
+                    TabView(selection: $viewModel.currentPage) {
+                        ForEach(0..<viewModel.pages.count, id: \.self) { index in
+                            OnboardingPageView(page: viewModel.pages[index])
+                                .tag(index)
                         }
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(AppTheme.textSecondary)
-                        .padding(.trailing, AppTheme.spacingL)
-                        .padding(.top, AppTheme.spacingS)
+                        petSetup
+                            .tag(viewModel.pages.count)
                     }
-                }
-                .frame(height: 44)
+                    .tabViewStyle(.page(indexDisplayMode: .always))
 
-                TabView(selection: $viewModel.currentPage) {
-                    ForEach(0..<viewModel.pages.count, id: \.self) { index in
-                        OnboardingPageView(page: viewModel.pages[index])
-                            .tag(index)
+                    PrimaryButton(
+                        title: viewModel.isLastPage ? "Start caring" : "Continue",
+                        systemImage: viewModel.isLastPage ? "checkmark" : "arrow.right"
+                    ) {
+                        viewModel.advance()
                     }
-
-                    ForEach(0..<viewModel.questions.count, id: \.self) { qIdx in
-                        let question = viewModel.questions[qIdx]
-                        let tagIndex = viewModel.pages.count + qIdx
-                        VStack(spacing: AppTheme.spacingL) {
-                            Text(question.title)
-                                .font(.title2.weight(.bold))
-                                .foregroundStyle(AppTheme.textPrimary)
-                                .multilineTextAlignment(.center)
-
-                            Text(question.subtitle)
-                                .font(.subheadline)
-                                .foregroundStyle(AppTheme.textSecondary)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, AppTheme.spacingM)
-
-                            VStack(spacing: 12) {
-                                ForEach(question.options, id: \.self) { opt in
-                                    let isSelected = viewModel.selectedAnswers[qIdx] == opt
-                                    Button {
-                                        viewModel.selectOption(opt)
-                                    } label: {
-                                        HStack {
-                                            Text(opt)
-                                                .font(.headline.weight(.semibold))
-                                            Spacer()
-                                            if isSelected {
-                                                Image(systemName: "checkmark.circle.fill")
-                                                    .foregroundStyle(AppTheme.primary)
-                                            }
-                                        }
-                                        .padding(AppTheme.spacingM)
-                                        .background(isSelected ? AppTheme.primary.opacity(0.12) : AppTheme.cardBackground)
-                                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 16)
-                                                .stroke(isSelected ? AppTheme.primary : Color.clear, lineWidth: 2)
-                                        )
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                            }
-                            .padding(.top, AppTheme.spacingM)
-                        }
-                        .padding(AppTheme.spacingL)
-                        .tag(tagIndex)
+                    .disabled(viewModel.isLastPage && !viewModel.canFinish)
+                    .padding()
+                }
+            }
+            .navigationTitle("Patios")
+            .fantasyNavigation()
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(viewModel.isLastPage ? "Keep sample pets" : "Skip") {
+                        viewModel.skip()
                     }
+                    .foregroundStyle(AppTheme.primary)
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .animation(.easeInOut, value: viewModel.currentPage)
-
-                HStack(spacing: 8) {
-                    ForEach(0..<viewModel.totalSteps, id: \.self) { index in
-                        Capsule()
-                            .fill(index == viewModel.currentPage ? AppTheme.primary : AppTheme.primary.opacity(0.2))
-                            .frame(width: index == viewModel.currentPage ? 24 : 8, height: 8)
-                            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: viewModel.currentPage)
-                    }
-                }
-                .padding(.bottom, AppTheme.spacingL)
-
-                PrimaryButton(
-                    title: viewModel.isLastPage ? "Get Started" : (viewModel.isQuestionPage ? "Next Question" : "Continue"),
-                    systemImage: viewModel.isLastPage ? "checkmark" : "arrow.right"
-                ) {
-                    viewModel.advance()
-                }
-                .padding(.horizontal, AppTheme.spacingL)
-                .padding(.bottom, AppTheme.spacingL)
             }
         }
         .onAppear {
             viewModel.onComplete = onFinished
+        }
+    }
+
+    private var petSetup: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: AppTheme.spacingM) {
+                FantasyHeroHeader(
+                    title: "Add your first pet",
+                    subtitle: "Cats, dogs, birds, rabbits, and any other pet can join later.",
+                    systemImage: "pawprint.fill"
+                )
+
+                VStack(spacing: AppTheme.spacingM) {
+                    TextField("Pet name", text: $viewModel.petName)
+                        .textInputAutocapitalization(.words)
+                        .padding()
+                        .cardStyle()
+                    PetKindPicker(selection: $viewModel.petType)
+                        .padding()
+                        .cardStyle()
+                    Picker("Sex", selection: $viewModel.petGender) {
+                        ForEach(PetGender.allCases) { gender in
+                            Text(gender.rawValue).tag(gender)
+                        }
+                    }
+                    .padding()
+                    .cardStyle()
+                }
+
+                Text("Start caring replaces the sample household with this pet and three daily tasks. Keep sample pets leaves Luna, Milo, and Buddy so you can explore first.")
+                    .font(AppTheme.captionFont())
+                    .foregroundStyle(AppTheme.textSecondary)
+            }
+            .padding(AppTheme.spacingL)
         }
     }
 }

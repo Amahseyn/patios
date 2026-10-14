@@ -90,13 +90,27 @@ enum PetType: String, CaseIterable, Identifiable, Codable {
         switch self {
         case .cat: return "Domestic Short Hair"
         case .dog: return "Mixed Breed"
-        case .bird: return "Mixed Breed"
-        case .rabbit: return "Mixed Breed"
-        case .horse: return "Mixed Breed"
-        case .fish: return "Mixed Breed"
-        case .hamster: return "Mixed Breed"
-        case .reptile: return "Mixed Breed"
-        case .other: return "Mixed Breed"
+        case .bird: return "Companion Bird"
+        case .rabbit: return "Domestic Rabbit"
+        case .horse: return "Horse"
+        case .fish: return "Freshwater"
+        case .hamster: return "Hamster"
+        case .reptile: return "Reptile"
+        case .other: return "Companion"
+        }
+    }
+
+    var accentHex: String {
+        switch self {
+        case .cat: return "#C45C86"
+        case .dog: return "#D4922A"
+        case .bird: return "#3D7EC4"
+        case .rabbit: return "#E7A0C0"
+        case .horse: return "#8B6BB5"
+        case .fish: return "#3E9A6A"
+        case .hamster: return "#D4654A"
+        case .reptile: return "#6A5A9A"
+        case .other: return "#C45C86"
         }
     }
 }

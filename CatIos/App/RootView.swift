@@ -11,6 +11,7 @@ import SwiftUI
 
 struct RootView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding: Bool = false
+    @StateObject private var authSession = AuthSession.shared
 
     var body: some View {
         Group {
@@ -27,6 +28,9 @@ struct RootView: View {
             }
         }
         .animation(.easeInOut, value: hasCompletedOnboarding)
+        .task {
+            await authSession.bootstrap()
+        }
     }
 }
 

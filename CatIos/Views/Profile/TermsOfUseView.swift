@@ -9,22 +9,20 @@ struct TermsOfUseView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppTheme.spacingL) {
-                Text("Terms of Use")
-                    .font(.title.weight(.bold))
-                    .foregroundStyle(AppTheme.textPrimary)
-
-                Text("Last updated: August 2026")
-                    .font(.caption)
-                    .foregroundStyle(AppTheme.textSecondary)
+                RealmLegalHero(
+                    title: "Terms of Use",
+                    subtitle: "Last updated: August 2026",
+                    icon: "doc.text.fill"
+                )
 
                 termsSection(title: "1. Acceptance of Terms", content: """
-By downloading, installing, or using the Pet Emotion AI mobile application ("App"), you agree to be bound by these Terms of Use ("Terms"). If you do not agree to these Terms, please do not download or use the App. These Terms apply to all visitors, users, and others who access or use the App.
+By downloading, installing, or using the Pet Care mobile application ("App"), you agree to be bound by these Terms of Use ("Terms"). If you do not agree to these Terms, please do not download or use the App. These Terms apply to all visitors, users, and others who access or use the App.
 """)
 
                 termsSection(title: "2. Description of Service", content: """
-Pet Emotion AI provides a comprehensive pet care management platform designed for multi-pet households. Core features include, but are not limited to:
+Pet Care is a home for every pet you look after, in households of one pet or many. Core features include, but are not limited to:
 
-• Multi-Pet Profile Management: Create and manage profiles for cats, dogs, and other pets with customizable avatars, personality traits, and age tracking.
+• Multi-Pet Profile Management: Create and manage profiles for cats, dogs, birds, rabbits, horses, fish, hamsters, reptiles, and any other kind you name, with avatars, personality notes, and age tracking.
 • Care Tracking & Task Management: Log feeding, water intake, bathroom events, grooming, medications, and custom care tasks with flexible scheduling (hourly, daily, weekly, monthly, yearly, or custom intervals).
 • Health & Vaccination Records: Maintain vaccination timelines, vet visit history, medical notes, and automated reminders with configurable recurrence frequencies.
 • AI Assistant & Behavioral Analysis: Interact with an on-device AI assistant trained on your pet's history; use voice input to receive behavioral insights, emotion analysis, and care suggestions.
@@ -64,16 +62,18 @@ The AI Assistant and behavioral analysis features provide suggestions based on v
 """)
 
                 termsSection(title: "6. Intellectual Property Rights", content: """
-• App Ownership: All content, features, functionality, trademarks, logos, and design elements of the App are owned by Pet Emotion AI or its licensors and are protected by international copyright, trademark, patent, and other intellectual property laws.
+• App Ownership: All content, features, functionality, trademarks, logos, and design elements of the App are owned by Pet Care or its licensors and are protected by international copyright, trademark, patent, and other intellectual property laws.
 • User Content: You retain ownership of all data you input into the App (pet profiles, care logs, photos, etc.). By using the App, you grant us a limited, worldwide, royalty-free license to process and store your data solely to provide and improve the service.
 • Feedback: Any feedback, suggestions, or ideas you provide about the App become our exclusive property, and we may use them without obligation or compensation to you.
 """)
 
                 termsSection(title: "7. Subscription & Payments", content: """
-Certain features of the App may be offered through a subscription model. By subscribing, you agree to:
+Basic is free and shows ads on the main screens. Pet Care+ removes those ads. Pet Care+ Monthly is $3.99. Pet Care+ Yearly is $29.99. A paid plan is an App Store purchase that Pet Care verifies before the ads go away. If purchases are unavailable, the account stays on Basic.
 
-• Pay all applicable fees (plus taxes) as described at the point of purchase.
-• Automatic renewal of your subscription unless you cancel at least 24 hours before the end of the current billing period.
+When App Store billing is active, you agree to:
+
+• Pay the fees (plus taxes) shown on the pricing page.
+• Automatic renewal unless you cancel at least 24 hours before the end of the current billing period.
 • Price changes: We may change subscription fees upon reasonable notice. Continued use after the price change constitutes acceptance of the new fee.
 • Refunds: Subscription fees are non-refundable except as required by law or at our sole discretion.
 """)
@@ -92,13 +92,13 @@ Your use of third-party services may be subject to their respective terms and pr
                 termsSection(title: "9. Limitation of Liability", content: """
 To the fullest extent permitted by applicable law:
 
-• Pet Emotion AI and its affiliates, officers, directors, employees, agents, and licensors shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, use, goodwill, or other intangible losses.
+• Pet Care and its affiliates, officers, directors, employees, agents, and licensors shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, use, goodwill, or other intangible losses.
 • Our total liability to you for any claim arising out of or relating to these Terms or the App shall not exceed the amount you paid us in the twelve (12) months preceding the claim, or one hundred dollars ($100), whichever is greater.
 • Some jurisdictions do not allow the exclusion of certain warranties or limitation of liability. Accordingly, some of the above limitations may not apply to you.
 """)
 
                 termsSection(title: "10. Indemnification", content: """
-You agree to indemnify, defend, and hold harmless Pet Emotion AI and its affiliates, officers, directors, employees, agents, and licensors from and against any and all claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or in any way connected with your access to or use of the App, your violation of these Terms, or your violation of any rights of another party.
+You agree to indemnify, defend, and hold harmless Pet Care and its affiliates, officers, directors, employees, agents, and licensors from and against any and all claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or in any way connected with your access to or use of the App, your violation of these Terms, or your violation of any rights of another party.
 """)
 
                 termsSection(title: "11. Termination", content: """
@@ -110,7 +110,7 @@ We reserve the right to update or modify these Terms at any time. Material chang
 """)
 
                 termsSection(title: "13. Governing Law & Dispute Resolution", content: """
-These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which Pet Emotion AI operates, without regard to its conflict of law provisions. Any disputes arising out of these Terms or the use of the App shall be resolved through good-faith negotiation, and if unresolved, through binding arbitration or the courts of competent jurisdiction.
+These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which Pet Care operates, without regard to its conflict of law provisions. Any disputes arising out of these Terms or the use of the App shall be resolved through good-faith negotiation, and if unresolved, through binding arbitration or the courts of competent jurisdiction.
 """)
 
                 termsSection(title: "14. Contact Information", content: """
@@ -121,30 +121,30 @@ If you have any questions about these Terms of Use, please contact us:
 • Website: www.petemotionai.app
 
 For legal notices, please send correspondence to:
-Pet Emotion AI Legal Team
+Pet Care Legal Team
 legal@petemotionai.app
 """)
             }
             .padding(AppTheme.spacingM)
         }
-        .background(AppTheme.background.ignoresSafeArea())
-        .navigationTitle("Terms of Use")
-        .navigationBarTitleDisplayMode(.inline)
+        .fantasyScreen()
+        .navigationTitle("Terms")
+        .fantasyNavigation()
     }
 
     private func termsSection(title: String, content: String) -> some View {
         VStack(alignment: .leading, spacing: AppTheme.spacingS) {
             Text(title)
-                .font(.headline)
+                .font(AppTheme.headlineFont())
                 .foregroundStyle(AppTheme.textPrimary)
 
             Text(content)
-                .font(.body)
+                .font(AppTheme.bodyFont())
                 .foregroundStyle(AppTheme.textSecondary)
-                .lineSpacing(4)
+                .lineSpacing(5)
         }
         .padding(AppTheme.spacingM)
-        .cardStyle()
+        .cardStyle(cornerRadius: AppTheme.cornerRadiusLarge)
     }
 }
 

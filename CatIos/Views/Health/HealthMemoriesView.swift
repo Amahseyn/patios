@@ -5,16 +5,10 @@
 
 import SwiftUI
 
-enum HealthSubTab: String, CaseIterable, Identifiable {
-    case healthTimeline = "Health Timeline 💉"
-
-    var id: String { rawValue }
-}
-
 struct HealthMemoriesView: View {
-    @StateObject private var companionVM = PetCompanionViewModel()
+    @EnvironmentObject private var healthStore: HealthRecordStore
     @EnvironmentObject private var petManager: PetManager
-    @State private var selectedTab: HealthSubTab = .healthTimeline
+    @EnvironmentObject private var householdSync: HouseholdSync
 
     @State private var selectedPetScopeId: UUID = PetManager.allPetsId
 
@@ -24,11 +18,11 @@ struct HealthMemoriesView: View {
 
     @State private var newRecordTitle: String = ""
     @State private var newRecordType: HealthRecordType = .vaccination
-    @State private var newVaccineName: String = "DHPP Booster 💉"
+    @State private var newVaccineName: String = "DHPP Booster"
     @State private var newRecordDate: Date = Date()
     @State private var hasNextDueDate: Bool = true
     @State private var newNextDueDate: Date = Calendar.current.date(byAdding: .year, value: 1, to: Date()) ?? Date()
-    @State private var newDoctorLocation: String = "Happy Paws Vet Clinic 🩺"
+    @State private var newDoctorLocation: String = ""
     @State private var newNotes: String = ""
     @State private var scheduleReminderAlarm: Bool = true
     @State private var newFrequency: TaskFrequency = .yearly
@@ -39,7 +33,7 @@ struct HealthMemoriesView: View {
 
     @State private var editRecordTitle: String = ""
     @State private var editRecordType: HealthRecordType = .vaccination
-    @State private var editVaccineName: String = "DHPP Booster 💉"
+    @State private var editVaccineName: String = "DHPP Booster"
     @State private var editRecordDate: Date = Date()
     @State private var editHasNextDueDate: Bool = true
     @State private var editNextDueDate: Date = Calendar.current.date(byAdding: .year, value: 1, to: Date()) ?? Date()
@@ -54,41 +48,118 @@ struct HealthMemoriesView: View {
 
     private var filteredHealthRecords: [HealthRecord] {
         let records = if selectedPetScopeId == PetManager.allPetsId {
-            companionVM.healthTimeline
+            healthStore.records
         } else {
-            companionVM.healthTimeline.filter { $0.petId == selectedPetScopeId || $0.petId == nil }
+            healthStore.records.filter { $0.petId == selectedPetScopeId || $0.petId == nil }
         }
         // Sort by date, most recent first
         return records.sorted { ($0.date ?? Date.distantPast) > ($1.date ?? Date.distantPast) }
     }
 
+    private var upcomingRecords: [HealthRecord] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let horizon = calendar.date(byAdding: .day, value: 45, to: today) ?? today
+        return filteredHealthRecords
+            .filter { record in
+                guard let due = record.nextDueDate else { return false }
+                return calendar.startOfDay(for: due) <= horizon
+            }
+            .sorted { ($0.nextDueDate ?? .distantFuture) < ($1.nextDueDate ?? .distantFuture) }
+    }
+
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                Picker("Tab", selection: $selectedTab) {
-                    ForEach(HealthSubTab.allCases) { tab in
-                        Text(tab.rawValue).tag(tab)
+            List {
+                if householdSync.lastError != nil {
+                    Section {
+                        SyncStatusBanner()
                     }
                 }
-                .pickerStyle(.segmented)
-                .padding(AppTheme.spacingM)
 
-                Divider()
+                Section {
+                    PetScopePicker(selection: $selectedPetScopeId, pets: petManager.pets)
+                } footer: {
+                    Text("Nutrition, weight, and behavior sit with health so due dates and daily logs stay together.")
+                }
 
-                ScrollView {
-                    VStack(spacing: AppTheme.spacingL) {
-                    switch selectedTab {
-                    case .healthTimeline:
-                        healthTimelineView
+                if !upcomingRecords.isEmpty {
+                    Section {
+                        ForEach(upcomingRecords) { rec in
+                            healthRecordButton(rec, emphasizeDueDate: true)
+                        }
+                    } header: {
+                        Text("Coming up")
+                    } footer: {
+                        Text("Due in the next 45 days, or already overdue. Tap a record to edit.")
                     }
+                }
+
+                Section("Logs") {
+                    NavigationLink {
+                        NutritionView()
+                    } label: {
+                        ModuleLink(title: "Nutrition", systemImage: "fork.knife", tint: AppTheme.nutrition)
                     }
-                    .padding(AppTheme.spacingM)
-                    .padding(.bottom, 40)
+                    NavigationLink {
+                        WeightView()
+                    } label: {
+                        ModuleLink(title: "Weight", systemImage: "scalemass", tint: AppTheme.health)
+                    }
+                    NavigationLink {
+                        BehaviorView()
+                    } label: {
+                        ModuleLink(title: "Activity", systemImage: "figure.walk", tint: AppTheme.behavior)
+                    }
+                }
+
+                if !healthStore.reminders.isEmpty {
+                    Section("Reminders") {
+                        ForEach(healthStore.reminders, id: \.self) { rem in
+                            Label(rem, systemImage: "bell.badge")
+                        }
+                    }
+                }
+
+                Section {
+                    if filteredHealthRecords.isEmpty {
+                        EmptyStateView(
+                            systemImage: "cross.case",
+                            title: "No health records yet",
+                            message: "Add a vaccine, vet visit, or treatment so due dates and reminders stay on this iPhone — and in your account after you sign in.",
+                            actionTitle: householdSync.canMutate ? "Add Record" : nil,
+                            action: householdSync.canMutate ? { showAddHealthSheet = true } : nil
+                        )
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets())
+                    } else {
+                        ForEach(filteredHealthRecords) { rec in
+                            healthRecordButton(rec)
+                        }
+                    }
+                } header: {
+                    Text("All records")
+                } footer: {
+                    if !filteredHealthRecords.isEmpty {
+                        Text("Newest first. Swipe a record to delete or toggle its reminder.")
+                    }
                 }
             }
-            .background(AppTheme.background.ignoresSafeArea())
-            .navigationTitle("Health & Vaccination Care")
-            .navigationBarTitleDisplayMode(.inline)
+            .refreshable {
+                await householdSync.pullNow()
+            }
+            .fantasyScreen()
+            .fantasyNavigation()
+            .navigationTitle("Health")
+            .toolbar {
+                if householdSync.canMutate {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button("Add", systemImage: "plus") {
+                            showAddHealthSheet = true
+                        }
+                    }
+                }
+            }
             .sheet(isPresented: $showAddHealthSheet) {
                 addHealthRecordSheet
             }
@@ -98,10 +169,40 @@ struct HealthMemoriesView: View {
         }
     }
 
+    @ViewBuilder
+    private func healthRecordButton(_ rec: HealthRecord, emphasizeDueDate: Bool = false) -> some View {
+        Button {
+            guard householdSync.canMutate else { return }
+            loadEditDraft(from: rec)
+            editingRecord = rec
+            showEditHealthSheet = true
+        } label: {
+            HealthRecordRow(record: rec, petName: petName(for: rec), emphasizeDueDate: emphasizeDueDate)
+        }
+        .foregroundStyle(.primary)
+        .swipeActions(edge: .trailing, allowsFullSwipe: householdSync.canMutate) {
+            if householdSync.canMutate {
+                Button("Delete", role: .destructive) {
+                    healthStore.removeHealthRecord(rec)
+                }
+            }
+        }
+        .swipeActions(edge: .leading) {
+            if householdSync.canMutate {
+                Button(rec.isReminderSet == true ? "Mute" : "Remind") {
+                    var updated = rec
+                    updated.isReminderSet = (updated.isReminderSet == true) ? false : true
+                    healthStore.updateHealthRecord(updated)
+                }
+                .tint(AppTheme.warning)
+            }
+        }
+    }
+
     private func loadEditDraft(from record: HealthRecord) {
         editRecordTitle = record.title
         editRecordType = record.recordType
-        editVaccineName = record.vaccineName ?? "DHPP Booster 💉"
+        editVaccineName = record.vaccineName ?? "DHPP Booster"
         editRecordDate = record.date ?? Date()
         editHasNextDueDate = record.nextDueDate != nil
         editNextDueDate = record.nextDueDate ?? Calendar.current.date(byAdding: .year, value: 1, to: Date()) ?? Date()
@@ -115,230 +216,11 @@ struct HealthMemoriesView: View {
         editPetScopeId = record.petId ?? PetManager.allPetsId
     }
 
-    private var petScopeSelectorBar: some View {
-        HStack(spacing: 8) {
-            Button {
-                withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
-                    selectedPetScopeId = PetManager.allPetsId
-                }
-            } label: {
-                Text("🐾 All")
-                    .font(.caption2.weight(.medium))
-                    .foregroundStyle(selectedPetScopeId == PetManager.allPetsId ? .white : AppTheme.textSecondary)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(selectedPetScopeId == PetManager.allPetsId ? AppTheme.primary : AppTheme.cardBackground)
-                    .clipShape(Capsule())
-            }
-            .buttonStyle(.plain)
-
-            ForEach(petManager.pets) { pet in
-                Button {
-                    withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
-                        selectedPetScopeId = pet.id
-                    }
-                } label: {
-                    HStack(spacing: 4) {
-                        Text(pet.avatarEmoji)
-                        Text(pet.name)
-                            .font(.caption2.weight(.medium))
-                    }
-                    .foregroundStyle(selectedPetScopeId == pet.id ? .white : AppTheme.textSecondary)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(selectedPetScopeId == pet.id ? Color(hex: pet.petColorHex) : AppTheme.cardBackground)
-                    .clipShape(Capsule())
-                }
-                .buttonStyle(.plain)
-            }
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 4)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(AppTheme.cardBackground)
-                .shadow(color: Color.black.opacity(0.04), radius: 2, x: 0, y: 1)
-        )
-        .padding(.horizontal, 16)
-        .padding(.top, 4)
-    }
-
-    private var healthTimelineView: some View {
-        VStack(alignment: .leading, spacing: AppTheme.spacingM) {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "syringe.fill")
-                            .font(.subheadline)
-                            .foregroundStyle(.purple)
-                            .padding(6)
-                            .background(Color.purple.opacity(0.12))
-                            .clipShape(Circle())
-
-                        Text("Vaccination & Medical Care")
-                            .font(.headline)
-                            .foregroundStyle(AppTheme.textPrimary)
-                    }
-                    Text("Schedule boosters, track dates & set vet reminders")
-                        .font(.caption)
-                        .foregroundStyle(AppTheme.textSecondary)
-                }
-                Spacer()
-                Button {
-                    showAddHealthSheet = true
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "plus.circle.fill")
-                        Text("Add")
-                    }
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 7)
-                    .background(AppTheme.primary)
-                    .clipShape(Capsule())
-                }
-            }
-
-            petScopeSelectorBar
-
-            ForEach(companionVM.healthReminders, id: \.self) { rem in
-                HStack(spacing: 12) {
-                    Image(systemName: "bell.badge.fill")
-                        .foregroundStyle(Color.orange)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Upcoming Scheduled Reminder ⏰")
-                            .font(.caption2.weight(.bold))
-                            .foregroundStyle(Color.orange)
-                        Text(rem)
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(AppTheme.textPrimary)
-                    }
-                }
-                .padding(14)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.orange.opacity(0.12))
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-            }
-
-            ForEach(filteredHealthRecords) { rec in
-                HStack(spacing: 14) {
-                    ZStack {
-                        Circle()
-                            .fill(rec.recordType == .vaccination ? Color.purple.opacity(0.15) : AppTheme.primary.opacity(0.15))
-                            .frame(width: 46, height: 46)
-                        Image(systemName: rec.recordType.icon)
-                            .font(.title3)
-                            .foregroundStyle(rec.recordType == .vaccination ? Color.purple : AppTheme.primary)
-                    }
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
-                            Text(rec.title)
-                                .font(.subheadline.weight(.bold))
-                                .foregroundStyle(AppTheme.textPrimary)
-                            Spacer()
-                            Text(rec.dateText)
-                                .font(.caption.weight(.bold))
-                                .foregroundStyle(AppTheme.primary)
-                        }
-
-                        Text(rec.notes)
-                            .font(.caption)
-                            .foregroundStyle(AppTheme.textSecondary)
-
-                        if let doc = rec.doctorOrLocation {
-                            Text("📍 \(doc)")
-                                .font(.caption2)
-                                .foregroundStyle(AppTheme.textSecondary.opacity(0.8))
-                        }
-
-                        if let nextDate = rec.nextDueDate {
-                            let df = DateFormatter()
-                            let _ = df.dateStyle = .medium
-                            HStack(spacing: 4) {
-                                Image(systemName: "calendar.badge.clock")
-                                Text("Next Due Date: \(df.string(from: nextDate))")
-                            }
-                            .font(.caption2.weight(.bold))
-                            .foregroundStyle(Color.purple)
-                            .padding(.top, 2)
-                        }
-
-                        if rec.frequency != .yearly || rec.customInterval != 1 {
-                            HStack(spacing: 4) {
-                                Image(systemName: rec.frequency.systemImage)
-                                    .font(.caption2)
-                                Text(frequencyLabel(for: rec))
-                                    .font(.caption2.weight(.bold))
-                                    .foregroundStyle(Color.purple)
-                            }
-                            .padding(.top, 2)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    HStack(spacing: 14) {
-                        Button(action: {
-                            loadEditDraft(from: rec)
-                            editingRecord = rec
-                            showEditHealthSheet = true
-                        }) {
-                            Image(systemName: "pencil")
-                                .font(.caption2)
-                                .foregroundStyle(AppTheme.textSecondary)
-                                .padding(4)
-                        }
-
-                        Button(action: {
-                            var updated = rec
-                            updated.isReminderSet = (updated.isReminderSet == true) ? false : true
-                            companionVM.updateHealthRecord(updated)
-                        }) {
-                            Image(systemName: rec.isReminderSet == true ? "bell.fill" : "bell.slash")
-                                .font(.caption2)
-                                .foregroundStyle(rec.isReminderSet == true ? AppTheme.textSecondary : AppTheme.textSecondary.opacity(0.6))
-                                .padding(4)
-                        }
-
-                        Button(action: {
-                            companionVM.removeHealthRecord(rec)
-                        }) {
-                            Image(systemName: "trash")
-                                .font(.caption2)
-                                .foregroundStyle(AppTheme.textSecondary.opacity(0.8))
-                                .padding(4)
-                        }
-                    }
-                }
-                .padding(14)
-                .cardStyle()
-            }
-        }
-    }
-
-    private func frequencyLabel(for record: HealthRecord) -> String {
-        switch record.frequency {
-        case .hourly:
-            return record.customInterval == 1 ? "Every Hour" : "Every \(record.customInterval) Hours"
-        case .daily:
-            return "Every Day"
-        case .weekly:
-            return "Every Week"
-        case .monthly:
-            return record.customInterval == 1 ? "Every Month" : "Every \(record.customInterval) Months"
-        case .yearly:
-            return record.customInterval == 1 ? "Every Year" : "Every \(record.customInterval) Years"
-        case .custom:
-            return "Every \(record.customInterval) interval(s)"
-        }
-    }
-
     private var addHealthRecordSheet: some View {
         NavigationStack {
             Form {
-                Section(header: Text("Record Details")) {
-                    Picker("Record Category", selection: $newRecordType) {
+                Section("Details") {
+                    Picker("Type", selection: $newRecordType) {
                         ForEach(HealthRecordType.allCases) { type in
                             Text(type.rawValue).tag(type)
                         }
@@ -346,10 +228,10 @@ struct HealthMemoriesView: View {
 
                     if newRecordType == .vaccination {
                         Picker("Vaccine Name", selection: $newVaccineName) {
-                            Text("DHPP Booster 💉").tag("DHPP Booster 💉")
-                            Text("Rabies Vaccine 🦠").tag("Rabies Vaccine 🦠")
-                            Text("Leptospirosis 🛡️").tag("Leptospirosis 🛡️")
-                            Text("Bordetella 🧪").tag("Bordetella 🧪")
+                            Text("DHPP Booster").tag("DHPP Booster")
+                            Text("Rabies Vaccine").tag("Rabies Vaccine")
+                            Text("Leptospirosis").tag("Leptospirosis")
+                            Text("Bordetella").tag("Bordetella")
                             Text("Custom Vaccine...").tag("Custom Vaccine...")
                         }
                         if newVaccineName == "Custom Vaccine..." {
@@ -359,7 +241,7 @@ struct HealthMemoriesView: View {
                         TextField("Record Title (e.g. Annual Vet Checkup)", text: $newRecordTitle)
                     }
 
-                    TextField("Vet Clinic / Location", text: $newDoctorLocation)
+                    TextField("Clinic or location", text: $newDoctorLocation, prompt: Text("Clinic or home"))
 
                     Picker("Pet", selection: $newPetScopeId) {
                         Text("🐾 All Pets").tag(PetManager.allPetsId)
@@ -370,19 +252,19 @@ struct HealthMemoriesView: View {
                     .pickerStyle(.menu)
                 }
 
-                Section(header: Text("Dates & Schedule Alarms 📅")) {
-                    DatePicker("Administered / Given Date", selection: $newRecordDate, displayedComponents: .date)
+                Section("Dates") {
+                    DatePicker("Date given", selection: $newRecordDate, displayedComponents: .date)
 
-                    Toggle("Set Next Due Date / Booster", isOn: $hasNextDueDate)
+                    Toggle("Set next due date", isOn: $hasNextDueDate)
 
                     if hasNextDueDate {
-                        DatePicker("Next Booster / Due Date", selection: $newNextDueDate, displayedComponents: .date)
+                        DatePicker("Next due", selection: $newNextDueDate, displayedComponents: .date)
 
-                        Toggle("Schedule Alarm & Smart Reminder ⏰", isOn: $scheduleReminderAlarm)
+                        Toggle("Reminders", isOn: $scheduleReminderAlarm)
                     }
                 }
 
-                Section(header: Text("Recurrence Frequency")) {
+                Section("Repeats") {
                     Picker("Frequency", selection: $newFrequency) {
                         ForEach(TaskFrequency.allCases) { freq in
                             Label(freq.rawValue, systemImage: freq.systemImage)
@@ -408,51 +290,33 @@ struct HealthMemoriesView: View {
                     }
                 }
 
-                Section(header: Text("Notes & Dosage")) {
-                    TextField("Notes (e.g. Batch #4092, batch details, reactions)", text: $newNotes)
+                Section("Notes") {
+                    TextField("Batch number, dosage, reactions…", text: $newNotes)
                 }
             }
-            .navigationTitle("Add Vaccination & Care 💉")
+            .navigationTitle("Add Health Record")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { showAddHealthSheet = false }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save & Schedule") {
-                        let finalTitle = (newRecordType == .vaccination && newVaccineName != "Custom Vaccine...")
-                            ? newVaccineName
-                            : newRecordTitle
-
-                        companionVM.addHealthRecord(
-                            title: finalTitle,
-                            recordType: newRecordType,
-                            date: newRecordDate,
-                            nextDueDate: hasNextDueDate ? newNextDueDate : nil,
-                            vaccineName: newRecordType == .vaccination ? finalTitle : nil,
-                            notes: newNotes,
-                            doctorOrLocation: newDoctorLocation,
-                            isReminderSet: scheduleReminderAlarm,
-                            petId: newPetScopeId == PetManager.allPetsId ? nil : newPetScopeId,
-                            frequency: newFrequency,
-                            customInterval: newCustomInterval,
-                            customUnit: newCustomUnit,
-                            selectedDays: newSelectedDays
-                        )
-                        showAddHealthSheet = false
-                        newRecordTitle = ""
+                    Button("Save") {
+                        Task { await saveNewRecord() }
                     }
+                    .disabled(!canSaveNewRecord)
                     .bold()
                 }
             }
         }
+        .presentationDetents([.large])
     }
 
     private var editHealthRecordSheet: some View {
         NavigationStack {
             Form {
-                Section(header: Text("Record Details")) {
-                    Picker("Record Category", selection: $editRecordType) {
+                Section("Details") {
+                    Picker("Type", selection: $editRecordType) {
                         ForEach(HealthRecordType.allCases) { type in
                             Text(type.rawValue).tag(type)
                         }
@@ -460,10 +324,10 @@ struct HealthMemoriesView: View {
 
                     if editRecordType == .vaccination {
                         Picker("Vaccine Name", selection: $editVaccineName) {
-                            Text("DHPP Booster 💉").tag("DHPP Booster 💉")
-                            Text("Rabies Vaccine 🦠").tag("Rabies Vaccine 🦠")
-                            Text("Leptospirosis 🛡️").tag("Leptospirosis 🛡️")
-                            Text("Bordetella 🧪").tag("Bordetella 🧪")
+                            Text("DHPP Booster").tag("DHPP Booster")
+                            Text("Rabies Vaccine").tag("Rabies Vaccine")
+                            Text("Leptospirosis").tag("Leptospirosis")
+                            Text("Bordetella").tag("Bordetella")
                             Text("Custom Vaccine...").tag("Custom Vaccine...")
                         }
                         if editVaccineName == "Custom Vaccine..." {
@@ -473,7 +337,7 @@ struct HealthMemoriesView: View {
                         TextField("Record Title (e.g. Annual Vet Checkup)", text: $editRecordTitle)
                     }
 
-                    TextField("Vet Clinic / Location", text: $editDoctorLocation)
+                    TextField("Clinic or location", text: $editDoctorLocation, prompt: Text("Clinic or home"))
 
                     Picker("Pet", selection: $editPetScopeId) {
                         Text("🐾 All Pets").tag(PetManager.allPetsId)
@@ -484,19 +348,19 @@ struct HealthMemoriesView: View {
                     .pickerStyle(.menu)
                 }
 
-                Section(header: Text("Dates & Schedule Alarms 📅")) {
-                    DatePicker("Administered / Given Date", selection: $editRecordDate, displayedComponents: .date)
+                Section("Dates") {
+                    DatePicker("Date given", selection: $editRecordDate, displayedComponents: .date)
 
-                    Toggle("Set Next Due Date / Booster", isOn: $editHasNextDueDate)
+                    Toggle("Set next due date", isOn: $editHasNextDueDate)
 
                     if editHasNextDueDate {
-                        DatePicker("Next Booster / Due Date", selection: $editNextDueDate, displayedComponents: .date)
+                        DatePicker("Next due", selection: $editNextDueDate, displayedComponents: .date)
 
-                        Toggle("Schedule Alarm & Smart Reminder ⏰", isOn: $editScheduleReminderAlarm)
+                        Toggle("Reminders", isOn: $editScheduleReminderAlarm)
                     }
                 }
 
-                Section(header: Text("Recurrence Frequency")) {
+                Section("Repeats") {
                     Picker("Frequency", selection: $editFrequency) {
                         ForEach(TaskFrequency.allCases) { freq in
                             Label(freq.rawValue, systemImage: freq.systemImage)
@@ -522,8 +386,8 @@ struct HealthMemoriesView: View {
                     }
                 }
 
-                Section(header: Text("Notes & Dosage")) {
-                    TextField("Notes (e.g. Batch #4092, batch details, reactions)", text: $editNotes)
+                Section("Notes") {
+                    TextField("Batch number, dosage, reactions…", text: $editNotes)
                 }
             }
             .navigationTitle("Edit Health Record")
@@ -534,44 +398,94 @@ struct HealthMemoriesView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save Changes") {
-                        let finalTitle = (editRecordType == .vaccination && editVaccineName != "Custom Vaccine...")
-                            ? editVaccineName
-                            : editRecordTitle
-
-                        var updated = editingRecord!
-                        updated.title = finalTitle
-                        updated.recordType = editRecordType
-                        updated.date = editRecordDate
-                        updated.nextDueDate = editHasNextDueDate ? editNextDueDate : nil
-                        updated.vaccineName = editRecordType == .vaccination ? finalTitle : nil
-                        updated.notes = editNotes
-                        updated.doctorOrLocation = editDoctorLocation
-                        updated.isReminderSet = editScheduleReminderAlarm
-                        updated.frequency = editFrequency
-                        updated.customInterval = editCustomInterval
-                        updated.customUnit = editCustomUnit
-                        updated.selectedDays = editSelectedDays
-                        updated.petId = editPetScopeId == PetManager.allPetsId ? nil : editPetScopeId
-
-                        let df = DateFormatter()
-                        df.dateStyle = .medium
-                        updated.dateText = df.string(from: editRecordDate)
-
-                        if let dueDate = updated.nextDueDate {
-                            let components = Calendar.current.dateComponents([.day], from: Date(), to: dueDate)
-                            updated.upcomingDaysRemaining = max(0, components.day ?? 0)
-                        } else {
-                            updated.upcomingDaysRemaining = nil
-                        }
-
-                        companionVM.updateHealthRecord(updated)
-                        showEditHealthSheet = false
-                        editingRecord = nil
+                        Task { await saveEditedRecord() }
                     }
+                    .disabled(!canSaveEditedRecord)
                     .bold()
                 }
             }
         }
+    }
+
+    private func saveEditedRecord() async {
+        guard canSaveEditedRecord, var updated = editingRecord else { return }
+        let finalTitle = (editRecordType == .vaccination && editVaccineName != "Custom Vaccine...")
+            ? editVaccineName
+            : editRecordTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        if editScheduleReminderAlarm {
+            _ = await HealthNotificationManager.shared.requestAuthorization()
+        }
+        updated.title = finalTitle
+        updated.recordType = editRecordType
+        updated.date = editRecordDate
+        updated.nextDueDate = editHasNextDueDate ? editNextDueDate : nil
+        updated.vaccineName = editRecordType == .vaccination ? finalTitle : nil
+        updated.notes = editNotes
+        updated.doctorOrLocation = editDoctorLocation.isEmpty ? nil : editDoctorLocation
+        updated.isReminderSet = editScheduleReminderAlarm
+        updated.frequency = editFrequency
+        updated.customInterval = editCustomInterval
+        updated.customUnit = editCustomUnit
+        updated.selectedDays = editSelectedDays
+        updated.petId = editPetScopeId == PetManager.allPetsId ? nil : editPetScopeId
+
+        let df = DateFormatter()
+        df.dateStyle = .medium
+        updated.dateText = df.string(from: editRecordDate)
+        if let dueDate = updated.nextDueDate {
+            let components = Calendar.current.dateComponents([.day], from: Date(), to: dueDate)
+            updated.upcomingDaysRemaining = max(0, components.day ?? 0)
+        } else {
+            updated.upcomingDaysRemaining = nil
+        }
+        healthStore.updateHealthRecord(updated)
+        showEditHealthSheet = false
+        editingRecord = nil
+    }
+
+    private func saveNewRecord() async {
+        guard canSaveNewRecord else { return }
+        let finalTitle = (newRecordType == .vaccination && newVaccineName != "Custom Vaccine...")
+            ? newVaccineName
+            : newRecordTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        if scheduleReminderAlarm {
+            _ = await HealthNotificationManager.shared.requestAuthorization()
+        }
+        healthStore.addHealthRecord(
+            title: finalTitle,
+            recordType: newRecordType,
+            date: newRecordDate,
+            nextDueDate: hasNextDueDate ? newNextDueDate : nil,
+            vaccineName: newRecordType == .vaccination ? finalTitle : nil,
+            notes: newNotes,
+            doctorOrLocation: newDoctorLocation.isEmpty ? nil : newDoctorLocation,
+            isReminderSet: scheduleReminderAlarm,
+            petId: newPetScopeId == PetManager.allPetsId ? nil : newPetScopeId,
+            frequency: newFrequency,
+            customInterval: newCustomInterval,
+            customUnit: newCustomUnit,
+            selectedDays: newSelectedDays
+        )
+        showAddHealthSheet = false
+        newRecordTitle = ""
+        newNotes = ""
+        newDoctorLocation = ""
+    }
+
+    private var canSaveNewRecord: Bool {
+        if newRecordType == .vaccination && newVaccineName != "Custom Vaccine..." { return true }
+        return !newRecordTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    private var canSaveEditedRecord: Bool {
+        if editRecordType == .vaccination && editVaccineName != "Custom Vaccine..." { return true }
+        return !editRecordTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    private func petName(for record: HealthRecord) -> String? {
+        guard selectedPetScopeId == PetManager.allPetsId else { return nil }
+        guard let petId = record.petId else { return "All pets" }
+        return petManager.pets.first(where: { $0.id == petId })?.name
     }
 
     private func weekdayPicker(selectedDays: Binding<Set<Int>>) -> some View {
@@ -608,6 +522,82 @@ struct HealthMemoriesView: View {
     }
 }
 
+private struct HealthRecordRow: View {
+    let record: HealthRecord
+    var petName: String? = nil
+    var emphasizeDueDate: Bool = false
+
+    var body: some View {
+        Label {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(record.title)
+                    .font(.body.weight(.medium))
+                HStack(spacing: 6) {
+                    Text(record.dateText)
+                    if let petName, !petName.isEmpty {
+                        Text("·")
+                        Text(petName)
+                    }
+                    if let location = record.doctorOrLocation, !location.isEmpty {
+                        Text("·")
+                        Text(location)
+                    }
+                }
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                if !record.notes.isEmpty && !emphasizeDueDate {
+                    Text(record.notes)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+                if let next = record.nextDueDate {
+                    Text(dueLabel(for: next))
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(dueTint(for: next))
+                }
+            }
+        } icon: {
+            Image(systemName: record.recordType.icon)
+                .foregroundStyle(dueTint(for: record.nextDueDate))
+        }
+    }
+
+    private func dueLabel(for next: Date) -> String {
+        let days = daysUntil(next)
+        let reminder = record.isReminderSet == true ? " · reminder on" : ""
+        if days < 0 {
+            let overdue = abs(days)
+            return overdue == 1 ? "Overdue by 1 day\(reminder)" : "Overdue by \(overdue) days\(reminder)"
+        }
+        if days == 0 { return "Due today\(reminder)" }
+        if days == 1 { return "Due tomorrow\(reminder)" }
+        if days <= 14 { return "Due in \(days) days\(reminder)" }
+        return "Due \(next.formatted(date: .abbreviated, time: .omitted))\(reminder)"
+    }
+
+    private func dueTint(for next: Date?) -> Color {
+        guard let next else { return AppTheme.health }
+        let days = daysUntil(next)
+        if days < 0 { return AppTheme.danger }
+        if days <= 7 { return AppTheme.warning }
+        return AppTheme.health
+    }
+
+    private func daysUntil(_ date: Date) -> Int {
+        let calendar = Calendar.current
+        return calendar.dateComponents(
+            [.day],
+            from: calendar.startOfDay(for: Date()),
+            to: calendar.startOfDay(for: date)
+        ).day ?? 0
+    }
+}
+
 #Preview {
     HealthMemoriesView()
+        .environmentObject(PetManager.shared)
+        .environmentObject(HealthRecordStore.shared)
+        .environmentObject(HouseholdSync.shared)
+        .environmentObject(AuthSession.shared)
 }

@@ -1,64 +1,110 @@
 //
 //  Theme.swift
-//  CatEmotionAI
+//  CatIos — Patios design system
 //
 
 import SwiftUI
 import UIKit
 
+enum AppAppearance: String, CaseIterable, Identifiable {
+    case system
+    case light
+    case dark
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .system: return "System"
+        case .light: return "Light"
+        case .dark: return "Dark"
+        }
+    }
+
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
+    }
+}
+
 enum AppTheme {
+    static let starlight = Color.clear.fallback(light: Color(hex: "B45309"), dark: Color(hex: "FBBF24"))
+    static let fae = Color.clear.fallback(light: Color(hex: "0F766E"), dark: Color(hex: "2DD4BF"))
+    static let blossom = Color.clear.fallback(light: Color(hex: "BE185D"), dark: Color(hex: "F9A8D4"))
+    static let lilac = Color.clear.fallback(light: Color(hex: "5B6B7A"), dark: Color(hex: "94A3B8"))
+    static let meadow = Color.clear.fallback(light: Color(hex: "15803D"), dark: Color(hex: "4ADE80"))
+    static let honey = Color.clear.fallback(light: Color(hex: "C2410C"), dark: Color(hex: "FDBA74"))
+    static let sky = Color.clear.fallback(light: Color(hex: "1D4ED8"), dark: Color(hex: "93C5FD"))
+    static let coral = Color.clear.fallback(light: Color(hex: "DC2626"), dark: Color(hex: "FCA5A5"))
+    static let dusk = Color.clear.fallback(light: Color(hex: "334155"), dark: Color(hex: "CBD5E1"))
+    static let tide = Color.clear.fallback(light: Color(hex: "0E7490"), dark: Color(hex: "67E8F9"))
+    static let ember = Color.clear.fallback(light: Color(hex: "EA580C"), dark: Color(hex: "FDBA74"))
+    static let moon = Color.clear.fallback(light: Color(hex: "F8FAF9"), dark: Color(hex: "15201C"))
+    static let void = Color.clear.fallback(light: Color(hex: "F3F5F4"), dark: Color(hex: "0C1210"))
 
-    // MARK: - Brand Colors
+    static let palette: [Color] = [fae, meadow, sky, honey, tide, dusk, ember]
 
-    static let primary = Color("BrandPrimary", bundle: nil)
-        .fallback(light: Color(red: 0.42, green: 0.36, blue: 0.98),
-                  dark: Color(red: 0.56, green: 0.50, blue: 1.0))
+    static let primary = fae
+    static let secondary = starlight
+    static let background = void
+    static let cardBackground = Color.clear.fallback(
+        light: Color.white,
+        dark: Color(hex: "17211E")
+    )
+    static let textPrimary = Color(.label)
+    static let textSecondary = Color(.secondaryLabel)
 
-    static let secondary = Color("BrandSecondary", bundle: nil)
-        .fallback(light: Color(red: 1.0, green: 0.65, blue: 0.42),
-                  dark: Color(red: 1.0, green: 0.70, blue: 0.48))
+    static let success = meadow
+    static let warning = honey
+    static let danger = coral
 
-    static let background = Color("BrandBackground", bundle: nil)
-        .fallback(light: Color(red: 0.97, green: 0.97, blue: 0.99),
-                  dark: Color(red: 0.07, green: 0.07, blue: 0.09))
+    static let nutrition = meadow
+    static let health = sky
+    static let behavior = honey
+    static let tasks = fae
+    static let analytics = dusk
+    static let assistant = tide
 
-    static let cardBackground = Color("BrandCard", bundle: nil)
-        .fallback(light: .white,
-                  dark: Color(red: 0.12, green: 0.12, blue: 0.15))
-
-    static let textPrimary = Color("BrandTextPrimary", bundle: nil)
-        .fallback(light: Color(red: 0.09, green: 0.09, blue: 0.12),
-                  dark: Color(red: 0.95, green: 0.95, blue: 0.97))
-
-    static let textSecondary = Color("BrandTextSecondary", bundle: nil)
-        .fallback(light: Color(red: 0.45, green: 0.45, blue: 0.5),
-                  dark: Color(red: 0.65, green: 0.65, blue: 0.7))
-
-    static let success = Color(red: 0.30, green: 0.75, blue: 0.48)
-    static let warning = Color(red: 0.98, green: 0.68, blue: 0.25)
-    static let danger  = Color(red: 0.94, green: 0.35, blue: 0.35)
-
-    static let shadowColor = Color.black.opacity(0.08)
-
-    // MARK: - Gradients
+    static let shadowColor = Color.black.opacity(0.06)
 
     static let heroGradient = LinearGradient(
-        colors: [primary, secondary],
+        colors: [
+            Color.clear.fallback(light: Color(hex: "0F766E"), dark: Color(hex: "0D9488")),
+            Color.clear.fallback(light: Color(hex: "115E59"), dark: Color(hex: "134E4A"))
+        ],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
 
-    static let micGradient = LinearGradient(
-        colors: [primary, primary.opacity(0.7)],
+    static let skyGradient = LinearGradient(
+        colors: [void, moon],
         startPoint: .top,
         endPoint: .bottom
     )
 
-    // MARK: - Radii & Spacing
+    static let micGradient = LinearGradient(
+        colors: [fae, tide],
+        startPoint: .top,
+        endPoint: .bottom
+    )
 
-    static let cornerRadiusLarge: CGFloat = 28
-    static let cornerRadiusMedium: CGFloat = 20
-    static let cornerRadiusSmall: CGFloat = 14
+    static let glowGradient = LinearGradient(
+        colors: [fae, tide],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+
+    static let enchantedBorder = Color.clear.fallback(
+        light: Color.black.opacity(0.06),
+        dark: Color.white.opacity(0.10)
+    )
+
+    static let cornerRadiusLarge: CGFloat = 16
+    static let cornerRadiusMedium: CGFloat = 12
+    static let cornerRadiusSmall: CGFloat = 8
 
     static let spacingXS: CGFloat = 4
     static let spacingS: CGFloat = 8
@@ -66,28 +112,50 @@ enum AppTheme {
     static let spacingL: CGFloat = 24
     static let spacingXL: CGFloat = 32
 
-}
+    static func titleFont(_ size: CGFloat = 28) -> Font {
+        .system(size: size, weight: .semibold, design: .default)
+    }
 
-private struct CardShadowModifier: ViewModifier {
-    @Environment(\.colorScheme) private var colorScheme
-    func body(content: Content) -> some View {
-        content.shadow(
-            color: colorScheme == .dark ? .black.opacity(0.4) : .black.opacity(0.08),
-            radius: 16, x: 0, y: 8
-        )
+    static func headlineFont() -> Font {
+        .system(.headline, design: .default).weight(.semibold)
+    }
+
+    static func bodyFont() -> Font {
+        .system(.body, design: .default)
+    }
+
+    static func captionFont() -> Font {
+        .system(.caption, design: .default)
     }
 }
 
 extension View {
     func cardShadow() -> some View {
-        modifier(CardShadowModifier())
+        shadow(color: AppTheme.shadowColor, radius: 8, y: 2)
     }
 
     func cardStyle(cornerRadius: CGFloat = AppTheme.cornerRadiusMedium) -> some View {
-        self
-            .background(AppTheme.cardBackground)
-            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-            .cardShadow()
+        background {
+            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                .fill(AppTheme.cardBackground)
+                .overlay {
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                        .strokeBorder(AppTheme.enchantedBorder, lineWidth: 1)
+                }
+        }
+        .cardShadow()
+    }
+
+    func fantasyScreen() -> some View {
+        background {
+            FantasyScreenBackground()
+                .ignoresSafeArea()
+        }
+        .scrollContentBackground(.hidden)
+    }
+
+    func fantasyNavigation() -> some View {
+        toolbarBackground(.visible, for: .navigationBar)
     }
 }
 
@@ -134,3 +202,22 @@ extension Color {
         )
     }
 }
+
+struct StatusBadge: View {
+    let title: String
+    var tint: Color = AppTheme.primary
+
+    var body: some View {
+        Text(title)
+            .font(AppTheme.captionFont().weight(.bold))
+            .foregroundStyle(tint)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background {
+                Capsule(style: .continuous)
+                    .fill(tint.opacity(0.12))
+            }
+            .accessibilityAddTraits(.isStaticText)
+    }
+}
+

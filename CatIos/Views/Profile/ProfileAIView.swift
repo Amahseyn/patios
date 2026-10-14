@@ -1,20 +1,14 @@
-//
-//  ProfileAIView.swift
-//  CatEmotionAI
-//
-
 import SwiftUI
 
 struct ProfileAIView: View {
-    @EnvironmentObject private var petManager: PetManager
-    @AppStorage("prefersDarkMode") private var prefersDarkMode: Bool = false
+    @State private var path = NavigationPath()
 
     var body: some View {
-        NavigationStack {
-            PetAIAssistantView()
-                .background(AppTheme.background.ignoresSafeArea())
-                .navigationTitle("AI Assistant")
-                .navigationBarTitleDisplayMode(.inline)
+        NavigationStack(path: $path) {
+            OracleHubView(path: $path)
+                .navigationDestination(for: UUID.self) { id in
+                    PetAIAssistantView(conversationId: id, path: $path)
+                }
         }
     }
 }
@@ -22,4 +16,7 @@ struct ProfileAIView: View {
 #Preview {
     ProfileAIView()
         .environmentObject(PetManager.shared)
+        .environmentObject(AuthSession.shared)
+        .environmentObject(AssistantSessionStore.shared)
+        .environmentObject(HouseholdSync.shared)
 }

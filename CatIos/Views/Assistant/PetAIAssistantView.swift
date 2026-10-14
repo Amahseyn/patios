@@ -3,106 +3,258 @@
 //  CatIos
 //
 //  AI chat assistant with voice input support.
+//
 
-import SwiftUI
 import Speech
+import SwiftUI
+import UIKit
 
 struct PetAIAssistantView: View {
     @EnvironmentObject private var petManager: PetManager
+    @EnvironmentObject private var authSession: AuthSession
+    @EnvironmentObject private var sessions: AssistantSessionStore
+    @EnvironmentObject private var householdSync: HouseholdSync
+    let conversationId: UUID
+    @Binding var path: NavigationPath
+
     @State private var inputText: String = ""
-    @State private var messages: [ChatMessage] = []
     @State private var isRecording: Bool = false
     @State private var recognizedText: String = ""
+    @State private var isSending: Bool = false
+    @State private var speechStatus = SFSpeechRecognizer.authorizationStatus()
+    @State private var assistantError: String?
+    @State private var renaming = false
+    @State private var renameText = ""
+    @State private var confirmDelete = false
+    @AppStorage(NotificationPreferences.assistantKey) private var suggestionsEnabled = true
 
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
     private let audioEngine = AVAudioEngine()
 
-    let suggestedQuestions = [
-        "Is my pet happy?",
-        "Why does my pet bark at night?",
-        "Why is my pet crying?",
-        "How can I improve my pet's routine?"
-    ]
+    private var conversation: AssistantConversation? {
+        sessions.conversation(id: conversationId)
+    }
+
+    private var messages: [AssistantTurn] {
+        conversation?.messages ?? []
+    }
+
+    private var sessionPet: PetProfile {
+        if let petId = conversation?.petId, let pet = petManager.pets.first(where: { $0.id == petId }) {
+            return pet
+        }
+        return petManager.currentPet
+    }
+
+    private var suggestedQuestions: [String] {
+        let name = sessionPet.name
+        return [
+            "How is \(name) feeling today?",
+            "What should I feed \(name) this evening?",
+            "What’s coming due for \(name)?",
+            "Help me plan \(name)’s care this week."
+        ]
+    }
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        VStack(spacing: AppTheme.spacingM) {
+        VStack(spacing: 0) {
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 12) {
+                        if !authSession.isSignedIn {
+                            HStack(alignment: .top, spacing: 10) {
+                                EnchantedIconBadge(systemImage: "key.fill", tint: AppTheme.warning, size: 36)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("On-device answers only")
+                                        .font(AppTheme.headlineFont())
+                                    Text("Sign in from You for cloud AI answers that sync with your account.")
+                                        .font(AppTheme.captionFont())
+                                        .foregroundStyle(AppTheme.textSecondary)
+                                }
+                            }
+                            .padding(AppTheme.spacingM)
+                            .cardStyle()
+                            .padding(.horizontal)
+                            .padding(.top, 8)
+                        }
+
+                        if speechStatus == .denied || speechStatus == .restricted {
+                            speechDeniedBanner
+                                .padding(.horizontal)
+                        }
+
+                        if let assistantError {
+                            Text(assistantError)
+                                .font(.footnote)
+                                .foregroundStyle(.red)
+                                .padding(.horizontal)
+                        } else if let syncError = sessions.lastError {
+                            Text(syncError)
+                                .font(.footnote)
+                                .foregroundStyle(.red)
+                                .padding(.horizontal)
+                        }
+
+                        if messages.isEmpty {
                             aiWelcomeHeader
-
-                            suggestedQuestionsSection
-
-                            ForEach(messages) { msg in
-                                ChatBubble(message: msg)
-                                    .id(msg.id)
-                            }
-
-                            if isRecording {
-                                recordingIndicator
+                                .padding(.horizontal)
+                            if suggestionsEnabled && householdSync.canMutate {
+                                suggestedQuestionsSection
+                                    .padding(.horizontal)
                             }
                         }
-                        .padding(AppTheme.spacingM)
-                    }
-                    .scrollDismissesKeyboard(.interactively)
-                    .onTapGesture {
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    }
-                    .onChange(of: messages.count) { _ in
-                        if let last = messages.last {
-                            withAnimation {
-                                proxy.scrollTo(last.id, anchor: .bottom)
-                            }
+
+                        ForEach(messages) { message in
+                            ChatBubble(message: message)
+                                .id(message.id)
+                                .padding(.horizontal)
+                        }
+
+                        if isSending {
+                            typingIndicator.id("typing").padding(.horizontal)
+                        }
+
+                        if isRecording {
+                            recordingIndicator.padding(.horizontal)
                         }
                     }
+                    .padding(.vertical, 8)
                 }
+                .scrollDismissesKeyboard(.interactively)
+                .onChange(of: messages.count) {
+                    scrollToLatest(proxy)
+                }
+                .onChange(of: isSending) { _, sending in
+                    if sending { scrollToLatest(proxy) }
+                }
+            }
 
-                Divider()
-
+            Divider()
+            if householdSync.canMutate {
                 inputFieldBar
             }
-            .background(AppTheme.background.ignoresSafeArea())
-            .navigationTitle("Ask \(petManager.currentPet.name) AI")
-            .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                if messages.isEmpty {
-                    loadInitialConversation()
+            Text(CareInsights.disclaimer)
+                .font(.caption2)
+                .foregroundStyle(AppTheme.textSecondary)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 8)
+        }
+        .fantasyScreen()
+        .fantasyNavigation()
+        .navigationTitle(conversation?.title ?? "Chat")
+        .navigationSubtitle(sessionPet.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if householdSync.canMutate {
+            ToolbarItem(placement: .primaryAction) {
+                Menu {
+                    Button("New Chat", systemImage: "square.and.pencil") {
+                        startAnotherChat()
+                    }
+                    Button("Rename", systemImage: "pencil") {
+                        renameText = conversation?.title ?? ""
+                        renaming = true
+                    }
+                    Button("Delete Chat", systemImage: "trash", role: .destructive) {
+                        confirmDelete = true
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
+                .accessibilityLabel("Chat actions")
+            }
             }
         }
+        .confirmationDialog("Delete this chat?", isPresented: $confirmDelete, titleVisibility: .visible) {
+            Button("Delete", role: .destructive) {
+                sessions.delete(id: conversationId)
+            }
+            Button("Cancel", role: .cancel) {}
+        }
+        .alert("Rename chat", isPresented: $renaming) {
+            TextField("Title", text: $renameText)
+            Button("Save") {
+                sessions.rename(id: conversationId, title: renameText)
+            }
+            Button("Cancel", role: .cancel) {}
+        }
+        .onAppear {
+            requestSpeechIfNeeded()
+            if let prompt = sessions.consumePendingPrompt(id: conversationId) {
+                sendMessage(prompt)
+            }
+        }
+        .onChange(of: sessions.conversations.contains { $0.id == conversationId }) { _, exists in
+            if !exists, !path.isEmpty {
+                path.removeLast()
+            }
+        }
+    }
+
+    private func scrollToLatest(_ proxy: ScrollViewProxy) {
+        withAnimation {
+            if isSending {
+                proxy.scrollTo("typing", anchor: .bottom)
+            } else if let last = messages.last {
+                proxy.scrollTo(last.id, anchor: .bottom)
+            }
+        }
+    }
+
+    private func startAnotherChat() {
+        let title = sessions.availableTitle("New chat", petId: sessionPet.id)
+        let id = sessions.start(petId: sessionPet.id, title: title)
+        if !path.isEmpty { path.removeLast() }
+        path.append(id)
     }
 
     private var aiWelcomeHeader: some View {
         HStack(spacing: AppTheme.spacingM) {
-            ZStack {
-                Circle()
-                    .fill(AppTheme.primary.opacity(0.15))
-                    .frame(width: 48, height: 48)
-                Image(systemName: "sparkles")
-                    .font(.title2)
-                    .foregroundStyle(AppTheme.primary)
-            }
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text("\(petManager.currentPet.name) AI Behavior Specialist")
-                    .font(.subheadline.weight(.bold))
+            EnchantedIconBadge(systemImage: "bubble.left.and.bubble.right.fill", tint: AppTheme.assistant, size: 52)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(conversation?.title ?? "Assistant")
+                    .font(AppTheme.headlineFont())
                     .foregroundStyle(AppTheme.textPrimary)
-                Text("Trained on \(petManager.currentPet.name)'s history & vocal patterns")
-                    .font(.caption2)
+                Text(authSession.isSignedIn
+                     ? "Using \(sessionPet.name)’s tasks and health records"
+                     : "Using \(sessionPet.name)’s data saved on this iPhone")
+                    .font(AppTheme.captionFont())
                     .foregroundStyle(AppTheme.textSecondary)
             }
-
             Spacer()
         }
         .padding(AppTheme.spacingM)
-        .cardStyle()
+        .cardStyle(cornerRadius: AppTheme.cornerRadiusLarge)
+    }
+
+    private var speechDeniedBanner: some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "mic.slash.fill")
+                .foregroundStyle(AppTheme.warning)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Microphone is off")
+                    .font(.caption.weight(.bold))
+                Text("Enable Speech Recognition and Microphone in Settings to dictate questions.")
+                    .font(.caption2)
+                    .foregroundStyle(AppTheme.textSecondary)
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    Button("Open Settings") {
+                        UIApplication.shared.open(url)
+                    }
+                    .font(.caption.weight(.bold))
+                }
+            }
+            Spacer()
+        }
+        .padding(12)
+        .background(AppTheme.warning.opacity(0.12))
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 
     private var suggestedQuestionsSection: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacingS) {
-            Text("Suggested Questions")
-                .font(.caption.weight(.bold))
+            Text("Try asking")
+                .font(AppTheme.captionFont().weight(.bold))
                 .foregroundStyle(AppTheme.textSecondary)
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -112,13 +264,20 @@ struct PetAIAssistantView: View {
                             sendMessage(question)
                         } label: {
                             Text(question)
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(AppTheme.primary)
+                                .font(AppTheme.captionFont())
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 8)
-                                .background(AppTheme.primary.opacity(0.1))
-                                .clipShape(Capsule())
+                                .background {
+                                    Capsule(style: .continuous)
+                                        .fill(AppTheme.cardBackground)
+                                        .overlay {
+                                            Capsule(style: .continuous)
+                                                .strokeBorder(AppTheme.enchantedBorder, lineWidth: 1)
+                                        }
+                                }
                         }
+                        .buttonStyle(.plain)
+                        .disabled(isSending)
                     }
                 }
             }
@@ -126,15 +285,20 @@ struct PetAIAssistantView: View {
     }
 
     private var inputFieldBar: some View {
-        HStack(spacing: AppTheme.spacingS) {
-            TextField("Ask anything about \(petManager.currentPet.name)...", text: $inputText)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .background(AppTheme.cardBackground)
-                .clipShape(Capsule())
-                .overlay(
-                    Capsule().stroke(Color.gray.opacity(0.2), lineWidth: 1)
-                )
+        HStack(alignment: .bottom, spacing: 8) {
+            TextField("Ask about meals, health, or routines…", text: $inputText, axis: .vertical)
+                .textFieldStyle(.plain)
+                .lineLimit(1...5)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .fill(AppTheme.cardBackground)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                .strokeBorder(AppTheme.enchantedBorder, lineWidth: 1)
+                        }
+                }
 
             Button {
                 if isRecording {
@@ -143,34 +307,30 @@ struct PetAIAssistantView: View {
                     startRecording()
                 }
             } label: {
-                ZStack {
-                    Circle()
-                        .fill(isRecording ? Color.red : AppTheme.primary)
-                        .frame(width: 44, height: 44)
-                    Image(systemName: isRecording ? "stop.fill" : "mic.fill")
-                        .font(.body.weight(.semibold))
-                        .foregroundStyle(.white)
-                }
+                Image(systemName: isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                    .font(.title)
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(isRecording ? Color.red : Color.accentColor)
             }
-            .disabled(!SFSpeechRecognizer.authorizationStatus().isAuthorized)
+            .disabled(!speechStatus.isAuthorized)
+            .accessibilityLabel(isRecording ? "Stop recording" : "Dictate")
 
             Button {
                 guard !inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-                sendMessage(inputText)
+                let text = inputText
                 inputText = ""
+                sendMessage(text)
             } label: {
-                ZStack {
-                    Circle()
-                        .fill(AppTheme.primary)
-                        .frame(width: 44, height: 44)
-                    Image(systemName: "paperplane.fill")
-                        .font(.body.weight(.bold))
-                        .foregroundStyle(.white)
-                }
+                Image(systemName: "arrow.up.circle.fill")
+                    .font(.title)
+                    .symbolRenderingMode(.hierarchical)
             }
+            .disabled(isSending || inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .accessibilityLabel("Send")
         }
-        .padding(AppTheme.spacingM)
-        .background(AppTheme.cardBackground)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(.bar)
     }
 
     private var recordingIndicator: some View {
@@ -192,103 +352,49 @@ struct PetAIAssistantView: View {
         .clipShape(RoundedRectangle(cornerRadius: AppTheme.cornerRadiusSmall))
     }
 
-    @State private var sessionId: String? = nil
-    @State private var isSending: Bool = false
-
-    private func loadInitialConversation() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        let now = formatter.string(from: Date())
-
-        messages = [
-            ChatMessage(
-                text: "Hello! I am \(petManager.currentPet.name)'s AI Care Companion. How can I help you take great care of \(petManager.currentPet.name) today?",
-                isUser: false,
-                time: now
-            )
-        ]
-        createBackendSession()
-    }
-
-    private func createBackendSession() {
-        guard let url = URL(string: "http://localhost:8000/api/v1/assistant/sessions") else { return }
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body: [String: Any] = [
-            "cat_id": petManager.currentPet.id.uuidString,
-            "title": "\(petManager.currentPet.name) Care Chat"
-        ]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
-        URLSession.shared.dataTask(with: request) { data, _, _ in
-            if let data = data,
-               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-               let sid = json["id"] as? String {
-                DispatchQueue.main.async {
-                    self.sessionId = sid
-                }
-            }
-        }.resume()
+    private var typingIndicator: some View {
+        HStack {
+            ProgressView()
+            Text("\(sessionPet.name)’s assistant is typing…")
+                .font(.caption)
+                .foregroundStyle(AppTheme.textSecondary)
+            Spacer()
+        }
+        .padding(.horizontal, 4)
     }
 
     private func sendMessage(_ text: String) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        let timeStr = formatter.string(from: Date())
-
-        messages.append(ChatMessage(text: text, isUser: true, time: timeStr))
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, !isSending else { return }
         isSending = true
-
-        guard let sid = sessionId, let url = URL(string: "http://localhost:8000/api/v1/assistant/sessions/\(sid)/messages") else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                self.isSending = false
-                let aiResponseText = self.generateMockAIResponse(for: text)
-                self.messages.append(ChatMessage(text: aiResponseText, isUser: false, time: timeStr))
-            }
-            return
+        assistantError = nil
+        let local = CareAssistantReply.reply(
+            for: trimmed,
+            petName: sessionPet.name,
+            wellnessScore: sessionPet.wellnessScore
+        )
+        Task {
+            assistantError = await sessions.deliver(text: trimmed, conversationId: conversationId, localReply: local)
+            isSending = false
         }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body: [String: Any] = ["message": text]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                self.isSending = false
-                if let data = data,
-                   let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let replyContent = json["content"] as? String {
-                    self.messages.append(ChatMessage(text: replyContent, isUser: false, time: timeStr))
-                } else {
-                    let fallback = self.generateMockAIResponse(for: text)
-                    self.messages.append(ChatMessage(text: fallback, isUser: false, time: timeStr))
-                }
-            }
-        }.resume()
     }
 
-    private func generateMockAIResponse(for prompt: String) -> String {
-        let pet = petManager.currentPet
-        let lower = prompt.lowercased()
-
-        if lower.contains("happy") {
-            return "Based on \(pet.name)'s recent 92% positivity score and comfortable body cues, yes! \(pet.name) is currently very happy and content."
-        } else if lower.contains("cry") || lower.contains("night") {
-            return "\(pet.name) usually makes night vocalizations seeking comfort or food. Her evening sound pattern indicates she prefers interactive play before bed."
-        } else if lower.contains("routine") {
-            return "To optimize \(pet.name)'s routine, keep morning feeding at 09:00, schedule interactive wand play at 19:00, and maintain quiet rest hours in the afternoon."
-        } else {
-            return "\(pet.name)'s AI memory shows stable behavior patterns today. I recommend giving her a soft treat and checking her water fountain!"
+    private func requestSpeechIfNeeded() {
+        let status = SFSpeechRecognizer.authorizationStatus()
+        speechStatus = status
+        guard status == .notDetermined else { return }
+        SFSpeechRecognizer.requestAuthorization { next in
+            DispatchQueue.main.async {
+                speechStatus = next
+            }
         }
     }
 
     private func startRecording() {
-        guard SFSpeechRecognizer.authorizationStatus() == .authorized,
+        guard speechStatus == .authorized,
               let speechRecognizer = speechRecognizer,
               speechRecognizer.isAvailable else {
+            requestSpeechIfNeeded()
             return
         }
 
@@ -297,24 +403,20 @@ struct PetAIAssistantView: View {
 
         let audioEngine = self.audioEngine
         let inputNode = audioEngine.inputNode
-
         let recordingFormat = inputNode.outputFormat(forBus: 0)
         inputNode.removeTap(onBus: 0)
-
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, _ in
-            // Audio buffer handled by speech recognizer request
-        }
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { _, _ in }
 
         audioEngine.prepare()
         do {
             try audioEngine.start()
         } catch {
-            print("Audio engine error: \(error)")
             isRecording = false
+            assistantError = "Could not start the microphone."
             return
         }
 
-        var recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+        let recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         recognitionRequest.shouldReportPartialResults = true
 
         speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
@@ -345,47 +447,45 @@ struct PetAIAssistantView: View {
     }
 }
 
-struct ChatMessage: Identifiable {
-    let id = UUID()
-    let text: String
-    let isUser: Bool
-    let time: String
-}
-
 struct ChatBubble: View {
-    let message: ChatMessage
+    let message: AssistantTurn
 
     var body: some View {
-        HStack {
-            if message.isUser { Spacer(minLength: 40) }
+        HStack(alignment: .bottom, spacing: 8) {
+            if message.isUser { Spacer(minLength: 48) } else {
+                EnchantedIconBadge(systemImage: "pawprint.fill", tint: AppTheme.assistant, size: 28)
+            }
 
             VStack(alignment: message.isUser ? .trailing : .leading, spacing: 4) {
                 Text(message.text)
-                    .font(.subheadline)
-                    .lineSpacing(3)
-                    .foregroundStyle(message.isUser ? .white : AppTheme.textPrimary)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
-                    .background(
-                        message.isUser
-                        ? AppTheme.primary
-                        : AppTheme.cardBackground
-                    )
-                    .clipShape(
-                        RoundedRectangle(
-                            cornerRadius: AppTheme.cornerRadiusMedium,
-                            style: .continuous
-                        )
-                    )
-                    .cardShadow()
-
-                Text(message.time)
-                    .font(.caption2)
+                    .font(AppTheme.bodyFont())
+                    .foregroundStyle(message.isUser ? Color.white : AppTheme.textPrimary)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 10)
+                    .background {
+                        if message.isUser {
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                .fill(AppTheme.heroGradient)
+                        } else {
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                .fill(AppTheme.cardBackground)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                        .strokeBorder(AppTheme.enchantedBorder, lineWidth: 1)
+                                }
+                        }
+                    }
+                    .contextMenu {
+                        Button("Copy", systemImage: "doc.on.doc") {
+                            UIPasteboard.general.string = message.text
+                        }
+                    }
+                Text(message.createdAt, format: .dateTime.hour().minute())
+                    .font(AppTheme.captionFont())
                     .foregroundStyle(AppTheme.textSecondary)
-                    .padding(.horizontal, 4)
             }
 
-            if !message.isUser { Spacer(minLength: 40) }
+            if !message.isUser { Spacer(minLength: 48) }
         }
     }
 }

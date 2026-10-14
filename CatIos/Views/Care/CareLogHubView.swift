@@ -47,6 +47,44 @@ enum FrequencyUnit: String, CaseIterable, Identifiable, Codable {
     }
 }
 
+enum CareTaskKind: String, CaseIterable, Identifiable, Codable {
+    case feeding = "Feeding"
+    case medication = "Medication"
+    case walking = "Walking"
+    case park = "Park visit"
+    case training = "Training"
+    case grooming = "Grooming"
+    case weight = "Weight tracking"
+    case vet = "Vet appointment"
+    case custom = "Custom"
+
+    var id: String { rawValue }
+
+    var symbol: String {
+        switch self {
+        case .feeding: return "fork.knife"
+        case .medication: return "pills"
+        case .walking: return "figure.walk"
+        case .park: return "tree"
+        case .training: return "graduationcap"
+        case .grooming: return "comb"
+        case .weight: return "scalemass"
+        case .vet: return "cross.case"
+        case .custom: return "checkmark.circle"
+        }
+    }
+}
+
+struct TaskOccurrence: Identifiable, Codable, Equatable {
+    var id: UUID = UUID()
+    var status: String
+    var occurredAt: Date
+    var petId: UUID?
+    var amountGrams: Double?
+    var calories: Double?
+    var foodName: String?
+}
+
 enum TaskStatus: String, CaseIterable, Identifiable {
     case all = "All"
     case pending = "To Do"
@@ -66,16 +104,16 @@ enum TaskStatus: String, CaseIterable, Identifiable {
 
     var tint: Color {
         switch self {
-        case .all: return .blue
-        case .pending: return .orange
-        case .completed: return .green
-        case .overdue: return .red
+        case .all: return AppTheme.sky
+        case .pending: return AppTheme.honey
+        case .completed: return AppTheme.meadow
+        case .overdue: return AppTheme.coral
         }
     }
 }
 
 struct CustomCareTask: Identifiable {
-    let id = UUID()
+    var id: UUID = UUID()
     var petId: UUID
     var title: String
     var timeText: String
@@ -90,6 +128,9 @@ struct CustomCareTask: Identifiable {
     var startDate: Date
     var completedDateOffset: Int? = nil
     var completedPetDateOffsets: [UUID: Int] = [:]
+    var taskKind: CareTaskKind = .custom
+    var snoozedUntil: Date?
+    var occurrenceLog: [TaskOccurrence] = []
 
     var timeComponents: (time: String, period: String)? {
         let parts = timeText.split(separator: " ")
@@ -112,14 +153,14 @@ struct ExpandedTaskItem: Identifiable {
 
 struct CareLogHubView: View {
     @EnvironmentObject private var petManager: PetManager
-    @StateObject private var companionVM = PetCompanionViewModel()
+    @EnvironmentObject private var taskStore: CareTaskStore
+    @EnvironmentObject private var householdSync: HouseholdSync
+    @EnvironmentObject private var wellness: WellnessStore
+    @EnvironmentObject private var auth: AuthSession
 
     @State private var selectedPetScopeId: UUID = PetManager.allPetsId
-    @State private var selectedDate: Date = Date()
     @State private var selectedDateOffset: Int = 0
     @State private var selectedTaskStatus: TaskStatus = .pending
-    @State private var showDatePicker = false
-    @State private var showAddPetModal = false
 
     private var displayedDate: Date {
         let calendar = Calendar.current
@@ -127,22 +168,8 @@ struct CareLogHubView: View {
         return calendar.date(byAdding: .day, value: selectedDateOffset, to: today) ?? today
     }
 
-    private var dateRangeOffsets: [Int] {
-        Array(-30...30)
-    }
-
-    @State private var careTasks: [CustomCareTask] = [
-        CustomCareTask(petId: PetProfile.mockLuna.id, title: "Morning Wet Salmon Pouch", timeText: "08:00 AM", frequency: .daily, isCompleted: true, alarmEnabled: true, emojiIcon: "🍗", startDate: Date(), completedDateOffset: 0),
-        CustomCareTask(petId: PetProfile.mockLuna.id, title: "Fresh Water Fountain Refill", timeText: "09:00 AM", frequency: .daily, isCompleted: true, alarmEnabled: true, emojiIcon: "💧", startDate: Date(), completedDateOffset: 0),
-        CustomCareTask(petId: PetProfile.mockMilo.id, title: "Litter Box Scoop & Clean", timeText: "08:30 AM", frequency: .daily, isCompleted: true, alarmEnabled: true, emojiIcon: "🚽", startDate: Date(), completedDateOffset: 0),
-        CustomCareTask(petId: PetProfile.mockMilo.id, title: "Afternoon Insulin / Medicine", timeText: "02:00 PM", frequency: .daily, isCompleted: false, alarmEnabled: true, emojiIcon: "💊", startDate: Date(), completedDateOffset: nil),
-        CustomCareTask(petId: PetManager.allPetsId, title: "Evening Crunchy Kibble", timeText: "07:00 PM", frequency: .daily, isCompleted: false, alarmEnabled: true, emojiIcon: "🥣", completedForPetIds: [PetProfile.mockLuna.id], startDate: Date(), completedPetDateOffsets: [PetProfile.mockLuna.id: 0]),
-        CustomCareTask(petId: PetManager.allPetsId, title: "Vaccination Booster", timeText: "10:00 AM", frequency: .monthly, customInterval: 1, isCompleted: false, alarmEnabled: true, emojiIcon: "💉", startDate: Date(), completedDateOffset: nil, completedPetDateOffsets: [:]),
-        CustomCareTask(petId: PetProfile.mockLuna.id, title: "Warm Sponge Bath & Brush", timeText: "05:00 PM", frequency: .weekly, selectedDays: [2, 4, 6], isCompleted: false, alarmEnabled: true, emojiIcon: "🛁", startDate: Date(), completedDateOffset: nil),
-        CustomCareTask(petId: PetProfile.mockMilo.id, title: "Feather Wand Play Session", timeText: "06:30 PM", frequency: .daily, isCompleted: false, alarmEnabled: true, emojiIcon: "🪶", startDate: Date(), completedDateOffset: nil)
-    ]
-
     @State private var showAddTaskSheet = false
+    @State private var showAddPetModal = false
     @State private var showEditTaskSheet = false
     @State private var editingTask: CustomCareTask?
 
@@ -155,59 +182,23 @@ struct CareLogHubView: View {
     @State private var taskCustomUnit: FrequencyUnit = .day
     @State private var taskSelectedDays: Set<Int> = [2, 3, 4, 5, 6]
     @State private var taskAlarmEnabled: Bool = true
+    @State private var taskKind: CareTaskKind = .custom
 
     @State private var completionPetIds: [UUID] = []
 
     @State private var showPetCompletionPicker = false
     @State private var pendingCompletionTaskId: UUID?
     @State private var pendingCompletionPetIds: [UUID] = []
+    @State private var showMealLogSheet = false
+    @State private var pendingFeedingTask: CustomCareTask?
+    @State private var pendingFeedingPetId: UUID?
+    @State private var showBlueprintManager = false
+    @State private var saveAsBlueprint = false
+    @State private var selectedBlueprintId: UUID?
 
     var filteredTasks: [CustomCareTask] {
-        let calendar = Calendar.current
-        let startOfSelectedDate = calendar.startOfDay(for: displayedDate)
-
-        let tasksForDate = careTasks.filter { task in
-            let taskStartDay = calendar.startOfDay(for: task.startDate)
-            guard displayedDate >= taskStartDay else { return false }
-
-            switch task.frequency {
-            case .daily:
-                return true
-            case .weekly:
-                let selectedWeekday = calendar.component(.weekday, from: displayedDate)
-                return task.selectedDays.contains(selectedWeekday)
-            case .monthly:
-                let selectedDay = calendar.component(.day, from: displayedDate)
-                let startDay = calendar.component(.day, from: task.startDate)
-                return selectedDay == startDay
-            case .yearly:
-                let selectedMonth = calendar.component(.month, from: displayedDate)
-                let startMonth = calendar.component(.month, from: task.startDate)
-                let selectedDay = calendar.component(.day, from: displayedDate)
-                let startDay = calendar.component(.day, from: task.startDate)
-                return selectedMonth == startMonth && selectedDay == startDay
-            case .hourly:
-                return true
-            case .custom:
-                let daysBetween = calendar.dateComponents([.day], from: taskStartDay, to: startOfSelectedDate).day ?? 0
-                let unitCount: Int
-                switch task.customUnit {
-                case .hour:
-                    let hoursBetween = calendar.dateComponents([.hour], from: task.startDate, to: displayedDate).hour ?? 0
-                    unitCount = hoursBetween
-                case .day:
-                    unitCount = daysBetween
-                case .week:
-                    unitCount = daysBetween / 7
-                case .month:
-                    let monthsBetween = calendar.dateComponents([.month], from: task.startDate, to: displayedDate).month ?? 0
-                    unitCount = monthsBetween
-                case .year:
-                    let yearsBetween = calendar.dateComponents([.year], from: task.startDate, to: displayedDate).year ?? 0
-                    unitCount = yearsBetween
-                }
-                return unitCount >= 0 && unitCount % task.customInterval == 0
-            }
+        let tasksForDate = taskStore.tasks.filter { task in
+            CareSchedule.occurs(task, on: displayedDate)
         }
 
         if selectedPetScopeId == PetManager.allPetsId {
@@ -283,7 +274,7 @@ struct CareLogHubView: View {
 
         let checkOffset = calendar.dateComponents([.day], from: today, to: checkDate).day ?? 0
 
-        var result = careTasks.filter { task in
+        var result = taskStore.tasks.filter { task in
             let taskStartDay = calendar.startOfDay(for: task.startDate)
             guard checkDate >= taskStartDay else { return false }
             guard isTask(task, scheduledFor: checkDate) else { return false }
@@ -301,7 +292,7 @@ struct CareLogHubView: View {
             let nowMinutes = calendar.component(.hour, from: now) * 60 + calendar.component(.minute, from: now)
             var seen = Set(result.map { $0.id })
 
-            let todayPastDue = careTasks.filter { task in
+            let todayPastDue = taskStore.tasks.filter { task in
                 guard !seen.contains(task.id) else { return false }
 
                 let taskStartDay = calendar.startOfDay(for: task.startDate)
@@ -325,47 +316,7 @@ struct CareLogHubView: View {
     }
 
     private func isTask(_ task: CustomCareTask, scheduledFor date: Date) -> Bool {
-        let calendar = Calendar.current
-        let taskStartDay = calendar.startOfDay(for: task.startDate)
-        guard date >= taskStartDay else { return false }
-
-        switch task.frequency {
-        case .daily, .hourly:
-            return true
-        case .weekly:
-            let selectedWeekday = calendar.component(.weekday, from: date)
-            let startWeekday = calendar.component(.weekday, from: task.startDate)
-            return selectedWeekday == startWeekday
-        case .monthly:
-            let selectedDay = calendar.component(.day, from: date)
-            let startDay = calendar.component(.day, from: task.startDate)
-            return selectedDay == startDay
-        case .yearly:
-            let selectedMonth = calendar.component(.month, from: date)
-            let startMonth = calendar.component(.month, from: task.startDate)
-            let selectedDay = calendar.component(.day, from: date)
-            let startDay = calendar.component(.day, from: task.startDate)
-            return selectedMonth == startMonth && selectedDay == startDay
-        case .custom:
-            let daysBetween = calendar.dateComponents([.day], from: taskStartDay, to: date).day ?? 0
-            let unitCount: Int
-            switch task.customUnit {
-            case .hour:
-                let hoursBetween = calendar.dateComponents([.hour], from: task.startDate, to: date).hour ?? 0
-                unitCount = hoursBetween
-            case .day:
-                unitCount = daysBetween
-            case .week:
-                unitCount = daysBetween / 7
-            case .month:
-                let monthsBetween = calendar.dateComponents([.month], from: task.startDate, to: date).month ?? 0
-                unitCount = monthsBetween
-            case .year:
-                let yearsBetween = calendar.dateComponents([.year], from: task.startDate, to: date).year ?? 0
-                unitCount = yearsBetween
-            }
-            return unitCount >= 0 && unitCount % task.customInterval == 0
-        }
+        CareSchedule.occurs(task, on: date)
     }
 
     var completedCount: Int {
@@ -453,11 +404,42 @@ struct CareLogHubView: View {
     }
 
     private func timeToMinutes(_ timeText: String) -> Int {
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-        guard let date = formatter.date(from: timeText) else { return 0 }
-        let calendar = Calendar.current
-        return calendar.component(.hour, from: date) * 60 + calendar.component(.minute, from: date)
+        CareSchedule.minutes(from: timeText)
+    }
+
+    private var dayTaskItems: [(CustomCareTask, UUID?)] {
+        let tasks = taskStore.tasks
+            .filter { task in
+                CareSchedule.occurs(task, on: displayedDate)
+                    && (selectedPetScopeId == PetManager.allPetsId || task.petId == selectedPetScopeId || task.petId == PetManager.allPetsId)
+            }
+            .sorted { timeToMinutes($0.timeText) < timeToMinutes($1.timeText) }
+        var rows: [(CustomCareTask, UUID?)] = []
+        if selectedPetScopeId == PetManager.allPetsId {
+            for task in tasks {
+                if task.petId == PetManager.allPetsId {
+                    for pet in petManager.pets {
+                        rows.append((task, pet.id))
+                    }
+                } else {
+                    rows.append((task, task.petId))
+                }
+            }
+        } else {
+            for task in tasks {
+                rows.append((task, selectedPetScopeId))
+            }
+        }
+        return rows
+    }
+
+    private var dayCompletedCount: Int {
+        dayTaskItems.filter { isTaskCompleted($0.0, for: $0.1, at: selectedDateOffset) }.count
+    }
+
+    private var dayProgress: Double {
+        guard !dayTaskItems.isEmpty else { return 0 }
+        return Double(dayCompletedCount) / Double(dayTaskItems.count)
     }
 
     private var sortedFilteredTasks: [CustomCareTask] {
@@ -496,53 +478,175 @@ struct CareLogHubView: View {
 
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .bottomTrailing) {
-                VStack(spacing: 0) {
-                    petScopeSelectorBar
-
-                    dateSwitcherBar
-
-                    taskStatusFilterBar
-
-                    Divider()
-
-                    ScrollView {
-                        VStack(spacing: AppTheme.spacingL) {
-                            careScopeHeaderCard
-                            customTasksListCard
+            List {
+                if householdSync.lastError != nil {
+                    Section {
+                        SyncStatusBanner()
+                        Button("Try Again") {
+                            Task { await householdSync.pushNow() }
                         }
-                        .padding(AppTheme.spacingM)
-                        .padding(.bottom, 80)
                     }
                 }
-                .background(AppTheme.background.ignoresSafeArea())
 
-                Menu {
-                    Button {
-                        taskPetScopeId = selectedPetScopeId
-                        showAddTaskSheet = true
-                    } label: {
-                        Label("Add Task", systemImage: "checklist")
+                Section {
+                    DayStrip(selectedDateOffset: $selectedDateOffset, summary: daySummary(offset:))
+                    PetScopePicker(selection: $selectedPetScopeId, pets: petManager.pets)
+                    Picker("Status", selection: $selectedTaskStatus) {
+                        ForEach(TaskStatus.allCases) { status in
+                            Text(status.rawValue).tag(status)
+                        }
                     }
-
-                    Button {
-                        showAddPetModal = true
-                    } label: {
-                        Label("Add Pet", systemImage: "plus.circle")
-                    }
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.headline.weight(.semibold))
-                        .foregroundStyle(.white)
-                        .frame(width: 44, height: 44)
-                        .background(Color.accentColor, in: Circle())
-                        .shadow(color: Color.accentColor.opacity(0.3), radius: 6, x: 0, y: 3)
+                    .pickerStyle(.segmented)
+                } footer: {
+                    Text("\(displayedTaskCount) \(statusTitle.lowercased()). Tap a task to mark it done.")
                 }
-                .padding(.trailing, AppTheme.spacingM)
-                .padding(.bottom, AppTheme.spacingM)
+
+                Section {
+                    CareSummaryCard(
+                        headline: careSummaryHeadline,
+                        detail: careSummaryDetail,
+                        remaining: max(0, dayTaskItems.count - dayCompletedCount),
+                        overdue: overdueTasks.count,
+                        progress: dayProgress,
+                        total: dayTaskItems.count
+                    )
+                }
+
+                if !taskStore.templates.isEmpty {
+                    Section {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: AppTheme.spacingS) {
+                                ForEach(taskStore.templates) { template in
+                                    TaskBlueprintChip(template: template) {
+                                        guard householdSync.canMutate else { return }
+                                        addTasks(from: template)
+                                    }
+                                }
+                            }
+                            .padding(.vertical, 2)
+                        }
+                    } header: {
+                        HStack {
+                            Text("Saved templates")
+                            Spacer()
+                            Button("Manage") { showBlueprintManager = true }
+                                .font(AppTheme.captionFont().weight(.semibold))
+                        }
+                    } footer: {
+                        Text("Tap a template to add that task without retyping.")
+                    }
+                }
+
+                if selectedTaskStatus != .overdue && !overdueTasks.isEmpty {
+                    Section {
+                        Button {
+                            selectedTaskStatus = .overdue
+                        } label: {
+                            Label("\(overdueTasks.count) overdue — review these first", systemImage: "exclamationmark.triangle.fill")
+                        }
+                        .foregroundStyle(AppTheme.danger)
+                    }
+                }
+
+                Section {
+                    if filteredTasks.isEmpty {
+                        EmptyStateView(
+                            systemImage: selectedTaskStatus == .overdue ? "checkmark.seal.fill" : "checklist",
+                            title: emptyStateText,
+                            message: emptyStateSubtext,
+                            actionTitle: selectedTaskStatus == .pending && householdSync.canMutate ? "Add Task" : nil,
+                            action: selectedTaskStatus == .pending && householdSync.canMutate ? { showAddTaskSheet = true } : nil
+                        )
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets())
+                    } else {
+                        ForEach(expandedTaskItems) { item in
+                            let currentTask = item.task
+                            TaskRowView(
+                                task: currentTask,
+                                petManager: petManager,
+                                selectedDateOffset: selectedDateOffset,
+                                selectedPetScopeId: selectedPetScopeId,
+                                displayPetId: item.displayPetId,
+                                mealSummary: mealSummary(for: currentTask, petId: item.displayPetId),
+                                isOverdue: isTaskOverdue(currentTask, for: item.displayPetId),
+                                onToggleComplete: {
+                                    let petId = item.displayPetId ?? (selectedPetScopeId == PetManager.allPetsId ? petManager.currentPet.id : selectedPetScopeId)
+                                    handleToggleComplete(task: currentTask, petId: petId)
+                                },
+                                onToggleAlarm: {
+                                    if let idx = taskStore.tasks.firstIndex(where: { $0.id == currentTask.id }) {
+                                        withAnimation {
+                                            var updatedTasks = taskStore.tasks
+                                            updatedTasks[idx].alarmEnabled.toggle()
+                                            taskStore.tasks = updatedTasks
+                                        }
+                                    }
+                                },
+                                canChange: householdSync.canMutate,
+                                onDelete: {
+                                    withAnimation {
+                                        taskStore.tasks.removeAll(where: { $0.id == currentTask.id })
+                                    }
+                                },
+                                onSnooze: {
+                                    if let idx = taskStore.tasks.firstIndex(where: { $0.id == currentTask.id }) {
+                                        var updatedTasks = taskStore.tasks
+                                        updatedTasks[idx].snoozedUntil = Date().addingTimeInterval(60 * 60)
+                                        updatedTasks[idx].occurrenceLog.append(
+                                            TaskOccurrence(status: "snoozed", occurredAt: Date(), petId: currentTask.petId)
+                                        )
+                                        taskStore.tasks = updatedTasks
+                                    }
+                                },
+                                onEdit: {
+                                    editingTask = currentTask
+                                    taskTitle = currentTask.title
+                                    taskEmoji = currentTask.emojiIcon
+                                    taskPetScopeId = currentTask.petId
+                                    taskTime = parseTime(currentTask.timeText)
+                                    taskFrequency = currentTask.frequency
+                                    taskCustomInterval = currentTask.customInterval
+                                    taskCustomUnit = currentTask.customUnit
+                                    taskSelectedDays = currentTask.selectedDays
+                                    taskAlarmEnabled = currentTask.alarmEnabled
+                                    taskKind = currentTask.taskKind
+                                    completionPetIds = currentTask.completedForPetIds
+                                    showEditTaskSheet = true
+                                }
+                            )
+                        }
+                    }
+                }
             }
-            .navigationTitle("Tasks & Alarms")
-            .navigationBarTitleDisplayMode(.inline)
+            .refreshable {
+                await householdSync.pullNow()
+            }
+            .fantasyScreen()
+            .fantasyNavigation()
+            .navigationTitle("Today")
+            .toolbar {
+                if householdSync.canMutate {
+                ToolbarItem(placement: .primaryAction) {
+                    Menu {
+                        Button("Add Task", systemImage: "checklist") {
+                            resetTaskForm()
+                            taskPetScopeId = selectedPetScopeId
+                            showAddTaskSheet = true
+                        }
+                        Button("Task templates", systemImage: "bookmark.fill") {
+                            showBlueprintManager = true
+                        }
+                        Button("Add Pet", systemImage: "pawprint") {
+                            showAddPetModal = true
+                        }
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                    .accessibilityLabel("Add")
+                }
+                }
+            }
             .sheet(isPresented: $showAddTaskSheet) {
                 addTaskModalSheet
             }
@@ -556,303 +660,122 @@ struct CareLogHubView: View {
                 AddPetModalView()
                     .environmentObject(petManager)
             }
+            .sheet(isPresented: $showBlueprintManager) {
+                TaskBlueprintManagerView()
+                    .environmentObject(taskStore)
+                    .environmentObject(petManager)
+                    .environmentObject(householdSync)
+            }
+            .sheet(isPresented: $showMealLogSheet, onDismiss: {
+                pendingFeedingTask = nil
+                pendingFeedingPetId = nil
+            }) {
+                MealLogSheet(
+                    petId: pendingFeedingPetId,
+                    title: pendingFeedingTask.map { "Log \($0.title)" } ?? "Log Meal",
+                    when: displayedDate
+                ) { entry in
+                    completeFeedingTask(with: entry)
+                }
+                .environmentObject(wellness)
+                .environmentObject(petManager)
+                .environmentObject(auth)
+            }
         }
     }
 
-    private var dateSwitcherBar: some View {
-        HStack(spacing: 6) {
-            Button {
-                withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
-                    selectedDateOffset -= 1
-                }
-            } label: {
-                dateCard(for: selectedDateOffset - 1)
-                    .frame(width: 56, height: 48)
-            }
-            .buttonStyle(.plain)
-            .contentShape(Rectangle())
+    private func handleToggleComplete(task: CustomCareTask, petId: UUID) {
+        let alreadyCompleted = isTaskCompleted(task, for: petId, at: selectedDateOffset)
 
-            ZStack {
-                TabView(selection: $selectedDateOffset) {
-                    ForEach(dateRangeOffsets, id: \.self) { offset in
-                        dateCard(for: offset)
-                            .tag(offset)
-                    }
-                }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .frame(width: 56, height: 52)
-                .onChange(of: selectedDateOffset) { _, _ in
-                    updateSelectedDateFromOffset()
-                }
-                .onTapGesture(count: 2) {
-                    withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
-                        selectedDateOffset = 0
-                    }
-                }
-            }
-            .frame(width: 56)
-
-            Button {
-                withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
-                    selectedDateOffset += 1
-                }
-            } label: {
-                dateCard(for: selectedDateOffset + 1)
-                    .frame(width: 56, height: 48)
-            }
-            .buttonStyle(.plain)
-            .contentShape(Rectangle())
-
-            Button {
-                showDatePicker = true
-            } label: {
-                Image(systemName: "calendar")
-                    .font(.caption2)
-                    .foregroundStyle(AppTheme.textSecondary)
-                    .padding(4)
-            }
-            .sheet(isPresented: $showDatePicker) {
-                datePickerSheet
-            }
-
-            Menu {
-                Button {
-                    withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
-                        selectedDateOffset -= 1
-                    }
-                } label: {
-                    Label("One Day Before", systemImage: "chevron.left")
-                }
-
-                Button {
-                    withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
-                        selectedDateOffset += 1
-                    }
-                } label: {
-                    Label("One Day After", systemImage: "chevron.right")
-                }
-
-                Button {
-                    showDatePicker = true
-                } label: {
-                    Label("Pick Date", systemImage: "calendar")
-                }
-            } label: {
-                Image(systemName: "ellipsis")
-                    .font(.caption2)
-                    .foregroundStyle(AppTheme.primary)
-                    .padding(4)
-                    .background(AppTheme.primary.opacity(0.1))
-                    .clipShape(Circle())
-            }
+        if task.taskKind == .feeding && !alreadyCompleted {
+            pendingFeedingTask = task
+            pendingFeedingPetId = petId
+            showMealLogSheet = true
+            return
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 4)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(AppTheme.cardBackground)
-                .shadow(color: Color.black.opacity(0.04), radius: 2, x: 0, y: 1)
-        )
-        .padding(.horizontal, 16)
-        .padding(.top, 4)
-    }
 
-    private var taskStatusFilterBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach(TaskStatus.allCases) { status in
-                    let count: Int = {
-                        switch status {
-                        case .all: return allTaskCount
-                        case .pending: return pendingTaskCount
-                        case .completed: return completedTaskCount
-                        case .overdue: return overdueTaskCount
-                        }
-                    }()
+        guard let idx = taskStore.tasks.firstIndex(where: { $0.id == task.id }) else { return }
 
-                    Button {
-                        withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
-                            selectedTaskStatus = status
-                        }
-                    } label: {
-        HStack(spacing: 1) {
-                            Image(systemName: status.systemImage)
-                                .font(.caption2)
-                            Text(status.rawValue)
-                                .font(.caption.weight(.bold))
-                            Text("\(count)")
-                                .font(.caption2.weight(.bold))
-                                .foregroundStyle(selectedTaskStatus == status ? status.tint.opacity(0.9) : AppTheme.textSecondary)
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(selectedTaskStatus == status ? status.tint.opacity(0.15) : AppTheme.cardBackground)
-                        .foregroundStyle(selectedTaskStatus == status ? status.tint : AppTheme.textPrimary)
-                        .clipShape(Capsule())
-                        .overlay(
-                            Capsule()
-                                .stroke(status.tint.opacity(selectedTaskStatus == status ? 0.4 : 0), lineWidth: 1)
-                        )
-                    }
+        withAnimation {
+            var updatedTasks = taskStore.tasks
+            if task.petId == PetManager.allPetsId {
+                if updatedTasks[idx].completedPetDateOffsets[petId] == selectedDateOffset {
+                    updatedTasks[idx].completedPetDateOffsets.removeValue(forKey: petId)
+                } else {
+                    updatedTasks[idx].completedPetDateOffsets[petId] = selectedDateOffset
+                }
+            } else if updatedTasks[idx].isCompleted && updatedTasks[idx].completedDateOffset == selectedDateOffset {
+                updatedTasks[idx].isCompleted = false
+                updatedTasks[idx].completedDateOffset = nil
+            } else {
+                updatedTasks[idx].isCompleted = true
+                updatedTasks[idx].completedDateOffset = selectedDateOffset
+                if task.taskKind != .feeding {
+                    updatedTasks[idx].occurrenceLog.append(
+                        TaskOccurrence(status: "completed", occurredAt: displayedDate, petId: task.petId)
+                    )
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
+            taskStore.tasks = updatedTasks
         }
     }
 
-    private func updateSelectedDateFromOffset() {
+    private func completeFeedingTask(with entry: FeedingEntry) {
+        wellness.feedings.insert(entry, at: 0)
+
+        guard let task = pendingFeedingTask,
+              let petId = pendingFeedingPetId,
+              let idx = taskStore.tasks.firstIndex(where: { $0.id == task.id }) else { return }
+
+        withAnimation {
+            var updatedTasks = taskStore.tasks
+            if task.petId == PetManager.allPetsId {
+                updatedTasks[idx].completedPetDateOffsets[petId] = selectedDateOffset
+            } else {
+                updatedTasks[idx].isCompleted = true
+                updatedTasks[idx].completedDateOffset = selectedDateOffset
+            }
+            updatedTasks[idx].occurrenceLog.append(
+                TaskOccurrence(
+                    status: "completed",
+                    occurredAt: entry.fedAt,
+                    petId: petId,
+                    amountGrams: entry.amountGrams,
+                    calories: entry.calories,
+                    foodName: entry.foodName
+                )
+            )
+            taskStore.tasks = updatedTasks
+        }
+
+        pendingFeedingTask = nil
+        pendingFeedingPetId = nil
+    }
+
+    private func mealSummary(for task: CustomCareTask, petId: UUID?) -> String? {
+        guard task.taskKind == .feeding,
+              isTaskCompleted(task, for: petId, at: selectedDateOffset) else { return nil }
+
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        selectedDate = calendar.date(byAdding: .day, value: selectedDateOffset, to: today) ?? today
-    }
-
-    private func dateCard(for offset: Int) -> some View {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let date = calendar.date(byAdding: .day, value: offset, to: today) ?? today
-        let isToday = offset == 0
-        let isSelected = offset == selectedDateOffset
-        let weekday = calendar.weekdaySymbols[calendar.component(.weekday, from: date) - 1]
-        let dayNumber = calendar.component(.day, from: date)
-        let month = calendar.monthSymbols[calendar.component(.month, from: date) - 1]
-
-        return VStack(spacing: 2) {
-            Text(weekday)
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(isSelected ? .white : AppTheme.textSecondary)
-                .lineLimit(1)
-
-            Text("\(dayNumber)")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(isSelected ? .white : AppTheme.textPrimary)
-
-            Text(month)
-                .font(.caption2)
-                .foregroundStyle(isSelected ? .white.opacity(0.85) : AppTheme.textSecondary)
-                .lineLimit(1)
+        if let occurrence = task.occurrenceLog.last(where: { occurrence in
+            occurrence.status == "completed"
+                && calendar.isDate(occurrence.occurredAt, inSameDayAs: displayedDate)
+                && (occurrence.petId == nil || occurrence.petId == petId)
+                && occurrence.amountGrams != nil
+                && occurrence.calories != nil
+        }), let grams = occurrence.amountGrams, let calories = occurrence.calories {
+            let food = occurrence.foodName ?? "Meal"
+            return "\(food) · \(MeasureText.mass(grams: grams)) · \(MeasureText.calories(calories))"
         }
-        .frame(width: 56, height: 48)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(isSelected ? AppTheme.primary : (isToday ? AppTheme.primary.opacity(0.12) : .clear))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(isToday && !isSelected ? AppTheme.primary.opacity(0.6) : .clear, lineWidth: 1)
-        )
-        .contentShape(Rectangle())
-    }
 
-    private func dateLabel(for date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("MMM d")
-        return formatter.string(from: date)
-    }
-
-    private var datePickerSheet: some View {
-        NavigationStack {
-            Form {
-                Section("Select Date") {
-                    DatePicker("Date", selection: Binding(
-                        get: { displayedDate },
-                        set: { newDate in
-                            let calendar = Calendar.current
-                            let today = calendar.startOfDay(for: Date())
-                            let newDay = calendar.startOfDay(for: newDate)
-                            if let offset = calendar.dateComponents([.day], from: today, to: newDay).day {
-                                selectedDateOffset = offset
-                            }
-                        }
-                    ), displayedComponents: .date)
-                }
-            }
-            .navigationTitle("Pick Date")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { showDatePicker = false }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { showDatePicker = false }
-                }
-            }
+        let targetPetId = petId ?? (selectedPetScopeId == PetManager.allPetsId ? petManager.currentPet.id : selectedPetScopeId)
+        if let feeding = wellness.feedings.first(where: { entry in
+            entry.petId == targetPetId && calendar.isDate(entry.fedAt, inSameDayAs: displayedDate)
+        }), let calories = feeding.calories {
+            return "\(feeding.foodName) · \(MeasureText.mass(grams: feeding.amountGrams)) · \(MeasureText.calories(calories))"
         }
-        .presentationDetents([.medium])
-    }
 
-    private var petScopeSelectorBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                Button {
-                    withAnimation {
-                        selectedPetScopeId = PetManager.allPetsId
-                    }
-                } label: {
-                    HStack(spacing: 6) {
-                        Text("🐾")
-                        Text("All Pets")
-                    }
-                    .font(.caption.weight(.bold))
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 8)
-                    .background(selectedPetScopeId == PetManager.allPetsId ? AppTheme.primary : AppTheme.cardBackground)
-                    .foregroundStyle(selectedPetScopeId == PetManager.allPetsId ? .white : AppTheme.textPrimary)
-                    .clipShape(Capsule())
-                    .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 2)
-                }
-
-                ForEach(petManager.pets) { pet in
-                    Button {
-                        withAnimation {
-                            selectedPetScopeId = pet.id
-                        }
-                    } label: {
-                        HStack(spacing: 6) {
-                            Text(pet.avatarEmoji)
-                            Text(pet.name)
-                        }
-                        .font(.caption.weight(.semibold))
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 8)
-                        .background(selectedPetScopeId == pet.id ? Color(hex: pet.petColorHex) : AppTheme.cardBackground)
-                        .foregroundStyle(selectedPetScopeId == pet.id ? .white : AppTheme.textPrimary)
-                        .clipShape(Capsule())
-                        .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 2)
-                    }
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-        }
-    }
-
-    private var careScopeHeaderCard: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text(statusTitle)
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(AppTheme.textSecondary)
-                Spacer()
-                Text("\(displayedTaskCount) Tasks")
-                    .font(.caption2.weight(.bold))
-                    .foregroundStyle(AppTheme.primary)
-            }
-
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(AppTheme.primary.opacity(0.15))
-                        .frame(height: 8)
-                    Capsule()
-                        .fill(LinearGradient(colors: [AppTheme.primary, Color.green], startPoint: .leading, endPoint: .trailing))
-                        .frame(width: geo.size.width * CGFloat(progressRatio), height: 8)
-                }
-            }
-            .frame(height: 8)
-        }
-        .padding(AppTheme.spacingM)
-        .cardStyle()
+        return nil
     }
 
     private var displayedTaskCount: Int {
@@ -867,160 +790,103 @@ struct CareLogHubView: View {
     private var statusTitle: String {
         switch selectedTaskStatus {
         case .all:
-            return "\(dateLabel(for: displayedDate)) Care Completion"
+            return "\(dateLabel(for: displayedDate)) · all tasks"
         case .pending:
-            return "Pending Tasks"
+            return "to do"
         case .completed:
-            return "Completed Tasks"
+            return "completed"
         case .overdue:
-            return "Overdue Tasks ⚠️"
+            return "overdue"
         }
     }
 
-    private var customTasksListCard: some View {
-    VStack(alignment: .leading, spacing: 12) {
-        HStack {
-            Text(statusTitle)
-                .font(.subheadline.weight(.bold))
-                .foregroundStyle(AppTheme.textPrimary)
-            Spacer()
-            Text("\(displayedTaskCount) Tasks")
-                .font(.caption2)
-                .foregroundStyle(AppTheme.textSecondary)
+    private func daySummary(offset: Int) -> (total: Int, done: Int) {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        guard let date = calendar.date(byAdding: .day, value: offset, to: today) else { return (0, 0) }
+        let tasks = taskStore.tasks.filter { task in
+            let inScope = selectedPetScopeId == PetManager.allPetsId
+                || task.petId == selectedPetScopeId
+                || task.petId == PetManager.allPetsId
+            return inScope && CareSchedule.occurs(task, on: date)
         }
-
-        if selectedTaskStatus != .overdue && !overdueTasks.isEmpty {
-            HStack(spacing: 8) {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.caption2)
-                    .foregroundStyle(.white)
-                Text("\(overdueTasks.count) Overdue Task(s)")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(.white)
-                Spacer()
-                Button("View") {
-                    withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
-                        selectedTaskStatus = .overdue
-                    }
+        let done = tasks.filter { task in
+            if task.petId == PetManager.allPetsId {
+                if selectedPetScopeId == PetManager.allPetsId {
+                    guard !petManager.pets.isEmpty else { return false }
+                    return petManager.pets.allSatisfy { task.completedPetDateOffsets[$0.id] == offset }
                 }
-                .font(.caption2.weight(.bold))
-                .foregroundStyle(.white)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 4)
-                .background(Color.red.opacity(0.8))
-                .clipShape(Capsule())
+                return task.completedPetDateOffsets[selectedPetScopeId] == offset
             }
-            .padding(12)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.red.opacity(0.9))
-            )
-        }
-
-        if filteredTasks.isEmpty {
-            VStack(spacing: 8) {
-                Text(emptyStateText)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(AppTheme.textPrimary)
-                Text(emptyStateSubtext)
-                    .font(.caption)
-                    .foregroundStyle(AppTheme.textSecondary)
-                    .multilineTextAlignment(.center)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 24)
-            .cardStyle()
-        } else {
-            ForEach(expandedTaskItems) { item in
-                let currentTask = item.task
-                TaskRowView(
-                    task: currentTask,
-                    petManager: petManager,
-                    selectedDateOffset: selectedDateOffset,
-                    selectedPetScopeId: selectedPetScopeId,
-                    displayPetId: item.displayPetId,
-                        onToggleComplete: {
-                            if let idx = careTasks.firstIndex(where: { $0.id == currentTask.id }) {
-                                let petId = item.displayPetId ?? (selectedPetScopeId == PetManager.allPetsId ? petManager.currentPet.id : selectedPetScopeId)
-                                withAnimation {
-                                    var updatedTasks = careTasks
-                                    if currentTask.petId == PetManager.allPetsId {
-                                        if updatedTasks[idx].completedPetDateOffsets[petId] == selectedDateOffset {
-                                            updatedTasks[idx].completedPetDateOffsets.removeValue(forKey: petId)
-                                        } else {
-                                            updatedTasks[idx].completedPetDateOffsets[petId] = selectedDateOffset
-                                        }
-                                    } else {
-                                        if updatedTasks[idx].isCompleted && updatedTasks[idx].completedDateOffset == selectedDateOffset {
-                                            updatedTasks[idx].isCompleted = false
-                                            updatedTasks[idx].completedDateOffset = nil
-                                        } else {
-                                            updatedTasks[idx].isCompleted = true
-                                            updatedTasks[idx].completedDateOffset = selectedDateOffset
-                                        }
-                                    }
-                                    careTasks = updatedTasks
-                                }
-                            }
-                        },
-                    onToggleAlarm: {
-                        if let idx = careTasks.firstIndex(where: { $0.id == currentTask.id }) {
-                            withAnimation {
-                                var updatedTasks = careTasks
-                                updatedTasks[idx].alarmEnabled.toggle()
-                                careTasks = updatedTasks
-                            }
-                        }
-                    },
-                    onDelete: {
-                        withAnimation {
-                            careTasks.removeAll(where: { $0.id == currentTask.id })
-                        }
-                    },
-                    onEdit: {
-                        editingTask = currentTask
-                        taskTitle = currentTask.title
-                        taskEmoji = currentTask.emojiIcon
-                        taskPetScopeId = currentTask.petId
-                        taskTime = parseTime(currentTask.timeText)
-                        taskFrequency = currentTask.frequency
-                        taskCustomInterval = currentTask.customInterval
-                        taskCustomUnit = currentTask.customUnit
-                        taskSelectedDays = currentTask.selectedDays
-                        taskAlarmEnabled = currentTask.alarmEnabled
-                        completionPetIds = currentTask.completedForPetIds
-                        showEditTaskSheet = true
-                    }
-                )
-            }
-        }
+            return task.isCompleted && task.completedDateOffset == offset
+        }.count
+        return (tasks.count, done)
     }
-    .padding(AppTheme.spacingM)  // This padding + cardStyle gives the card its size
-    .cardStyle()  // This applies the card appearance
-}
+
+    private func dateLabel(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.setLocalizedDateFormatFromTemplate("MMM d")
+        return formatter.string(from: date)
+    }
+
+    private var nextPendingTitle: String? {
+        expandedTaskItems.first { item in
+            !isTaskCompleted(item.task, for: item.displayPetId, at: selectedDateOffset)
+        }?.task.title
+    }
+
+    private var careSummaryHeadline: String {
+        if overdueTasks.count > 0 {
+            return overdueTasks.count == 1 ? "1 task is overdue" : "\(overdueTasks.count) tasks are overdue"
+        }
+        if dayTaskItems.isEmpty {
+            return "Nothing scheduled"
+        }
+        if dayCompletedCount == dayTaskItems.count {
+            return "All done for this day"
+        }
+        if let next = nextPendingTitle {
+            return "Next: \(next)"
+        }
+        return "\(dayTaskItems.count - dayCompletedCount) remaining"
+    }
+
+    private var careSummaryDetail: String {
+        if overdueTasks.count > 0 {
+            return "Finish overdue care first, then continue with the rest of the day."
+        }
+        if dayTaskItems.isEmpty {
+            return "Add feeding, medication, walks, or appointments for this day."
+        }
+        if dayCompletedCount == dayTaskItems.count {
+            return "Every scheduled task is complete."
+        }
+        return "\(dayCompletedCount) of \(dayTaskItems.count) complete. Tap a row to mark it done."
+    }
+
     private var emptyStateText: String {
         switch selectedTaskStatus {
         case .all:
-            return "No care tasks defined for this date."
+            return "Nothing scheduled"
         case .pending:
-            return "No pending tasks."
+            return "You're all caught up"
         case .completed:
-            return "No completed tasks yet."
+            return "No completed tasks yet"
         case .overdue:
-            return "No overdue tasks! Great job!"
+            return "Nothing overdue"
         }
     }
 
     private var emptyStateSubtext: String {
         switch selectedTaskStatus {
         case .all:
-            return "Tap 'Add Task' to create custom feeding, grooming, medicine or playtime schedules!"
+            return "Add feeding, medication, walks, grooming, or a vet visit for this day."
         case .pending:
-            return "All tasks are completed for this date."
+            return "Every scheduled task for this day is done."
         case .completed:
-            return "Complete some tasks to see them here."
+            return "Completed care for this day will appear here."
         case .overdue:
-            return "You're staying on top of everything."
+            return "You're on schedule for the current filters."
         }
     }
 
@@ -1039,33 +905,98 @@ struct CareLogHubView: View {
         return formatter.string(from: date)
     }
 
+    private func resetTaskForm() {
+        taskTitle = ""
+        taskEmoji = "🐾"
+        taskPetScopeId = PetManager.allPetsId
+        taskTime = Date()
+        taskFrequency = .daily
+        taskCustomInterval = 1
+        taskCustomUnit = .day
+        taskSelectedDays = [2, 3, 4, 5, 6]
+        taskAlarmEnabled = true
+        taskKind = .custom
+        saveAsBlueprint = false
+        selectedBlueprintId = nil
+    }
+
+    private func applyBlueprintToForm(_ template: CareTaskTemplate) {
+        taskTitle = template.title
+        taskEmoji = template.emojiIcon
+        taskKind = template.taskKind
+        taskTime = parseTime(template.timeText)
+        taskFrequency = template.frequency
+        taskCustomInterval = template.customInterval
+        taskCustomUnit = template.customUnit
+        taskSelectedDays = template.selectedDays
+        taskAlarmEnabled = template.alarmEnabled
+        if template.appliesToAllPets {
+            taskPetScopeId = PetManager.allPetsId
+        } else if let first = template.petIds.first {
+            taskPetScopeId = first
+        }
+    }
+
+    private func addTasks(from template: CareTaskTemplate) {
+        let newTasks = taskStore.applyTemplate(template)
+        guard !newTasks.isEmpty else { return }
+        withAnimation {
+            taskStore.tasks.insert(contentsOf: newTasks, at: 0)
+        }
+    }
+
     private var addTaskModalSheet: some View {
         NavigationStack {
             Form {
-                Section(header: Text("Task Details")) {
-                    TextField("Task Name (e.g. Salmon Meal, Medication)", text: $taskTitle)
+                if !taskStore.templates.isEmpty {
+                    Section("Start from a template") {
+                        Picker("Template", selection: $selectedBlueprintId) {
+                            Text("Custom task").tag(Optional<UUID>.none)
+                            ForEach(taskStore.templates) { template in
+                                Text("\(template.emojiIcon) \(template.title)").tag(Optional(template.id))
+                            }
+                        }
+                        .onChange(of: selectedBlueprintId) { _, newValue in
+                            guard let id = newValue,
+                                  let template = taskStore.templates.first(where: { $0.id == id }) else { return }
+                            applyBlueprintToForm(template)
+                        }
+                    }
+                }
 
-                    Picker("Emoji Icon", selection: $taskEmoji) {
+                Section("Details") {
+                    TextField("Task name (e.g. Breakfast, Walk, Medication)", text: $taskTitle)
+
+                    Picker("Icon", selection: $taskEmoji) {
                         Text("🍗 Meal / Food").tag("🍗")
                         Text("💧 Water Refill").tag("💧")
                         Text("🚽 Litter Box").tag("🚽")
                         Text("💊 Medicine / Drops").tag("💊")
                         Text("🛁 Grooming / Bath").tag("🛁")
                         Text("🎾 Play & Exercise").tag("🎾")
-                        Text("🧠 Behavioral Check").tag("🧠")
+                        Text("🚶 Walk").tag("🚶")
+                        Text("🌾 Hay & Greens").tag("🌾")
+                        Text("🪺 Habitat").tag("🪺")
+                        Text("🧠 Check-in").tag("🧠")
                         Text("🐾 General Care").tag("🐾")
                     }
 
-                    Picker("Target Pet Scope", selection: $taskPetScopeId) {
+                    Picker("Pet", selection: $taskPetScopeId) {
                         Text("🐾 All Pets").tag(PetManager.allPetsId)
                         ForEach(petManager.pets) { pet in
                             Text("\(pet.avatarEmoji) \(pet.name)").tag(pet.id)
                         }
                     }
+
+                    Picker("Kind", selection: $taskKind) {
+                        ForEach(CareTaskKind.allCases) { kind in
+                            Label(kind.rawValue, systemImage: kind.symbol).tag(kind)
+                        }
+                    }
                 }
 
-                Section(header: Text("Alarm Time & Frequency")) {
-                    DatePicker("Alarm Clock Time", selection: $taskTime, displayedComponents: .hourAndMinute)
+                Section("Schedule") {
+                    DatePicker("Time", selection: $taskTime, displayedComponents: .hourAndMinute)
 
                     Picker("Frequency", selection: $taskFrequency) {
                         ForEach(TaskFrequency.allCases) { freq in
@@ -1091,10 +1022,18 @@ struct CareLogHubView: View {
                         weekdayPicker(selectedDays: $taskSelectedDays)
                     }
 
-                    Toggle("Enable Sound & Push Alarm ⏰", isOn: $taskAlarmEnabled)
+                    Toggle("Reminders", isOn: $taskAlarmEnabled)
+                }
+
+                if householdSync.canMutate {
+                    Section {
+                        Toggle("Save as a template", isOn: $saveAsBlueprint)
+                    } footer: {
+                        Text("Templates let you add this task again without retyping.")
+                    }
                 }
             }
-            .navigationTitle("Define Custom Care Task 🐾")
+            .navigationTitle("New Task")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -1102,9 +1041,10 @@ struct CareLogHubView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save Task") {
+                        guard !taskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
                         let newTask = CustomCareTask(
                             petId: taskPetScopeId,
-                            title: taskTitle.isEmpty ? "Custom Care Task" : taskTitle,
+                            title: taskTitle.trimmingCharacters(in: .whitespacesAndNewlines),
                             timeText: formatTime(taskTime),
                             frequency: taskFrequency,
                             customInterval: taskCustomInterval,
@@ -1115,15 +1055,20 @@ struct CareLogHubView: View {
                             emojiIcon: taskEmoji,
                             startDate: Date(),
                             completedDateOffset: nil,
-                            completedPetDateOffsets: [:]
+                            completedPetDateOffsets: [:],
+                            taskKind: taskKind
                         )
 
                         withAnimation {
-                            careTasks.insert(newTask, at: 0)
+                            taskStore.tasks.insert(newTask, at: 0)
+                        }
+                        if saveAsBlueprint {
+                            taskStore.addTemplate(from: newTask)
                         }
                         showAddTaskSheet = false
-                        taskTitle = ""
+                        resetTaskForm()
                     }
+                    .disabled(taskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .bold()
                 }
             }
@@ -1133,30 +1078,39 @@ struct CareLogHubView: View {
     private var editTaskModalSheet: some View {
         NavigationStack {
             Form {
-                Section(header: Text("Task Details")) {
-                    TextField("Task Name", text: $taskTitle)
+                Section("Details") {
+                    TextField("Task name (e.g. Breakfast, Walk, Medication)", text: $taskTitle)
 
-                    Picker("Emoji Icon", selection: $taskEmoji) {
+                    Picker("Icon", selection: $taskEmoji) {
                         Text("🍗 Meal / Food").tag("🍗")
                         Text("💧 Water Refill").tag("💧")
                         Text("🚽 Litter Box").tag("🚽")
                         Text("💊 Medicine / Drops").tag("💊")
                         Text("🛁 Grooming / Bath").tag("🛁")
                         Text("🎾 Play & Exercise").tag("🎾")
-                        Text("🧠 Behavioral Check").tag("🧠")
+                        Text("🚶 Walk").tag("🚶")
+                        Text("🌾 Hay & Greens").tag("🌾")
+                        Text("🪺 Habitat").tag("🪺")
+                        Text("🧠 Check-in").tag("🧠")
                         Text("🐾 General Care").tag("🐾")
                     }
 
-                    Picker("Target Pet Scope", selection: $taskPetScopeId) {
+                    Picker("Pet", selection: $taskPetScopeId) {
                         Text("🐾 All Pets").tag(PetManager.allPetsId)
                         ForEach(petManager.pets) { pet in
                             Text("\(pet.avatarEmoji) \(pet.name)").tag(pet.id)
                         }
                     }
+
+                    Picker("Kind", selection: $taskKind) {
+                        ForEach(CareTaskKind.allCases) { kind in
+                            Label(kind.rawValue, systemImage: kind.symbol).tag(kind)
+                        }
+                    }
                 }
 
-                Section(header: Text("Alarm Time & Frequency")) {
-                    DatePicker("Alarm Clock Time", selection: $taskTime, displayedComponents: .hourAndMinute)
+                Section("Schedule") {
+                    DatePicker("Time", selection: $taskTime, displayedComponents: .hourAndMinute)
 
                     Picker("Frequency", selection: $taskFrequency) {
                         ForEach(TaskFrequency.allCases) { freq in
@@ -1182,44 +1136,50 @@ struct CareLogHubView: View {
                         weekdayPicker(selectedDays: $taskSelectedDays)
                     }
 
-                    Toggle("Enable Sound & Push Alarm ⏰", isOn: $taskAlarmEnabled)
+                    Toggle("Reminders", isOn: $taskAlarmEnabled)
                 }
             }
-            .navigationTitle("Edit Care Task 🐾")
+            .navigationTitle("Edit Task")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { showEditTaskSheet = false }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Update Task") {
+                    Button("Save") {
+                        guard !taskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
                         guard let task = editingTask,
-                              let idx = careTasks.firstIndex(where: { $0.id == task.id }) else { return }
+                              let idx = taskStore.tasks.firstIndex(where: { $0.id == task.id }) else { return }
 
-                        careTasks[idx] = CustomCareTask(
+                        taskStore.tasks[idx] = CustomCareTask(
+                            id: task.id,
                             petId: taskPetScopeId,
-                            title: taskTitle.isEmpty ? "Custom Care Task" : taskTitle,
+                            title: taskTitle.trimmingCharacters(in: .whitespacesAndNewlines),
                             timeText: formatTime(taskTime),
                             frequency: taskFrequency,
                             customInterval: taskCustomInterval,
                             customUnit: taskCustomUnit,
                             selectedDays: taskSelectedDays,
-                            isCompleted: careTasks[idx].isCompleted,
+                            isCompleted: taskStore.tasks[idx].isCompleted,
                             alarmEnabled: taskAlarmEnabled,
                             emojiIcon: taskEmoji,
-                            completedForPetIds: careTasks[idx].completedForPetIds,
-                            startDate: careTasks[idx].startDate,
-                            completedDateOffset: careTasks[idx].completedDateOffset,
-                            completedPetDateOffsets: careTasks[idx].completedPetDateOffsets
+                            completedForPetIds: taskStore.tasks[idx].completedForPetIds,
+                            startDate: taskStore.tasks[idx].startDate,
+                            completedDateOffset: taskStore.tasks[idx].completedDateOffset,
+                            completedPetDateOffsets: taskStore.tasks[idx].completedPetDateOffsets,
+                            taskKind: taskKind,
+                            snoozedUntil: taskStore.tasks[idx].snoozedUntil,
+                            occurrenceLog: taskStore.tasks[idx].occurrenceLog
                         )
                         showEditTaskSheet = false
                         taskTitle = ""
                     }
+                    .disabled(taskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .bold()
                 }
             }
         }
-        .presentationDetents([.medium])
+        .presentationDetents([.large])
     }
 
     private var petCompletionPickerSheet: some View {
@@ -1252,9 +1212,9 @@ struct CareLogHubView: View {
                 Section {
                     Button("Done") {
                         if let taskId = pendingCompletionTaskId,
-                           let idx = careTasks.firstIndex(where: { $0.id == taskId }) {
+                           let idx = taskStore.tasks.firstIndex(where: { $0.id == taskId }) {
                             withAnimation {
-                                var updatedTasks = careTasks
+                                var updatedTasks = taskStore.tasks
                                 if pendingCompletionPetIds.isEmpty {
                                     updatedTasks[idx].completedPetDateOffsets.removeAll()
                                 } else {
@@ -1262,7 +1222,7 @@ struct CareLogHubView: View {
                                         updatedTasks[idx].completedPetDateOffsets[petId] = selectedDateOffset
                                     }
                                 }
-                                careTasks = updatedTasks
+                                taskStore.tasks = updatedTasks
                             }
                         }
                         showPetCompletionPicker = false
@@ -1326,15 +1286,173 @@ struct CareLogHubView: View {
     }
 }
 
+private struct DayStrip: View {
+    @Binding var selectedDateOffset: Int
+    let summary: (Int) -> (total: Int, done: Int)
+    @State private var showCalendar = false
+
+    private var weekOffsets: [Int] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let selected = calendar.date(byAdding: .day, value: selectedDateOffset, to: today) ?? today
+        let weekday = calendar.component(.weekday, from: selected)
+        var distanceFromWeekStart = weekday - calendar.firstWeekday
+        if distanceFromWeekStart < 0 { distanceFromWeekStart += 7 }
+        let startOfWeek = calendar.date(byAdding: .day, value: -distanceFromWeekStart, to: selected) ?? selected
+        let startOffset = calendar.dateComponents([.day], from: today, to: calendar.startOfDay(for: startOfWeek)).day ?? 0
+        return (0..<7).map { startOffset + $0 }
+    }
+
+    private var selectedDate: Date {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        return calendar.date(byAdding: .day, value: selectedDateOffset, to: today) ?? today
+    }
+
+    private var dateSelection: Binding<Date> {
+        Binding(
+            get: { selectedDate },
+            set: { newDate in
+                let calendar = Calendar.current
+                let today = calendar.startOfDay(for: Date())
+                let newDay = calendar.startOfDay(for: newDate)
+                selectedDateOffset = calendar.dateComponents([.day], from: today, to: newDay).day ?? 0
+            }
+        )
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: AppTheme.spacingS) {
+            HStack(spacing: AppTheme.spacingS) {
+                stepButton(systemImage: "chevron.left", label: "Previous day", delta: -1)
+                VStack(spacing: 2) {
+                    Text(relativeTitle)
+                        .font(.headline)
+                        .foregroundStyle(AppTheme.textPrimary)
+                    Text(selectedDate.formatted(date: .abbreviated, time: .omitted))
+                        .font(.caption)
+                        .foregroundStyle(AppTheme.textSecondary)
+                }
+                .frame(maxWidth: .infinity)
+                stepButton(systemImage: "chevron.right", label: "Next day", delta: 1)
+                if selectedDateOffset != 0 {
+                    Button("Today") {
+                        withAnimation { selectedDateOffset = 0 }
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                }
+                Button {
+                    showCalendar = true
+                } label: {
+                    Image(systemName: "calendar")
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+                .accessibilityLabel("Choose a day")
+            }
+
+            HStack(spacing: 6) {
+                ForEach(weekOffsets, id: \.self) { offset in
+                    dayChip(offset)
+                }
+            }
+        }
+        .padding(.vertical, 4)
+        .sensoryFeedback(.selection, trigger: selectedDateOffset)
+        .sheet(isPresented: $showCalendar) {
+            NavigationStack {
+                DatePicker("Day", selection: dateSelection, displayedComponents: .date)
+                    .datePickerStyle(.graphical)
+                    .padding()
+                    .navigationTitle("Choose a Day")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") { showCalendar = false }
+                        }
+                    }
+            }
+            .presentationDetents([.medium])
+        }
+    }
+
+    private var relativeTitle: String {
+        switch selectedDateOffset {
+        case 0: return "Today"
+        case 1: return "Tomorrow"
+        case -1: return "Yesterday"
+        default:
+            return selectedDate.formatted(.dateTime.weekday(.wide))
+        }
+    }
+
+    private func stepButton(systemImage: String, label: String, delta: Int) -> some View {
+        Button {
+            withAnimation { selectedDateOffset += delta }
+        } label: {
+            Image(systemName: systemImage)
+        }
+        .buttonStyle(.bordered)
+        .controlSize(.small)
+        .accessibilityLabel(label)
+    }
+
+    private func dayChip(_ offset: Int) -> some View {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let date = calendar.date(byAdding: .day, value: offset, to: today) ?? today
+        let isSelected = offset == selectedDateOffset
+        let load = summary(offset)
+        return Button {
+            withAnimation { selectedDateOffset = offset }
+        } label: {
+            VStack(spacing: 4) {
+                Text(date.formatted(.dateTime.weekday(.narrow)))
+                    .font(.caption2.weight(.semibold))
+                Text(date.formatted(.dateTime.day()))
+                    .font(.subheadline.weight(.bold))
+                Circle()
+                    .fill(dotColor(load, isSelected: isSelected))
+                    .frame(width: 5, height: 5)
+                    .opacity(load.total == 0 ? 0 : 1)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+            .foregroundStyle(isSelected ? Color.white : AppTheme.textPrimary)
+            .background(
+                isSelected ? AnyShapeStyle(AppTheme.primary) : AnyShapeStyle(AppTheme.primary.opacity(offset == 0 ? 0.12 : 0.04)),
+                in: RoundedRectangle(cornerRadius: AppTheme.cornerRadiusSmall, style: .continuous)
+            )
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(date.formatted(date: .complete, time: .omitted))
+        .accessibilityValue(load.total == 0 ? "No tasks" : "\(load.done) of \(load.total) done")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    private func dotColor(_ load: (total: Int, done: Int), isSelected: Bool) -> Color {
+        if load.total > 0 && load.done == load.total {
+            return isSelected ? Color.white : AppTheme.success
+        }
+        return isSelected ? Color.white.opacity(0.85) : AppTheme.warning
+    }
+}
+
 struct TaskRowView: View {
     let task: CustomCareTask
     let petManager: PetManager
     let selectedDateOffset: Int
     let selectedPetScopeId: UUID
     let displayPetId: UUID?
+    var mealSummary: String?
+    var isOverdue: Bool = false
     let onToggleComplete: () -> Void
     let onToggleAlarm: () -> Void
+    var canChange: Bool = true
     let onDelete: () -> Void
+    let onSnooze: () -> Void
     let onEdit: () -> Void
 
     var isCurrentPetCompleted: Bool {
@@ -1345,123 +1463,100 @@ struct TaskRowView: View {
         return task.isCompleted && task.completedDateOffset == selectedDateOffset
     }
 
-    private var taskPetColor: Color {
-        if task.petId == PetManager.allPetsId {
-            if let displayPetId = displayPetId, let p = petManager.pets.first(where: { $0.id == displayPetId }) {
-                return Color(hex: p.petColorHex)
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: isCurrentPetCompleted ? "checkmark.circle.fill" : (isOverdue ? "exclamationmark.circle.fill" : "circle"))
+                .font(.title2)
+                .foregroundStyle(checkboxTint)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("\(task.emojiIcon) \(task.title)")
+                        .font(.body.weight(.medium))
+                        .strikethrough(isCurrentPetCompleted)
+                        .foregroundStyle(isCurrentPetCompleted ? .secondary : .primary)
+                    Spacer(minLength: 8)
+                    Text(task.timeText)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(isOverdue && !isCurrentPetCompleted ? AppTheme.danger : AppTheme.textSecondary)
+                        .monospacedDigit()
+                }
+                Text(detailLine)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                if isOverdue && !isCurrentPetCompleted {
+                    Text("Overdue")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(AppTheme.danger)
+                }
+                if let mealSummary {
+                    Text(mealSummary)
+                        .font(.caption)
+                        .foregroundStyle(AppTheme.nutrition)
+                }
+                if !task.alarmEnabled {
+                    Text("Reminders off")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
-            if selectedPetScopeId != PetManager.allPetsId, let p = petManager.pets.first(where: { $0.id == selectedPetScopeId }) {
-                return Color(hex: p.petColorHex)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if canChange { onToggleComplete() }
+        }
+        .accessibilityAddTraits(.isButton)
+        .accessibilityLabel(task.title)
+        .accessibilityValue(accessibilityValue)
+        .swipeActions(edge: .trailing, allowsFullSwipe: canChange) {
+            if canChange {
+                Button("Delete", systemImage: "trash", role: .destructive, action: onDelete)
+                Button("Edit", systemImage: "pencil", action: onEdit)
+                    .tint(.blue)
             }
-            return AppTheme.primary
         }
-        if let p = petManager.pets.first(where: { $0.id == task.petId }) {
-            return Color(hex: p.petColorHex)
+        .swipeActions(edge: .leading) {
+            if canChange {
+                Button(isCurrentPetCompleted ? "Undo" : "Done", systemImage: isCurrentPetCompleted ? "arrow.uturn.backward" : "checkmark") {
+                    onToggleComplete()
+                }
+                .tint(.green)
+                Button(task.alarmEnabled ? "Mute" : "Remind", systemImage: task.alarmEnabled ? "bell.slash" : "bell") {
+                    onToggleAlarm()
+                }
+                .tint(.orange)
+                Button("Snooze 1h", systemImage: "clock") {
+                    onSnooze()
+                }
+                .tint(AppTheme.tasks)
+            }
         }
-        return AppTheme.primary
     }
 
-    var body: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 12) {
-                Button(action: onToggleComplete) {
-                    Image(systemName: isCurrentPetCompleted ? "checkmark.circle.fill" : "circle")
-                        .font(.title3)
-                        .foregroundStyle(isCurrentPetCompleted ? .green : taskPetColor)
-                        .frame(width: 24, height: 24)
-                }
+    private var checkboxTint: Color {
+        if isCurrentPetCompleted { return AppTheme.success }
+        if isOverdue { return AppTheme.danger }
+        return AppTheme.primary.opacity(0.55)
+    }
 
-                Text(task.emojiIcon)
-                    .font(.title3)
+    private var accessibilityValue: String {
+        if isCurrentPetCompleted { return "Completed" }
+        if isOverdue { return "Overdue, \(task.timeText)" }
+        return "To do, \(task.timeText)"
+    }
 
-                Text(task.title)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(isCurrentPetCompleted ? AppTheme.textSecondary : AppTheme.textPrimary)
-                    .strikethrough(isCurrentPetCompleted)
-
-                Spacer()
-
-                HStack(spacing: 14) {
-                    Button(action: onEdit) {
-                        Image(systemName: "pencil")
-                            .font(.caption2)
-                            .foregroundStyle(AppTheme.textSecondary)
-                            .padding(4)
-                    }
-
-                    Button(action: onToggleAlarm) {
-                        Image(systemName: task.alarmEnabled ? "bell.fill" : "bell.slash")
-                            .font(.caption2)
-                            .foregroundStyle(task.alarmEnabled ? AppTheme.textSecondary : AppTheme.textSecondary.opacity(0.6))
-                            .padding(4)
-                    }
-
-                    Button(action: onDelete) {
-                        Image(systemName: "trash")
-                            .font(.caption2)
-                            .foregroundStyle(AppTheme.textSecondary.opacity(0.8))
-                            .padding(4)
-                    }
-                }
-            }
-            .padding(.top, 10)
-            .padding(.horizontal, 12)
-
-            HStack(spacing: 6) {
-                Image(systemName: task.frequency.systemImage)
-                    .font(.caption2)
-                    .foregroundStyle(taskPetColor)
-                if let components = task.timeComponents {
-                    Text(components.time)
-                        .font(.caption.weight(.bold))
-                    Text(components.period)
-                        .font(.caption2)
-                        .foregroundStyle(taskPetColor.opacity(0.8))
-                } else {
-                    Text(task.timeText)
-                        .font(.caption.weight(.bold))
-                }
-                Text("•")
-                Text(frequencyLabel(for: task))
-                    .font(.caption2)
-            }
-            .foregroundStyle(taskPetColor)
-            .padding(.bottom, 10)
-            .padding(.leading, 48)
-            .padding(.trailing, 12)
+    private var detailLine: String {
+        var parts = [task.taskKind.rawValue, frequencyLabel(for: task)]
+        if let snoozedUntil = task.snoozedUntil, snoozedUntil > Date() {
+            parts.append("Snoozed")
         }
-        .frame(height: 72)
-        .background(
-            RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium, style: .continuous)
-                .fill(taskPetColor.opacity(0.08))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium, style: .continuous)
-                .stroke(taskPetColor.opacity(0.15), lineWidth: 1)
-        )
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            Button {
-                onEdit()
-            } label: {
-                Label("Edit", systemImage: "pencil")
-            }
-            .tint(.blue)
-
-            Button {
-                onDelete()
-            } label: {
-                Label("Delete", systemImage: "trash")
-            }
-            .tint(.red)
+        if selectedPetScopeId == PetManager.allPetsId,
+           let displayPetId,
+           let pet = petManager.pets.first(where: { $0.id == displayPetId }) {
+            parts.append(pet.name)
         }
-        .swipeActions(edge: .leading, allowsFullSwipe: false) {
-            Button {
-                onToggleComplete()
-            } label: {
-                Label(isCurrentPetCompleted ? "Mark Undone" : "Mark Done", systemImage: isCurrentPetCompleted ? "circle" : "checkmark.circle.fill")
-            }
-            .tint(.green)
-        }
+        return parts.joined(separator: " · ")
     }
 
     private func frequencyLabel(for task: CustomCareTask) -> String {
@@ -1487,4 +1582,9 @@ struct TaskRowView: View {
 #Preview {
     CareLogHubView()
         .environmentObject(PetManager.shared)
+        .environmentObject(CareTaskStore.shared)
+        .environmentObject(HouseholdSync.shared)
+        .environmentObject(AuthSession.shared)
+        .environmentObject(WellnessStore.shared)
+        .environmentObject(AuthSession.shared)
 }

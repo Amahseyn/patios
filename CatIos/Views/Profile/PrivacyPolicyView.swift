@@ -9,13 +9,11 @@ struct PrivacyPolicyView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppTheme.spacingL) {
-                Text("Privacy Policy")
-                    .font(.title.weight(.bold))
-                    .foregroundStyle(AppTheme.textPrimary)
-
-                Text("Last updated: August 2026")
-                    .font(.caption)
-                    .foregroundStyle(AppTheme.textSecondary)
+                RealmLegalHero(
+                    title: "Privacy Policy",
+                    subtitle: "Last updated: August 2026",
+                    icon: "hand.raised.fill"
+                )
 
                 policySection(title: "Introduction", content: """
 At Gooli ("we," "our," or "us"), we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application. Please read this policy carefully. By using the app, you consent to the data practices described herein.
@@ -24,7 +22,7 @@ At Gooli ("we," "our," or "us"), we are committed to protecting your privacy. Th
                 policySection(title: "Information We Collect", content: """
 We collect information you provide directly to us and information derived from your use of the app, including:
 
-• Pet Profiles: Name, species (cat, dog, or other), breed, age, weight, avatar image, and personality notes.
+• Pet Profiles: Name, species (any pet, including cats, dogs, birds, rabbits, horses, fish, hamsters, reptiles, or a kind you name), breed, age, weight, avatar image, and personality notes.
 • Care & Health Data: Feeding logs, water intake, bathroom events, grooming records, health timeline entries (vaccinations, medications, vet visits), and custom care tasks with completion status.
 • AI Interaction Data: Voice recordings and text inputs used for behavioral analysis, emotion detection, and AI-generated care suggestions. All voice processing is performed on-device; audio is not uploaded to our servers.
 • Usage & Device Data: App preferences, notification settings, crash logs, and anonymized analytics to improve app stability and performance.
@@ -49,6 +47,7 @@ Your information is used to:
 • Encryption: If you enable cloud backup or account features, all data in transit is encrypted using TLS 1.2+, and data at rest is protected using industry-standard encryption.
 • Access Controls: We implement strict access controls and regular security audits. Only authorized personnel may access aggregated, anonymized data for product improvement.
 • Data Minimization: We collect only the data necessary to provide and improve the app. We do not sell, rent, or trade your personal information to third parties.
+• Ads: The Basic plan shows ads inside the app. Those ads are not loaded from an advertising network in this version, and choosing Pet Care+ removes them.
 """)
 
                 policySection(title: "Permissions & System Features", content: """
@@ -89,7 +88,7 @@ We do not sell your personal information. We may disclose your data only in the 
 
 • With your explicit consent.
 • To comply with legal obligations, such as subpoenas or court orders.
-• To protect the safety, rights, or property of Pet Emotion AI, our users, or the public.
+• To protect the safety, rights, or property of Pet Care, our users, or the public.
 • In connection with a merger, acquisition, or sale of assets, where you will be notified via app notification or email.
 """)
 
@@ -109,24 +108,24 @@ We aim to respond to all inquiries within 5 business days.
             }
             .padding(AppTheme.spacingM)
         }
-        .background(AppTheme.background.ignoresSafeArea())
-        .navigationTitle("Privacy Policy")
-        .navigationBarTitleDisplayMode(.inline)
+        .fantasyScreen()
+        .navigationTitle("Privacy")
+        .fantasyNavigation()
     }
 
     private func policySection(title: String, content: String) -> some View {
         VStack(alignment: .leading, spacing: AppTheme.spacingS) {
             Text(title)
-                .font(.headline)
+                .font(AppTheme.headlineFont())
                 .foregroundStyle(AppTheme.textPrimary)
 
             Text(content)
-                .font(.body)
+                .font(AppTheme.bodyFont())
                 .foregroundStyle(AppTheme.textSecondary)
-                .lineSpacing(4)
+                .lineSpacing(5)
         }
         .padding(AppTheme.spacingM)
-        .cardStyle()
+        .cardStyle(cornerRadius: AppTheme.cornerRadiusLarge)
     }
 }
 

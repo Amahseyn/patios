@@ -105,13 +105,7 @@ struct MultiPetView: View {
         NavigationStack {
             Form {
                 Section("Pet Type") {
-                    Picker("Pet Type", selection: $newPetType) {
-                        ForEach([PetType.cat, .dog, .other]) { type in
-                            Text(type.rawValue)
-                                .tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
+                    PetKindPicker(selection: $newPetType)
                     .onChange(of: newPetType) { _ in
                         if newPetType != .other {
                             newCustomPetTypeName = ""
@@ -119,7 +113,7 @@ struct MultiPetView: View {
                     }
 
                     if newPetType == .other {
-                        TextField("Enter pet type (e.g. Bird, Horse)", text: $newCustomPetTypeName)
+                        TextField("Name this kind (e.g. ferret, goat, guinea pig)", text: $newCustomPetTypeName)
                             .textInputAutocapitalization(.words)
                             .autocorrectionDisabled(true)
                     }
@@ -180,12 +174,7 @@ struct MultiPetView: View {
         NavigationStack {
             Form {
                 Section("Pet Type") {
-                    Picker("Pet Type", selection: $draftPetType) {
-                        ForEach([PetType.cat, .dog, .other]) { type in
-                            Text(type.rawValue).tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
+                    PetKindPicker(selection: $draftPetType)
                     .onChange(of: draftPetType) { _ in
                         if draftPetType != .other {
                             draftCustomPetTypeName = ""
@@ -193,7 +182,7 @@ struct MultiPetView: View {
                     }
 
                     if draftPetType == .other {
-                        TextField("Enter pet type (e.g. Bird, Horse)", text: $draftCustomPetTypeName)
+                        TextField("Name this kind (e.g. ferret, goat, guinea pig)", text: $draftCustomPetTypeName)
                             .textInputAutocapitalization(.words)
                             .autocorrectionDisabled(true)
                     }
